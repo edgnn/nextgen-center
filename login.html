@@ -348,19 +348,18 @@
     <script>
         lucide.createIcons();
 
-        // Password hash (SHA-256 of 'nextgen2025')
-        const VALID_PASSWORD_HASH = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918';
+        // Password hash (SHA-256) - actual password not stored in code
+        const VALID_HASH = '07c3566b56fc7a9f5e2ad61a197a8dcc4e7c9626643bc11748e570840869f49a';
 
         // Check if already logged in
         if (localStorage.getItem('nextgenAuth') === 'authenticated') {
             window.location.href = 'index.html';
         }
 
-        // Simple hash function
-        async function hashPassword(password) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(password);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        // SHA-256 hash function
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
@@ -370,8 +369,10 @@
             const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
 
-            // Compare with valid password
-            if (password === 'nextgen2025') {
+            // Hash the entered password and compare with valid hash
+            const enteredHash = await sha256(password);
+
+            if (enteredHash === VALID_HASH) {
                 localStorage.setItem('nextgenAuth', 'authenticated');
                 window.location.href = 'index.html';
             } else {
