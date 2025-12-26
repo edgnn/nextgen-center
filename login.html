@@ -149,11 +149,9 @@
 
         .input-wrapper {
             position: relative;
-            display: flex;
-            align-items: center;
         }
 
-        .input-wrapper>i {
+        .lock-icon {
             position: absolute;
             left: 16px;
             top: 50%;
@@ -332,7 +330,7 @@
                 <div class="form-group">
                     <label class="form-label">Password</label>
                     <div class="input-wrapper">
-                        <i data-lucide="lock"></i>
+                        <i data-lucide="lock" class="lock-icon"></i>
                         <input type="password" id="password" class="form-input" placeholder="Masukkan password" required
                             autocomplete="current-password">
                         <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">
