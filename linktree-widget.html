@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nextgen Center - Learning Hub</title>
 
+    <!-- Auth Check - Redirect to login if not authenticated -->
+    <script>
+        if (localStorage.getItem('nextgenAuth') !== 'authenticated') {
+            window.location.href = 'login.html';
+        }
+    </script>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -876,6 +882,9 @@
                     <i data-lucide="moon" class="moon-icon"></i>
                     <i data-lucide="sun" class="sun-icon"></i>
                 </button>
+                <button class="theme-toggle" onclick="logout()" aria-label="Logout" title="Logout">
+                    <i data-lucide="log-out"></i>
+                </button>
                 <button class="mobile-menu-btn">
                     <span></span>
                     <span></span>
@@ -1538,6 +1547,12 @@
         // Open obfuscated links
         function openLink(encoded) {
             window.open(atob(encoded), '_blank');
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('nextgenAuth');
+            window.location.href = 'login.html';
         }
 
         // Theme Toggle
