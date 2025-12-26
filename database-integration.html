@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Integration Demo - Nextgen Center</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --border-color: #334155;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+        }
+
+        /* Config Section */
+        .config-section {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .config-section h2 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .config-section h2 svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent-primary);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .input-wrapper label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .input-wrapper input,
+        .input-wrapper select {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .input-wrapper input:focus,
+        .input-wrapper select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--accent-gradient);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+        }
+
+        /* Search Section */
+        .search-section {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-input input {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .search-input svg {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: var(--text-secondary);
+        }
+
+        /* Status */
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .status.loading {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent-primary);
+        }
+
+        .status.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .status svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Data Grid */
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .data-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .data-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-primary);
+        }
+
+        .data-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-card-id {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            background: var(--bg-tertiary);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .data-card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .data-card-actions button {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .data-card-actions button:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .data-card-actions button svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .data-field {
+            margin-bottom: 12px;
+        }
+
+        .data-field-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .data-field-value {
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        /* Table View */
+        .table-container {
+            overflow-x: auto;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+        }
+
+        tr:hover td {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .view-btn {
+            padding: 10px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .view-btn:hover,
+        .view-btn.active {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        .view-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+        }
+
+        .pagination button {
+            padding: 10px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-info {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📊 Database Integration Demo</h1>
+            <p>Contoh integrasi Google Sheets sebagai database menggunakan Apps Script</p>
+        </header>
+
+        <!-- Configuration -->
+        <section class="config-section">
+            <h2>
+                <i data-lucide="settings"></i>
+                Konfigurasi API
+            </h2>
+            <div class="input-group">
+                <div class="input-wrapper" style="flex: 2">
+                    <label>Apps Script Web App URL</label>
+                    <input type="text" id="apiUrl" placeholder="https://script.google.com/macros/s/xxx/exec">
+                </div>
+                <div class="input-wrapper">
+                    <label>Sheet Name</label>
+                    <input type="text" id="sheetName" value="Sheet1" placeholder="Sheet1">
+                </div>
+                <div class="input-wrapper" style="flex: 0">
+                    <label>&nbsp;</label>
+                    <button class="btn" onclick="fetchData()">
+                        <i data-lucide="download"></i>
+                        Load Data
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Status -->
+        <div id="status" class="status" style="display: none;">
+            <span class="spinner"></span>
+            <span id="statusText">Loading...</span>
+        </div>
+
+        <!-- Search & View Controls -->
+        <div class="search-section">
+            <div class="search-input">
+                <i data-lucide="search"></i>
+                <input type="text" id="searchInput" placeholder="Cari data..." oninput="filterData()">
+            </div>
+            <div class="view-toggle">
+                <button class="view-btn active" onclick="setView('grid')" id="gridViewBtn">
+                    <i data-lucide="layout-grid"></i>
+                    Grid
+                </button>
+                <button class="view-btn" onclick="setView('table')" id="tableViewBtn">
+                    <i data-lucide="table"></i>
+                    Table
+                </button>
+            </div>
+            <button class="btn btn-secondary" onclick="refreshData()">
+                <i data-lucide="refresh-cw"></i>
+            </button>
+        </div>
+
+        <!-- Data Display -->
+        <div id="dataContainer">
+            <div class="empty-state">
+                <i data-lucide="database"></i>
+                <p>Masukkan URL Apps Script dan klik "Load Data" untuk memulai</p>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div id="pagination" class="pagination" style="display: none;">
+            <button onclick="prevPage()" id="prevBtn">
+                <i data-lucide="chevron-left"></i>
+            </button>
+            <span class="pagination-info" id="paginationInfo">Page 1 of 1</span>
+            <button onclick="nextPage()" id="nextBtn">
+                <i data-lucide="chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // State
+        let allData = [];
+        let filteredData = [];
+        let headers = [];
+        let currentView = 'grid';
+        let currentPage = 1;
+        const itemsPerPage = 12;
+
+        // Show status message
+        function showStatus(type, message) {
+            const status = document.getElementById('status');
+            const statusText = document.getElementById('statusText');
+
+            status.className = `status ${type}`;
+            status.style.display = 'flex';
+
+            if (type === 'loading') {
+                statusText.innerHTML = `<span class="spinner"></span> ${message}`;
+            } else {
+                const icon = type === 'success' ? 'check-circle' : 'alert-circle';
+                statusText.innerHTML = message;
+
+                // Auto hide after 3 seconds
+                setTimeout(() => {
+                    status.style.display = 'none';
+                }, 3000);
+            }
+
+            lucide.createIcons();
+        }
+
+        // Fetch data from API
+        async function fetchData() {
+            const apiUrl = document.getElementById('apiUrl').value.trim();
+            const sheetName = document.getElementById('sheetName').value.trim();
+
+            if (!apiUrl) {
+                showStatus('error', 'Masukkan URL Apps Script terlebih dahulu');
+                return;
+            }
+
+            showStatus('loading', 'Memuat data...');
+
+            try {
+                const url = `${apiUrl}?action=getData&sheet=${encodeURIComponent(sheetName)}`;
+                const response = await fetch(url);
+                const result = await response.json();
+
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+
+                allData = result.data || [];
+                headers = result.headers || [];
+                filteredData = [...allData];
+                currentPage = 1;
+
+                showStatus('success', `Berhasil memuat ${allData.length} data`);
+                renderData();
+
+            } catch (error) {
+                showStatus('error', `Error: ${error.message}`);
+                console.error(error);
+            }
+        }
+
+        // Filter data based on search
+        function filterData() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+
+            if (!query) {
+                filteredData = [...allData];
+            } else {
+                filteredData = allData.filter(item => {
+                    return Object.values(item).some(value =>
+                        String(value).toLowerCase().includes(query)
+                    );
+                });
+            }
+
+            currentPage = 1;
+            renderData();
+        }
+
+        // Refresh data
+        function refreshData() {
+            fetchData();
+        }
+
+        // Set view mode
+        function setView(view) {
+            currentView = view;
+            document.getElementById('gridViewBtn').classList.toggle('active', view === 'grid');
+            document.getElementById('tableViewBtn').classList.toggle('active', view === 'table');
+            renderData();
+        }
+
+        // Render data
+        function renderData() {
+            const container = document.getElementById('dataContainer');
+            const pagination = document.getElementById('pagination');
+
+            if (filteredData.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i data-lucide="inbox"></i>
+                        <p>Tidak ada data ditemukan</p>
+                    </div>
+                `;
+                pagination.style.display = 'none';
+                lucide.createIcons();
+                return;
+            }
+
+            // Calculate pagination
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = filteredData.slice(startIndex, endIndex);
+
+            if (currentView === 'grid') {
+                renderGridView(pageData);
+            } else {
+                renderTableView(pageData);
+            }
+
+            // Update pagination
+            pagination.style.display = totalPages > 1 ? 'flex' : 'none';
+            document.getElementById('paginationInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+            document.getElementById('prevBtn').disabled = currentPage <= 1;
+            document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+
+            lucide.createIcons();
+        }
+
+        // Render grid view
+        function renderGridView(data) {
+            const container = document.getElementById('dataContainer');
+            const displayHeaders = headers.filter(h => !h.startsWith('_'));
+
+            container.innerHTML = `
+                <div class="data-grid">
+                    ${data.map(item => `
+                        <div class="data-card">
+                            <div class="data-card-header">
+                                <span class="data-card-id">Row #${item._rowIndex || '-'}</span>
+                                <div class="data-card-actions">
+                                    <button onclick='viewItem(${JSON.stringify(item)})' title="View">
+                                        <i data-lucide="eye"></i>
+                                    </button>
+                                    <button onclick='copyItem(${JSON.stringify(item)})' title="Copy">
+                                        <i data-lucide="copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            ${displayHeaders.slice(0, 4).map(header => `
+                                <div class="data-field">
+                                    <div class="data-field-label">${header}</div>
+                                    <div class="data-field-value">${item[header] || '-'}</div>
+                                </div>
+                            `).join('')}
+                            ${displayHeaders.length > 4 ? `
+                                <div class="data-field">
+                                    <div class="data-field-value" style="color: var(--text-secondary); font-size: 0.85rem;">
+                                        + ${displayHeaders.length - 4} more fields
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Render table view
+        function renderTableView(data) {
+            const container = document.getElementById('dataContainer');
+            const displayHeaders = headers.filter(h => !h.startsWith('_'));
+
+            container.innerHTML = `
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                ${displayHeaders.map(h => `<th>${h}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map(item => `
+                                <tr>
+                                    <td>${item._rowIndex || '-'}</td>
+                                    ${displayHeaders.map(h => `<td>${item[h] || '-'}</td>`).join('')}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // Pagination controls
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderData();
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderData();
+            }
+        }
+
+        // View item details
+        function viewItem(item) {
+            const displayHeaders = headers.filter(h => !h.startsWith('_'));
+            let details = displayHeaders.map(h => `${h}: ${item[h] || '-'}`).join('\n');
+            alert(details);
+        }
+
+        // Copy item to clipboard
+        function copyItem(item) {
+            navigator.clipboard.writeText(JSON.stringify(item, null, 2))
+                .then(() => showStatus('success', 'Data copied to clipboard'))
+                .catch(() => showStatus('error', 'Failed to copy'));
+        }
+
+        // Demo mode with sample data
+        function loadDemoData() {
+            headers = ['ID', 'Name', 'Category', 'Status', 'Created'];
+            allData = [
+                { _rowIndex: 2, ID: '001', Name: 'SD-WAN Training', Category: 'Networking', Status: 'Active', Created: '2025-01-01' },
+                { _rowIndex: 3, ID: '002', Name: 'Cisco Certificate', Category: 'Certification', Status: 'Active', Created: '2025-01-05' },
+                { _rowIndex: 4, ID: '003', Name: 'Fortinet Guide', Category: 'Security', Status: 'Draft', Created: '2025-01-10' },
+                { _rowIndex: 5, ID: '004', Name: 'Network Basics', Category: 'Fundamentals', Status: 'Active', Created: '2025-01-15' },
+                { _rowIndex: 6, ID: '005', Name: 'VPN Configuration', Category: 'Security', Status: 'Active', Created: '2025-01-20' }
+            ];
+            filteredData = [...allData];
+            currentPage = 1;
+            showStatus('success', 'Demo data loaded successfully');
+            renderData();
+        }
+
+        // Auto-load demo on page load (comment out for production)
+        // loadDemoData();
+    </script>
+</body>
+
+</html>
