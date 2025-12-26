@@ -149,9 +149,11 @@
 
         .input-wrapper {
             position: relative;
+            display: flex;
+            align-items: center;
         }
 
-        .input-wrapper i {
+        .input-wrapper>i {
             position: absolute;
             left: 16px;
             top: 50%;
@@ -159,6 +161,8 @@
             color: var(--text-muted);
             width: 20px;
             height: 20px;
+            pointer-events: none;
+            z-index: 1;
         }
 
         .form-input {
