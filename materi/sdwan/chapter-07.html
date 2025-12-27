@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 7: Centralized Control Policies - Nextgen Center</title>
+    <meta name="description"
+        content="Chapter 7 - Centralized Control Policies: Route manipulation, topology control, dan service chaining.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="chapter-style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../cisco-sdwan-tutorial.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali ke Daftar Isi</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="chapter-header">
+            <div class="chapter-badge">Chapter 7</div>
+            <h1>Centralized Control Policies</h1>
+            <p class="chapter-meta">Page 214 • Route Control & Topology</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="target"></i> Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Memahami cara control policies mempengaruhi OMP routing</li>
+                <li>Mengkonfigurasi route filtering dan manipulation</li>
+                <li>Memahami topology control untuk hub-spoke dan mesh</li>
+                <li>Mengimplementasikan service chaining</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="filter"></i> Route Filtering</h2>
+            <div class="content-block">
+                <p>Control policies dapat memfilter routes yang didistribusikan oleh vSmart.</p>
+
+                <h3>Match Criteria:</h3>
+                <ul>
+                    <li><strong>OMP Route:</strong> Filter berdasarkan prefix, TLOC, site-id</li>
+                    <li><strong>TLOC Route:</strong> Filter berdasarkan color, encapsulation</li>
+                    <li><strong>Service Route:</strong> Filter berdasarkan VPN, service type</li>
+                </ul>
+
+                <h3>Actions:</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>accept</code></td>
+                        <td>Allow route to be advertised</td>
+                    </tr>
+                    <tr>
+                        <td><code>reject</code></td>
+                        <td>Block route advertisement</td>
+                    </tr>
+                    <tr>
+                        <td><code>set</code></td>
+                        <td>Modify route attributes (preference, TLOC)</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="git-merge"></i> Topology Control</h2>
+            <div class="content-block">
+                <h3>Hub-and-Spoke Topology:</h3>
+                <p>Force traffic through hub sites with control policies.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Policy Logic</span>
+                    </div>
+                    <pre><code>match:
+  site-list: branch-sites
+action:
+  set tloc-list: hub-tlocs
+  # Spoke routes only reachable via hub</code></pre>
+                </div>
+
+                <h3>Restrict Full Mesh:</h3>
+                <p>By default SD-WAN creates full mesh. Use control policy untuk membatasi konektivitas.</p>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Use Case</strong>
+                        <p>Restrict connectivity antar branch sites sehingga semua traffic harus melalui DC untuk
+                            security inspection.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="share-2"></i> Service Chaining</h2>
+            <div class="content-block">
+                <p>Service chaining mengarahkan traffic melalui network services (firewall, IPS, etc) sebelum mencapai
+                    destination.</p>
+
+                <h3>Service Types:</h3>
+                <ul>
+                    <li><strong>FW:</strong> Firewall service</li>
+                    <li><strong>IDS:</strong> Intrusion Detection System</li>
+                    <li><strong>IDP:</strong> Intrusion Detection and Prevention</li>
+                    <li><strong>netsvc:</strong> Generic network service</li>
+                </ul>
+
+                <div class="architecture-block">
+                    <h4>Service Chaining Flow:</h4>
+                    <ul>
+                        <li>Traffic matches policy at ingress edge</li>
+                        <li>Policy redirects to service node</li>
+                        <li>Service inspects/modifies traffic</li>
+                        <li>Traffic continues to destination</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!-- Interactive Quiz Button -->
+        <div class="quiz-section" style="text-align: center; margin: 2rem 0;">
+            <a href="chapter-07-quiz.html" class="quiz-btn" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #049fd9, #0277bd); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(4, 159, 217, 0.3);">
+                <i data-lucide="brain"></i>
+                <span>Take Interactive Quiz</span>
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+
+
+
+        <div class="chapter-nav">
+            <a href="chapter-06.html" class="nav-btn prev">
+                <i data-lucide="chevron-left"></i>
+                <span>Chapter 6</span>
+            </a>
+            <a href="chapter-08.html" class="nav-btn next">
+                <span>Chapter 8</span>
+                <i data-lucide="chevron-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="chapter-script.js"></script>
+</body>
+
+</html>

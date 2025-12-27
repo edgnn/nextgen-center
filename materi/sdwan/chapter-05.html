@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 5: SD-WAN Design and Migration - Nextgen Center</title>
+    <meta name="description"
+        content="Chapter 5 - Design dan Migration: Topology design, site types, dan migration strategies.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="chapter-style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../cisco-sdwan-tutorial.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali ke Daftar Isi</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="chapter-header">
+            <div class="chapter-badge">Chapter 5</div>
+            <h1>Cisco Catalyst SD-WAN Design and Migration</h1>
+            <p class="chapter-meta">Page 124 • Architecture Planning</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="target"></i> Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Memahami SD-WAN topology design considerations</li>
+                <li>Mengidentifikasi site types dan requirements</li>
+                <li>Merencanakan controller placement dan sizing</li>
+                <li>Menjalankan migration strategy dari legacy WAN</li>
+            </ul>
+        </section>
+
+        <!-- Topology Types Diagram -->
+        <div class="image-container">
+            <img src="images/topology-types.png" alt="SD-WAN Topology Types Diagram">
+            <p class="image-caption">Gambar 5.1 - Tipe-tipe topologi SD-WAN: Hub-and-Spoke, Full Mesh, dan Hierarchical
+            </p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="git-merge"></i> Topology Design</h2>
+            <div class="content-block">
+                <h3>Common Topologies:</h3>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="star"></i></div>
+                        <h4>Hub-and-Spoke</h4>
+                        <p>Traditional dengan centralized hub</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="hexagon"></i></div>
+                        <h4>Full Mesh</h4>
+                        <p>Direct connectivity antar sites</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="git-branch"></i></div>
+                        <h4>Partial Mesh</h4>
+                        <p>Selective direct connections</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="layers"></i></div>
+                        <h4>Hierarchical</h4>
+                        <p>Regional hubs dengan spokes</p>
+                    </div>
+                </div>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>SD-WAN Advantage</strong>
+                        <p>SD-WAN dapat dengan mudah membentuk full mesh atau partial mesh tanpa konfigurasi manual
+                            per-tunnel.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="building"></i> Site Types</h2>
+            <div class="content-block">
+                <table class="data-table">
+                    <tr>
+                        <th>Site Type</th>
+                        <th>Characteristics</th>
+                        <th>Typical Hardware</th>
+                    </tr>
+                    <tr>
+                        <td>Data Center</td>
+                        <td>High bandwidth, critical apps, dual-homed</td>
+                        <td>Catalyst 8500, ASR 1000</td>
+                    </tr>
+                    <tr>
+                        <td>Regional Hub</td>
+                        <td>Aggregation point, service insertion</td>
+                        <td>Catalyst 8300</td>
+                    </tr>
+                    <tr>
+                        <td>Large Branch</td>
+                        <td>100+ users, multiple WAN links</td>
+                        <td>Catalyst 8200</td>
+                    </tr>
+                    <tr>
+                        <td>Small Branch</td>
+                        <td>
+                            <50 users, single/dual WAN</td>
+                        <td>Catalyst 8200L, ISR 1100</td>
+                    </tr>
+                    <tr>
+                        <td>Home Office</td>
+                        <td>1-5 users, basic connectivity</td>
+                        <td>ISR 1100, vEdge Cloud</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="server"></i> Controller Sizing</h2>
+            <div class="content-block">
+                <h3>Controller Recommendations:</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Scale</th>
+                        <th>vManage</th>
+                        <th>vSmart</th>
+                        <th>vBond</th>
+                    </tr>
+                    <tr>
+                        <td>Small (<100 devices)</td>
+                        <td>1x (8 vCPU, 32GB)</td>
+                        <td>2x (4 vCPU, 8GB)</td>
+                        <td>2x (2 vCPU, 4GB)</td>
+                    </tr>
+                    <tr>
+                        <td>Medium (100-1000)</td>
+                        <td>3x Cluster (16 vCPU, 64GB)</td>
+                        <td>2x (8 vCPU, 16GB)</td>
+                        <td>2x (4 vCPU, 8GB)</td>
+                    </tr>
+                    <tr>
+                        <td>Large (1000+)</td>
+                        <td>6x Cluster (32 vCPU, 128GB)</td>
+                        <td>4x (16 vCPU, 32GB)</td>
+                        <td>4x (8 vCPU, 16GB)</td>
+                    </tr>
+                </table>
+
+                <div class="alert warning">
+                    <i data-lucide="alert-triangle"></i>
+                    <div class="alert-content">
+                        <strong>Always Deploy Redundancy</strong>
+                        <p>Minimal 2 vSmart dan 2 vBond untuk production environments.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="move-right"></i> Migration Strategies</h2>
+            <div class="content-block">
+                <h3>Migration Approaches:</h3>
+
+                <div class="architecture-block">
+                    <h4>🔄 Parallel Migration</h4>
+                    <ul>
+                        <li>SD-WAN deployed alongside existing WAN</li>
+                        <li>Gradual traffic migration</li>
+                        <li>Easier rollback</li>
+                        <li>Higher cost during transition</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>🔁 In-Place Migration</h4>
+                    <ul>
+                        <li>Replace existing routers with SD-WAN devices</li>
+                        <li>Site-by-site cutover</li>
+                        <li>Lower cost</li>
+                        <li>Higher risk per site</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>📍 Phased Approach</h4>
+                    <ul>
+                        <li>Start with non-critical sites</li>
+                        <li>Build expertise gradually</li>
+                        <li>Migrate critical sites last</li>
+                        <li>Recommended for most enterprises</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!-- Interactive Quiz Button -->
+        <div class="quiz-section" style="text-align: center; margin: 2rem 0;">
+            <a href="chapter-05-quiz.html" class="quiz-btn" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #049fd9, #0277bd); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(4, 159, 217, 0.3);">
+                <i data-lucide="brain"></i>
+                <span>Take Interactive Quiz</span>
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+
+
+
+        <div class="chapter-nav">
+            <a href="chapter-04.html" class="nav-btn prev">
+                <i data-lucide="chevron-left"></i>
+                <span>Chapter 4</span>
+            </a>
+            <a href="chapter-06.html" class="nav-btn next">
+                <span>Chapter 6</span>
+                <i data-lucide="chevron-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="chapter-script.js"></script>
+</body>
+
+</html>

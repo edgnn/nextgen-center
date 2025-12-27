@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 12: Cisco Catalyst SD-WAN Cloud OnRamp - Nextgen Center</title>
+    <meta name="description"
+        content="Chapter 12 - Cloud OnRamp: SaaS optimization, IaaS connectivity, dan multi-cloud.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="chapter-style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../cisco-sdwan-tutorial.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali ke Daftar Isi</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="chapter-header">
+            <div class="chapter-badge">Chapter 12</div>
+            <h1>Cisco Catalyst SD-WAN Cloud OnRamp</h1>
+            <p class="chapter-meta">Page 514 • Cloud Integration</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="target"></i> Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Memahami Cloud OnRamp architecture dan use cases</li>
+                <li>Mengkonfigurasi Cloud OnRamp untuk SaaS</li>
+                <li>Mengimplementasikan Cloud OnRamp untuk IaaS</li>
+                <li>Mengelola multi-cloud connectivity</li>
+            </ul>
+        </section>
+
+        <!-- Cloud OnRamp Diagram -->
+        <div class="image-container">
+            <img src="images/cloud-onramp.png" alt="SD-WAN Cloud OnRamp Architecture Diagram">
+            <p class="image-caption">Gambar 12.1 - Arsitektur Cloud OnRamp untuk konektivitas SaaS dan IaaS</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="cloud"></i> Cloud OnRamp Overview</h2>
+            <div class="content-block">
+                <p>Cloud OnRamp menyediakan optimized connectivity ke cloud applications dan infrastructure.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="app-window"></i></div>
+                        <h4>SaaS</h4>
+                        <p>Optimize access ke Office 365, Salesforce, etc</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="server"></i></div>
+                        <h4>IaaS</h4>
+                        <p>Connect ke AWS, Azure, GCP</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="building"></i></div>
+                        <h4>Colocation</h4>
+                        <p>Extend SD-WAN ke colo facilities</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="boxes"></i></div>
+                        <h4>Multi-Cloud</h4>
+                        <p>Unified connectivity across clouds</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="app-window"></i> Cloud OnRamp for SaaS</h2>
+            <div class="content-block">
+                <p>Automatically optimize path selection untuk SaaS applications berdasarkan real-time performance.</p>
+
+                <h3>How It Works:</h3>
+                <div class="architecture-block">
+                    <h4>1️⃣ Application Discovery</h4>
+                    <ul>
+                        <li>Detect SaaS traffic (Office 365, Webex, etc)</li>
+                        <li>Identify application flows</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>2️⃣ Path Probing</h4>
+                    <ul>
+                        <li>Probe multiple paths to SaaS endpoints</li>
+                        <li>Measure latency dan loss</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>3️⃣ Best Path Selection</h4>
+                    <ul>
+                        <li>Route via Direct Internet Access (DIA)</li>
+                        <li>Or via hub/gateway if better performance</li>
+                    </ul>
+                </div>
+
+                <h3>Supported Applications:</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Vendor</th>
+                        <th>Applications</th>
+                    </tr>
+                    <tr>
+                        <td>Microsoft</td>
+                        <td>Office 365, Teams, SharePoint</td>
+                    </tr>
+                    <tr>
+                        <td>Cisco</td>
+                        <td>Webex, Umbrella</td>
+                    </tr>
+                    <tr>
+                        <td>Salesforce</td>
+                        <td>Salesforce CRM</td>
+                    </tr>
+                    <tr>
+                        <td>Other</td>
+                        <td>Box, Dropbox, Slack, etc</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="server"></i> Cloud OnRamp for IaaS</h2>
+            <div class="content-block">
+                <p>Deploy SD-WAN edges di public cloud untuk extend fabric ke cloud workloads.</p>
+
+                <h3>Supported Cloud Providers:</h3>
+                <ul>
+                    <li><strong>AWS:</strong> Transit Gateway integration, VPC connectivity</li>
+                    <li><strong>Azure:</strong> Virtual WAN integration, VNET peering</li>
+                    <li><strong>GCP:</strong> Cloud Router integration</li>
+                </ul>
+
+                <h3>Deployment Models:</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Model</th>
+                        <th>Use Case</th>
+                    </tr>
+                    <tr>
+                        <td>Cloud Gateway</td>
+                        <td>Hub di cloud untuk branch access</td>
+                    </tr>
+                    <tr>
+                        <td>Cloud Edge</td>
+                        <td>Spoke in cloud VPC/VNET</td>
+                    </tr>
+                    <tr>
+                        <td>Megaport/Equinix</td>
+                        <td>Private connectivity via fabric</td>
+                    </tr>
+                </table>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Automation</strong>
+                        <p>Cloud OnRamp can automatically discover dan connect ke cloud VPCs/VNETs through APIs.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Interactive Quiz Button -->
+        <div class="quiz-section" style="text-align: center; margin: 2rem 0;">
+            <a href="chapter-12-quiz.html" class="quiz-btn" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #049fd9, #0277bd); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(4, 159, 217, 0.3);">
+                <i data-lucide="brain"></i>
+                <span>Take Interactive Quiz</span>
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+
+
+
+        <div class="chapter-nav">
+            <a href="chapter-11.html" class="nav-btn prev">
+                <i data-lucide="chevron-left"></i>
+                <span>Chapter 11</span>
+            </a>
+            <a href="chapter-13.html" class="nav-btn next">
+                <span>Chapter 13</span>
+                <i data-lucide="chevron-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="chapter-script.js"></script>
+</body>
+
+</html>

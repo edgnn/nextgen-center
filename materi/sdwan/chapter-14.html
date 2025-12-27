@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 14: SD-WAN Monitoring and Operations - Nextgen Center</title>
+    <meta name="description"
+        content="Chapter 14 - Monitoring and Operations: Dashboard, alerts, troubleshooting, dan maintenance.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="chapter-style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../cisco-sdwan-tutorial.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali ke Daftar Isi</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="chapter-header">
+            <div class="chapter-badge">Chapter 14</div>
+            <h1>Cisco Catalyst SD-WAN Monitoring and Operations</h1>
+            <p class="chapter-meta">Page 596 • Day-2 Operations</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="target"></i> Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Memahami vManage monitoring dashboard</li>
+                <li>Mengkonfigurasi alerts dan notifications</li>
+                <li>Menggunakan troubleshooting tools</li>
+                <li>Melakukan software upgrades dan maintenance</li>
+            </ul>
+        </section>
+
+        <!-- Monitoring Dashboard Diagram -->
+        <div class="image-container">
+            <img src="images/monitoring-dashboard.png" alt="vManage Monitoring Dashboard">
+            <p class="image-caption">Gambar 14.1 - vManage Dashboard untuk monitoring dan visibility jaringan SD-WAN</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="layout-dashboard"></i> vManage Dashboard</h2>
+            <div class="content-block">
+                <p>vManage menyediakan real-time visibility ke seluruh SD-WAN fabric.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="activity"></i></div>
+                        <h4>Network Health</h4>
+                        <p>Overall fabric status dan trends</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="map"></i></div>
+                        <h4>Topology View</h4>
+                        <p>Visual network topology</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="bar-chart"></i></div>
+                        <h4>App Statistics</h4>
+                        <p>Application usage analytics</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="bell"></i></div>
+                        <h4>Alarms</h4>
+                        <p>Critical events dan alerts</p>
+                    </div>
+                </div>
+
+                <h3>Key Metrics:</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Metric</th>
+                        <th>Description</th>
+                        <th>Concern Level</th>
+                    </tr>
+                    <tr>
+                        <td>Control Connections</td>
+                        <td>OMP sessions to vSmart</td>
+                        <td>Critical if down</td>
+                    </tr>
+                    <tr>
+                        <td>BFD Sessions</td>
+                        <td>Data plane tunnel health</td>
+                        <td>High if degraded</td>
+                    </tr>
+                    <tr>
+                        <td>Certificate Status</td>
+                        <td>Validity dan expiry</td>
+                        <td>Critical if expired</td>
+                    </tr>
+                    <tr>
+                        <td>CPU/Memory</td>
+                        <td>Resource utilization</td>
+                        <td>Medium if high</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="bell"></i> Alerts and Notifications</h2>
+            <div class="content-block">
+                <h3>Alert Types:</h3>
+                <ul>
+                    <li><strong>Critical:</strong> Immediate attention required</li>
+                    <li><strong>Major:</strong> Significant issue affecting service</li>
+                    <li><strong>Minor:</strong> Degradation or warning</li>
+                    <li><strong>Warning:</strong> Potential issue detected</li>
+                </ul>
+
+                <h3>Notification Methods:</h3>
+                <ul>
+                    <li>Email notifications</li>
+                    <li>Syslog integration</li>
+                    <li>SNMP traps</li>
+                    <li>Webhooks untuk external systems</li>
+                </ul>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Best Practice</strong>
+                        <p>Configure tiered notification escalation untuk different severity levels.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="wrench"></i> Troubleshooting Tools</h2>
+            <div class="content-block">
+                <h3>Built-in Tools:</h3>
+
+                <div class="architecture-block">
+                    <h4>🔍 Real-Time Device Data</h4>
+                    <ul>
+                        <li>Interface statistics</li>
+                        <li>Tunnel status</li>
+                        <li>OMP routes</li>
+                        <li>BFD sessions</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>📊 App Route Statistics</h4>
+                    <ul>
+                        <li>Path latency/loss/jitter</li>
+                        <li>Application flows</li>
+                        <li>DPI statistics</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>🛠️ Diagnostic Tools</h4>
+                    <ul>
+                        <li>Ping dan Traceroute</li>
+                        <li>Speed test</li>
+                        <li>Packet capture</li>
+                        <li>Debug logs</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="download"></i> Software Upgrades</h2>
+            <div class="content-block">
+                <h3>Upgrade Best Practices:</h3>
+                <ul>
+                    <li><strong>Staging:</strong> Test upgrades di lab environment terlebih dahulu</li>
+                    <li><strong>Backup:</strong> Backup configuration sebelum upgrade</li>
+                    <li><strong>Rolling:</strong> Upgrade satu device pada satu waktu</li>
+                    <li><strong>Validation:</strong> Verify control dan data plane setelah upgrade</li>
+                </ul>
+
+                <h3>Upgrade Order:</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Order</th>
+                        <th>Component</th>
+                        <th>Notes</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>vManage</td>
+                        <td>Upgrade controllers first</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>vBond</td>
+                        <td>One at a time</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>vSmart</td>
+                        <td>Maintain HA during upgrade</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Edge Devices</td>
+                        <td>Rolling upgrade by site</td>
+                    </tr>
+                </table>
+
+                <div class="alert warning">
+                    <i data-lucide="alert-triangle"></i>
+                    <div class="alert-content">
+                        <strong>Version Compatibility</strong>
+                        <p>Always check release notes untuk compatibility matrix antara controllers dan edge devices.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Interactive Quiz Button -->
+        <div class="quiz-section" style="text-align: center; margin: 2rem 0;">
+            <a href="chapter-14-quiz.html" class="quiz-btn" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #049fd9, #0277bd); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(4, 159, 217, 0.3);">
+                <i data-lucide="brain"></i>
+                <span>Take Interactive Quiz</span>
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+
+
+
+        <div class="chapter-nav">
+            <a href="chapter-13.html" class="nav-btn prev">
+                <i data-lucide="chevron-left"></i>
+                <span>Chapter 13</span>
+            </a>
+            <a href="../cisco-sdwan-tutorial.html" class="nav-btn next">
+                <span>Daftar Isi</span>
+                <i data-lucide="list"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="chapter-script.js"></script>
+</body>
+
+</html>

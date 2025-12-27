@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 8: Centralized Data Policies - Nextgen Center</title>
+    <meta name="description" content="Chapter 8 - Centralized Data Policies: Traffic steering, DSCP marking, dan PBR.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="chapter-style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../cisco-sdwan-tutorial.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali ke Daftar Isi</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="chapter-header">
+            <div class="chapter-badge">Chapter 8</div>
+            <h1>Centralized Data Policies</h1>
+            <p class="chapter-meta">Page 304 • Traffic Engineering</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="target"></i> Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Memahami centralized data policy vs control policy</li>
+                <li>Mengkonfigurasi traffic steering berdasarkan application</li>
+                <li>Mengimplementasikan DSCP marking dan re-marking</li>
+                <li>Menggunakan VPN membership control</li>
+            </ul>
+        </section>
+
+        <!-- Traffic Steering Diagram -->
+        <div class="image-container">
+            <img src="images/traffic-steering.png" alt="SD-WAN Traffic Steering Diagram">
+            <p class="image-caption">Gambar 8.1 - Traffic steering berdasarkan aplikasi ke berbagai WAN transport</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="split"></i> Data Policy vs Control Policy</h2>
+            <div class="content-block">
+                <table class="data-table">
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Control Policy</th>
+                        <th>Data Policy</th>
+                    </tr>
+                    <tr>
+                        <td>Operates On</td>
+                        <td>OMP routes (control plane)</td>
+                        <td>Actual traffic (data plane)</td>
+                    </tr>
+                    <tr>
+                        <td>Applied At</td>
+                        <td>vSmart only</td>
+                        <td>vSmart → pushed to edges</td>
+                    </tr>
+                    <tr>
+                        <td>Match Criteria</td>
+                        <td>Route attributes</td>
+                        <td>Packet headers, applications</td>
+                    </tr>
+                    <tr>
+                        <td>Use Case</td>
+                        <td>Route filtering, topology</td>
+                        <td>Traffic steering, QoS marking</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="navigation"></i> Traffic Steering</h2>
+            <div class="content-block">
+                <p>Data policies dapat mengarahkan traffic ke specific paths berdasarkan various criteria.</p>
+
+                <h3>Steering Options:</h3>
+                <ul>
+                    <li><strong>TLOC-based:</strong> Steer ke specific transport (MPLS, Internet)</li>
+                    <li><strong>Color-based:</strong> Steer berdasarkan WAN link color</li>
+                    <li><strong>Service-based:</strong> Redirect ke service node</li>
+                    <li><strong>Local-based:</strong> Direct Internet Access (DIA)</li>
+                </ul>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Data Policy Example</span>
+                    </div>
+                    <pre><code>sequence 10
+  match
+    app-list critical-apps
+  action accept
+    set
+      local-tloc color mpls
+      # Steer critical apps to MPLS
+
+sequence 20
+  match
+    app-list web-browsing
+  action accept
+    set
+      local-tloc color biz-internet
+      # Steer web to Internet</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="tag"></i> DSCP Marking</h2>
+            <div class="content-block">
+                <p>Data policies dapat set atau re-mark DSCP values untuk QoS treatment.</p>
+
+                <table class="data-table">
+                    <tr>
+                        <th>DSCP Value</th>
+                        <th>Per-Hop Behavior</th>
+                        <th>Typical Use</th>
+                    </tr>
+                    <tr>
+                        <td>46 (EF)</td>
+                        <td>Expedited Forwarding</td>
+                        <td>Voice, real-time</td>
+                    </tr>
+                    <tr>
+                        <td>34 (AF41)</td>
+                        <td>Assured Forwarding</td>
+                        <td>Video conferencing</td>
+                    </tr>
+                    <tr>
+                        <td>26 (AF31)</td>
+                        <td>Assured Forwarding</td>
+                        <td>Mission critical</td>
+                    </tr>
+                    <tr>
+                        <td>0 (BE)</td>
+                        <td>Best Effort</td>
+                        <td>Default traffic</td>
+                    </tr>
+                </table>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>End-to-End QoS</strong>
+                        <p>DSCP marking di SD-WAN overlay harus aligned dengan underlay QoS policies untuk effective
+                            treatment.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Interactive Quiz Button -->
+        <div class="quiz-section" style="text-align: center; margin: 2rem 0;">
+            <a href="chapter-08-quiz.html" class="quiz-btn" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #049fd9, #0277bd); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(4, 159, 217, 0.3);">
+                <i data-lucide="brain"></i>
+                <span>Take Interactive Quiz</span>
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+
+
+
+        <div class="chapter-nav">
+            <a href="chapter-07.html" class="nav-btn prev">
+                <i data-lucide="chevron-left"></i>
+                <span>Chapter 7</span>
+            </a>
+            <a href="chapter-09.html" class="nav-btn next">
+                <span>Chapter 9</span>
+                <i data-lucide="chevron-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="chapter-script.js"></script>
+</body>
+
+</html>

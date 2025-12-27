@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 5 Quiz - SD-WAN Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --accent-primary: #049fd9;
+            --accent-secondary: #0277bd;
+            --success: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.1);
+            --error: #ef4444;
+            --error-bg: rgba(239, 68, 68, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --success-bg: rgba(16, 185, 129, 0.15);
+            --error-bg: rgba(239, 68, 68, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .badge {
+            background: var(--accent-primary);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .exam-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .question-counter {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .sun-icon {
+            display: block;
+        }
+
+        .main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .question-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            line-height: 1.7;
+            margin-bottom: 28px;
+            color: var(--text-primary);
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent-primary);
+            background: rgba(4, 159, 217, 0.05);
+        }
+
+        .option-item.selected {
+            border-color: var(--accent-primary);
+            background: rgba(4, 159, 217, 0.1);
+        }
+
+        .option-item.correct {
+            border-color: var(--success);
+            background: var(--success-bg);
+        }
+
+        .option-item.incorrect {
+            border-color: var(--error);
+            background: var(--error-bg);
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            opacity: 0.8;
+        }
+
+        .option-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .option-item.selected .option-checkbox {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .option-item.correct .option-checkbox {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .option-item.incorrect .option-checkbox {
+            background: var(--error);
+            border-color: var(--error);
+        }
+
+        .option-checkbox svg {
+            width: 14px;
+            height: 14px;
+            color: white;
+            display: none;
+        }
+
+        .option-item.selected .option-checkbox svg,
+        .option-item.correct .option-checkbox svg,
+        .option-item.incorrect .option-checkbox svg {
+            display: block;
+        }
+
+        .option-letter {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .option-item.selected .option-letter {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        .option-item.correct .option-letter {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .option-item.incorrect .option-letter {
+            background: var(--error);
+            color: white;
+            border-color: var(--error);
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+
+        .answer-feedback {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 20px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            margin-top: 24px;
+            font-weight: 600;
+        }
+
+        .answer-feedback.show {
+            display: flex;
+        }
+
+        .answer-feedback.correct {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .answer-feedback.incorrect {
+            background: var(--error-bg);
+            color: var(--error);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .nav-btn.secondary {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .nav-btn.secondary:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .nav-btn.primary {
+            background: var(--accent-primary);
+            border: none;
+            color: white;
+        }
+
+        .nav-btn.primary:hover {
+            background: var(--accent-secondary);
+            transform: translateY(-1px);
+        }
+
+        .nav-btn.primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .nav-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .progress-container {
+            margin-bottom: 32px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--success));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .results-card {
+            display: none;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .results-card.show {
+            display: block;
+        }
+
+        .results-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: var(--success-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .results-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--success);
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .results-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--success);
+            margin-bottom: 16px;
+        }
+
+        .results-detail {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 640px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .question-card {
+                padding: 20px;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-left">
+            <span class="badge">SD-WAN</span>
+            <span class="exam-title">Chapter 5: SD-WAN Design</span>
+        </div>
+        <div class="header-right">
+            <span class="question-counter" id="questionCounter">1 / 21</span>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+    <main class="main">
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text"><span>Progress</span><span id="progressPercent">5%</span></div>
+        </div>
+        <div class="question-card" id="questionCard">
+            <div class="question-text" id="questionText"></div>
+            <div class="options-list" id="optionsList"></div>
+            <div class="answer-feedback" id="answerFeedback">
+                <i data-lucide="check-circle"></i>
+                <span id="feedbackText"></span>
+            </div>
+        </div>
+        <div class="nav-buttons">
+            <a href="chapter-05.html" class="nav-btn secondary"><i data-lucide="arrow-left"></i>Kembali / Back</a>
+            <button class="nav-btn primary" id="nextBtn" onclick="handleNext()"><span id="nextBtnText">Cek Jawaban /
+                    Check</span><i data-lucide="arrow-right"></i></button>
+        </div>
+        <div class="results-card" id="resultsCard">
+            <div class="results-icon"><i data-lucide="trophy"></i></div>
+            <h2 class="results-title">Quiz Selesai! / Quiz Completed!</h2>
+            <div class="results-score" id="resultsScore">0/21</div>
+            <p class="results-detail" id="resultsDetail"></p>
+            <div class="nav-buttons" style="justify-content: center;">
+                <button class="nav-btn primary" onclick="restartQuiz()"><i data-lucide="refresh-cw"></i>Coba Lagi / Try
+                    Again</button>
+                <a href="chapter-05.html" class="nav-btn secondary"><i data-lucide="book-open"></i>Kembali / Back</a>
+            </div>
+        </div>
+    </main>
+    <script>
+        const questions = [
+            { id: 1, text: "Apa saja use case utama Cisco Catalyst SD-WAN? (Pilih tiga.) / What are some main use cases for Cisco Catalyst SD-WAN? (Choose three.)", options: [{ letter: "A", text: "Optimisasi performa aplikasi / Application performance optimization" }, { letter: "B", text: "Akses Internet langsung yang aman / Secure direct Internet access" }, { letter: "C", text: "Konektivitas multicloud / Multicloud connectivity" }, { letter: "D", text: "Segmentasi traffic data center / Data center traffic segmentation" }], correctAnswers: ["A", "B", "C"], isMultiple: true },
+            { id: 2, text: "Cisco SD-WAN menyederhanakan konektivitas ke jenis resource apa di cloud? (Pilih dua.) / Cisco SD-WAN simplifies connectivity to what kind of resources in a cloud? (Choose two.)", options: [{ letter: "A", text: "NaaS" }, { letter: "B", text: "IaaS" }, { letter: "C", text: "PaaS" }, { letter: "D", text: "SaaS" }], correctAnswers: ["B", "D"], isMultiple: true },
+            { id: 3, text: "Mana yang BUKAN pertimbangan untuk desain Cisco SD-WAN? / Which of the following is not a consideration for Cisco SD-WAN design?", options: [{ letter: "A", text: "Skala deployment / Deployment scale" }, { letter: "B", text: "Autentikasi wireless / Wireless authentication" }, { letter: "C", text: "High availability dan disaster recovery" }, { letter: "D", text: "Segmentasi VPN / VPN segmentation" }], correctAnswers: ["B"], isMultiple: false },
+            { id: 4, text: "Untuk region mana dalam Multi-Region Fabric Anda perlu menambahkan topology control policy? / For what region in a Multi-Region Fabric do you need to add a topology control policy to ensure that traffic flow from one access region to another follows a certain preferred path?", options: [{ letter: "A", text: "Tidak ada / None" }, { letter: "B", text: "Core region" }, { letter: "C", text: "Source access region" }, { letter: "D", text: "Destination access region" }], correctAnswers: ["A"], isMultiple: false },
+            { id: 5, text: "Dalam model deployment mana SD-WAN Control Components customer memiliki tanggung jawab paling besar? / In which deployment model of Cisco SD-WAN Control Components does a customer assume the most responsibility?", options: [{ letter: "A", text: "Cisco-hosted cloud" }, { letter: "B", text: "MSP-hosted cloud" }, { letter: "C", text: "On-premises private cloud" }, { letter: "D", text: "Customer's public cloud" }], correctAnswers: ["C"], isMultiple: false },
+            { id: 6, text: "Komponen SD-WAN mana yang TIDAK mendukung konfigurasi high availability? / Which Cisco SD-WAN component does not support high availability configuration?", options: [{ letter: "A", text: "Cisco Catalyst SD-WAN Analytics" }, { letter: "B", text: "Cisco Catalyst SD-WAN Manager" }, { letter: "C", text: "Cisco Catalyst SD-WAN Controller" }, { letter: "D", text: "Cisco Catalyst SD-WAN Validator" }], correctAnswers: ["A"], isMultiple: false },
+            { id: 7, text: "Apa mekanisme disaster recovery yang direkomendasikan untuk SD-WAN Manager? / What is the recommended disaster recovery mechanism for SD-WAN Manager?", options: [{ letter: "A", text: "Manual" }, { letter: "B", text: "Scheduled / Terjadwal" }, { letter: "C", text: "Administrator-triggered failover" }, { letter: "D", text: "Arbitrator-triggered failover" }], correctAnswers: ["C"], isMultiple: false },
+            { id: 8, text: "Berapa SD-WAN Controller yang direkomendasikan untuk deployment dengan 500 WAN Edge router? / How many SD-WAN Controllers are recommended for a deployment with 500 WAN Edge routers?", options: [{ letter: "A", text: "0 karena ini komponen opsional / 0 as this is an optional component" }, { letter: "B", text: "1 karena cukup kapasitasnya / 1 because 1 SD-WAN Controller has more than enough capacity" }, { letter: "C", text: "2 untuk redundansi / 2 for the redundancy" }, { letter: "D", text: "3 karena cluster membutuhkan jumlah ganjil / 3 because a clustered implementation requires an uneven number" }], correctAnswers: ["C"], isMultiple: false },
+            { id: 9, text: "Pernyataan mana yang benar tentang SD-WAN Validator? / Which statement is true about SD-WAN Validator?", options: [{ letter: "A", text: "Hanya dua SD-WAN Validator yang dapat di-provision / Only two SD-WAN Validators can be provisioned" }, { letter: "B", text: "Melacak status semua SD-WAN Validator lain / It tracks the state of all the other SD-WAN Validators" }, { letter: "C", text: "Dapat dimasukkan sebagai IP address atau DNS name / It can be entered as an IP address or as a DNS name" }, { letter: "D", text: "Menjalankan VM image yang sama dengan SD-WAN Controller / It runs the same virtual machine image as SD-WAN Controller" }], correctAnswers: ["C"], isMultiple: false },
+            { id: 10, text: "Benar atau salah: Sebagian besar deployment SD-WAN dilakukan di lingkungan greenfield. / True or false: Most SD-WAN deployments are done in a greenfield environment.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["B"], isMultiple: false },
+            { id: 11, text: "Benar atau salah: Migrasi ke SD-WAN adalah hard cut, dengan semua data center dan remote site dimigrasi secara bersamaan. / True or false: Migration to SD-WAN is a hard cut, with all data centers and remote sites migrated simultaneously.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["B"], isMultiple: false },
+            { id: 12, text: "Persiapan penting apa yang harus dilakukan sebelum migrasi? (Pilih dua.) / What are some of the most important preparations that should be made prior to migration? (Choose two.)", options: [{ letter: "A", text: "Reload semua router / Reloading all routers" }, { letter: "B", text: "Memastikan setiap router memiliki kontrak maintenance / Ensuring that every router has a maintenance contract" }, { letter: "C", text: "Menganalisis topologi, routing, dan traffic engineering yang ada / Analyzing the existing topology, routing, and traffic engineering" }, { letter: "D", text: "Desain dan konfigurasi policy SD-WAN / Cisco SD-WAN policy design and configuration" }], correctAnswers: ["C", "D"], isMultiple: true },
+            { id: 13, text: "Nilai konfigurasi khusus SD-WAN apa yang harus ditentukan sebelum migrasi? (Pilih tiga.) / What type of SD-WAN-specific configuration values should be defined prior to migration? (Choose three.)", options: [{ letter: "A", text: "Site IDs" }, { letter: "B", text: "VPN IDs" }, { letter: "C", text: "OSPF hello dan dead timers" }, { letter: "D", text: "BGP MED values" }, { letter: "E", text: "TLOC colors" }], correctAnswers: ["A", "B", "E"], isMultiple: true },
+            { id: 14, text: "Benar atau salah: Memasang WAN Edge router berdampingan dengan infrastruktur WAN saat ini adalah metode yang disukai untuk integrasi data center SD-WAN. / True or false: Standing up WAN Edge routers alongside the current WAN infrastructure is the preferred method for Cisco SD-WAN data center integration.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["A"], isMultiple: false },
+            { id: 15, text: "Dari perspektif desain, bagaimana Anda dapat meningkatkan latensi saat migrasi ke SD-WAN sambil transit melalui hub? / From a design perspective, how can you improve latency when migrating to Cisco SD-WAN while transiting hubs?", options: [{ letter: "A", text: "Aktifkan TCP optimization" }, { letter: "B", text: "Pindahkan site lebih dekat / Move the sites closer to each other" }, { letter: "C", text: "Tentukan beberapa regional hub sebagai transit point / Designate multiple regional hubs as transit points" }, { letter: "D", text: "Gunakan dedicated Layer 2 circuits / Use dedicated Layer 2 circuits" }], correctAnswers: ["C"], isMultiple: false },
+            { id: 16, text: "Benar atau salah: Cara paling umum untuk mengintegrasikan koneksi transport-side pada WAN Edge router adalah dengan berbagi single interface di VPN 0 untuk semua carrier/transport. / True or false: The most common way to integrate transport-side connections on a WAN Edge router into the network is by sharing a single interface in VPN 0 for all carriers/transports.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["B"], isMultiple: false },
+            { id: 17, text: "Apa perbedaan antara bind mode dan unbind mode saat mengkonfigurasi loopback TLOC? / What is the difference between bind mode and unbind mode when configuring a loopback TLOC?", options: [{ letter: "A", text: "Bind mode membentuk control connections, unbind tidak / Bind mode forms control connections, and unbind mode does not" }, { letter: "B", text: "Unbind mode membutuhkan lebih sedikit CPU / Unbind mode takes less router CPU than bind mode" }, { letter: "C", text: "Unbind mode memungkinkan konektivitas public dan private color / Unbind mode allows for public and private color connectivity" }, { letter: "D", text: "Bind mode memastikan traffic ke loopback akan dibawa ke dan dari mapped physical interface / Bind mode ensures that traffic destined to the loopback will be carried to and from the mapped physical interface" }], correctAnswers: ["D"], isMultiple: false },
+            { id: 18, text: "Apa tiga opsi migrasi branch SD-WAN yang berbeda? (Pilih tiga.) / What are three different Cisco SD-WAN branch migration options? (Choose three.)", options: [{ letter: "A", text: "Penggantian CE lengkap dengan single WAN Edge router / Complete CE replacement with a single WAN Edge router" }, { letter: "B", text: "WAN Edge router dalam inline bridge mode" }, { letter: "C", text: "Integrasi dengan existing CE router / Integration with an existing CE router" }, { letter: "D", text: "Penggantian CE lengkap dengan dual WAN Edge router / Complete CE replacement with dual WAN Edge routers" }], correctAnswers: ["A", "C", "D"], isMultiple: true },
+            { id: 19, text: "Benar atau salah: TLOC extension hanya dapat dikonfigurasi untuk private colors. / True or false: A TLOC extension can only be configured for private colors.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["B"], isMultiple: false },
+            { id: 20, text: "Routing protocol mana yang didukung untuk integrasi service-side dengan LAN? (Pilih tiga.) / Which routing protocols are supported for service-side integration with the LAN? (Choose three.)", options: [{ letter: "A", text: "OMP" }, { letter: "B", text: "OSPF" }, { letter: "C", text: "ISIS" }, { letter: "D", text: "EIGRP" }, { letter: "E", text: "ODR" }, { letter: "F", text: "eBGP" }], correctAnswers: ["B", "D", "F"], isMultiple: true },
+            { id: 21, text: "Pertimbangan penting apa yang harus dibuat di data center saat mengimplementasikan integrasi dengan jaringan yang ada? / What important consideration needs to be made at the data center when implementing integration with existing networks?", options: [{ letter: "A", text: "Hanya OSPF yang harus digunakan / Only OSPF should be used" }, { letter: "B", text: "ECMP harus dikonfigurasi / ECMP should be configured" }, { letter: "C", text: "WAN Edge router harus menjalankan code terbaru / WAN Edge routers should be running the latest code" }, { letter: "D", text: "Filtering ke WAN Edge router harus dikonfigurasi / Filtering toward the WAN Edge router should be configured" }], correctAnswers: ["D"], isMultiple: false }
+        ];
+
+        let currentQuestion = 0, selectedAnswers = [], isAnswered = false, correctCount = 0;
+        function init() { loadQuestion(); lucide.createIcons(); }
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('questionText').textContent = q.text;
+            document.getElementById('questionCounter').textContent = `${currentQuestion + 1} / ${questions.length}`;
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('progressPercent').textContent = `${Math.round(progress)}%`;
+            selectedAnswers = []; isAnswered = false;
+            document.getElementById('nextBtnText').textContent = 'Cek Jawaban / Check';
+            document.getElementById('answerFeedback').classList.remove('show', 'correct', 'incorrect');
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('optionsList').innerHTML = q.options.map(opt => `<div class="option-item" data-letter="${opt.letter}" onclick="selectOption('${opt.letter}')"><div class="option-checkbox"><i data-lucide="check"></i></div><span class="option-letter">${opt.letter}.</span><span class="option-text">${opt.text}</span></div>`).join('');
+            lucide.createIcons();
+        }
+        function selectOption(letter) {
+            if (isAnswered) return;
+            const q = questions[currentQuestion];
+            const el = document.querySelector(`.option-item[data-letter="${letter}"]`);
+            if (q.isMultiple) { if (selectedAnswers.includes(letter)) { selectedAnswers = selectedAnswers.filter(a => a !== letter); el.classList.remove('selected'); } else { selectedAnswers.push(letter); el.classList.add('selected'); } }
+            else { document.querySelectorAll('.option-item').forEach(e => e.classList.remove('selected')); selectedAnswers = [letter]; el.classList.add('selected'); }
+            document.getElementById('nextBtn').disabled = selectedAnswers.length === 0;
+        }
+        function handleNext() { if (!isAnswered) { checkAnswer(); } else { currentQuestion++; if (currentQuestion < questions.length) { loadQuestion(); } else { showResults(); } } }
+        function checkAnswer() {
+            isAnswered = true; const q = questions[currentQuestion]; const correct = q.correctAnswers;
+            const isCorrect = selectedAnswers.length === correct.length && selectedAnswers.every(a => correct.includes(a));
+            if (isCorrect) correctCount++;
+            document.getElementById('answerFeedback').classList.add('show', isCorrect ? 'correct' : 'incorrect');
+            document.getElementById('feedbackText').textContent = `Jawaban benar / Correct: ${correct.join(', ')}`;
+            document.querySelectorAll('.option-item').forEach(el => { el.classList.add('disabled'); if (correct.includes(el.dataset.letter)) { el.classList.add('correct'); el.classList.remove('selected'); } else if (selectedAnswers.includes(el.dataset.letter)) { el.classList.add('incorrect'); el.classList.remove('selected'); } });
+            document.getElementById('nextBtnText').textContent = currentQuestion < questions.length - 1 ? 'Lanjut / Next' : 'Lihat Hasil / Results';
+            document.getElementById('nextBtn').disabled = false; lucide.createIcons();
+        }
+        function showResults() { document.getElementById('questionCard').style.display = 'none'; document.querySelector('.nav-buttons').style.display = 'none'; document.getElementById('resultsCard').classList.add('show'); document.getElementById('resultsScore').textContent = `${correctCount}/${questions.length}`; document.getElementById('resultsDetail').textContent = `Anda menjawab ${correctCount} dari ${questions.length} pertanyaan dengan benar. / You answered ${correctCount} out of ${questions.length} questions correctly.`; lucide.createIcons(); }
+        function restartQuiz() { currentQuestion = 0; correctCount = 0; document.getElementById('questionCard').style.display = 'block'; document.querySelector('.nav-buttons').style.display = 'flex'; document.getElementById('resultsCard').classList.remove('show'); loadQuestion(); }
+        function toggleTheme() { const html = document.documentElement; if (html.getAttribute('data-theme') === 'dark') { html.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); } else { html.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); } lucide.createIcons(); }
+        if (localStorage.getItem('theme') === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); }
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

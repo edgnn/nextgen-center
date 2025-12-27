@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 3: Control Plane and Data Plane Operations - Nextgen Center</title>
+    <meta name="description"
+        content="Chapter 3 - Control Plane dan Data Plane: OMP, IPsec tunnels, BFD, dan routing operations.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="chapter-style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../cisco-sdwan-tutorial.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali ke Daftar Isi</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="chapter-header">
+            <div class="chapter-badge">Chapter 3</div>
+            <h1>Control Plane and Data Plane Operations</h1>
+            <p class="chapter-meta">Page 34 • Core Protocols & Operations</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="target"></i> Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Memahami OMP (Overlay Management Protocol) dan route types</li>
+                <li>Menjelaskan pembentukan control plane connections</li>
+                <li>Memahami data plane tunnels dan IPsec operations</li>
+                <li>Menjelaskan BFD (Bidirectional Forwarding Detection) untuk tunnel health</li>
+            </ul>
+        </section>
+
+        <!-- Control vs Data Plane Diagram -->
+        <div class="image-container">
+            <img src="images/control-data-plane.png" alt="Control Plane vs Data Plane Diagram">
+            <p class="image-caption">Gambar 3.1 - Perbandingan Control Plane (OMP) dan Data Plane (IPsec) dalam SD-WAN
+            </p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="radio"></i> OMP - Overlay Management Protocol</h2>
+            <div class="content-block">
+                <p>OMP adalah protokol proprietary Cisco yang mengelola control plane untuk SD-WAN overlay network.</p>
+
+                <!-- OMP Routes Diagram -->
+                <div class="image-container">
+                    <img src="images/omp-routes.png" alt="OMP Route Types Diagram">
+                    <p class="image-caption">Gambar 3.2 - Tipe-tipe OMP Routes: OMP Routes, TLOC Routes, dan Service
+                        Routes</p>
+                </div>
+
+                <h3>OMP Route Types:</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Route Type</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>OMP Routes</code></td>
+                        <td>Prefix routes (IPv4/IPv6) dari VPN</td>
+                    </tr>
+                    <tr>
+                        <td><code>TLOC Routes</code></td>
+                        <td>Transport Location - endpoint info untuk tunnels</td>
+                    </tr>
+                    <tr>
+                        <td><code>Service Routes</code></td>
+                        <td>Routes ke network services (firewall, etc)</td>
+                    </tr>
+                </table>
+
+                <h3>TLOC (Transport Location)</h3>
+                <p>TLOC adalah identifier unik untuk setiap WAN transport pada edge device:</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">TLOC Format</span>
+                    </div>
+                    <pre><code>TLOC = System-IP + Color + Encapsulation
+Example: 10.0.0.1 + biz-internet + ipsec</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="link-2"></i> Control Plane Connections</h2>
+            <div class="content-block">
+                <h3>Connection Establishment Flow:</h3>
+                <div class="architecture-block">
+                    <h4>1️⃣ Edge → vBond</h4>
+                    <ul>
+                        <li>Edge device initiates connection ke vBond</li>
+                        <li>vBond authenticates device certificates</li>
+                        <li>vBond provides vSmart dan vManage addresses</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>2️⃣ Edge → vSmart</h4>
+                    <ul>
+                        <li>DTLS/TLS tunnel established ke vSmart</li>
+                        <li>OMP session comes up</li>
+                        <li>Route dan policy exchange dimulai</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>3️⃣ Edge → vManage</h4>
+                    <ul>
+                        <li>Management tunnel established</li>
+                        <li>Configuration push dan monitoring aktif</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="shield"></i> Data Plane - IPsec Tunnels</h2>
+            <div class="content-block">
+                <p>Data plane menggunakan IPsec tunnels untuk secure transport antar edge devices.</p>
+
+                <h3>Key Exchange Process:</h3>
+                <ul>
+                    <li><strong>vSmart-mediated:</strong> vSmart memfasilitasi key exchange antar edges</li>
+                    <li><strong>Symmetric Keys:</strong> AES-256-GCM untuk encryption</li>
+                    <li><strong>Key Rotation:</strong> Keys di-rotate secara berkala untuk security</li>
+                </ul>
+
+                <table class="data-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>Encryption</td>
+                        <td>AES-256-GCM</td>
+                    </tr>
+                    <tr>
+                        <td>Authentication</td>
+                        <td>SHA-256</td>
+                    </tr>
+                    <tr>
+                        <td>Key Lifetime</td>
+                        <td>Configurable (default varies)</td>
+                    </tr>
+                    <tr>
+                        <td>Anti-Replay</td>
+                        <td>Enabled by default</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="activity"></i> BFD - Tunnel Health Detection</h2>
+            <div class="content-block">
+                <p>BFD (Bidirectional Forwarding Detection) digunakan untuk mendeteksi tunnel health dan mengukur path
+                    quality.</p>
+
+                <h3>BFD Metrics:</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="clock"></i></div>
+                        <h4>Latency</h4>
+                        <p>Round-trip time measurement</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="trending-down"></i></div>
+                        <h4>Loss</h4>
+                        <p>Packet loss percentage</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="shuffle"></i></div>
+                        <h4>Jitter</h4>
+                        <p>Latency variation</p>
+                    </div>
+                </div>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Application-Aware Routing</strong>
+                        <p>BFD metrics digunakan oleh Application-Aware Routing untuk memilih best path berdasarkan SLA
+                            requirements.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Quiz Button -->
+        <div style="text-align: center; margin: 32px 0;">
+            <a href="chapter-03-quiz.html" class="nav-btn next"
+                style="display: inline-flex; gap: 10px; padding: 16px 32px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 12px; font-size: 1rem;">
+                <i data-lucide="help-circle"></i>
+                <span>Take Interactive Quiz</span>
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="chapter-nav">
+            <a href="chapter-02.html" class="nav-btn prev">
+                <i data-lucide="chevron-left"></i>
+                <span>Chapter 2</span>
+            </a>
+            <a href="chapter-04.html" class="nav-btn next">
+                <span>Chapter 4</span>
+                <i data-lucide="chevron-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="chapter-script.js"></script>
+</body>
+
+</html>

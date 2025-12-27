@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 9: Application-Aware Routing Policies - Nextgen Center</title>
+    <meta name="description"
+        content="Chapter 9 - Application-Aware Routing: SLA-based routing, failover, dan load balancing.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="chapter-style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../cisco-sdwan-tutorial.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali ke Daftar Isi</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="chapter-header">
+            <div class="chapter-badge">Chapter 9</div>
+            <h1>Application-Aware Routing Policies</h1>
+            <p class="chapter-meta">Page 368 • SLA-Based Routing</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="target"></i> Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Memahami Application-Aware Routing (AAR) concepts</li>
+                <li>Mengkonfigurasi SLA classes dan thresholds</li>
+                <li>Mengimplementasikan automatic failover</li>
+                <li>Menggunakan load balancing strategies</li>
+            </ul>
+        </section>
+
+        <!-- AAR SLA Diagram -->
+        <div class="image-container">
+            <img src="images/aar-sla.png" alt="Application-Aware Routing with SLA Diagram">
+            <p class="image-caption">Gambar 9.1 - Application-Aware Routing dengan SLA thresholds untuk pemilihan path
+                dinamis</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="brain"></i> Application-Aware Routing Overview</h2>
+            <div class="content-block">
+                <p>AAR memungkinkan SD-WAN untuk secara dinamis memilih best path berdasarkan real-time SLA metrics.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="clock"></i></div>
+                        <h4>Latency</h4>
+                        <p>Round-trip time in milliseconds</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="trending-down"></i></div>
+                        <h4>Loss</h4>
+                        <p>Packet loss percentage</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="activity"></i></div>
+                        <h4>Jitter</h4>
+                        <p>Latency variation</p>
+                    </div>
+                </div>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>BFD Integration</strong>
+                        <p>AAR menggunakan BFD probes untuk measure real-time path quality metrics.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="sliders"></i> SLA Classes</h2>
+            <div class="content-block">
+                <p>SLA classes mendefinisikan acceptable thresholds untuk different application types.</p>
+
+                <table class="data-table">
+                    <tr>
+                        <th>SLA Class</th>
+                        <th>Latency</th>
+                        <th>Loss</th>
+                        <th>Jitter</th>
+                        <th>Applications</th>
+                    </tr>
+                    <tr>
+                        <td>Voice</td>
+                        <td>&lt;150ms</td>
+                        <td>&lt;1%</td>
+                        <td>&lt;30ms</td>
+                        <td>VoIP, Telephony</td>
+                    </tr>
+                    <tr>
+                        <td>Video</td>
+                        <td>&lt;200ms</td>
+                        <td>&lt;1%</td>
+                        <td>&lt;50ms</td>
+                        <td>Video conf, Streaming</td>
+                    </tr>
+                    <tr>
+                        <td>Critical</td>
+                        <td>&lt;300ms</td>
+                        <td>&lt;2%</td>
+                        <td>N/A</td>
+                        <td>ERP, Database</td>
+                    </tr>
+                    <tr>
+                        <td>Default</td>
+                        <td>Any</td>
+                        <td>Any</td>
+                        <td>Any</td>
+                        <td>Best effort traffic</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="repeat"></i> Failover Mechanisms</h2>
+            <div class="content-block">
+                <h3>Failover Options:</h3>
+
+                <div class="architecture-block">
+                    <h4>🔄 Preferred Color</h4>
+                    <ul>
+                        <li>Primary: Use specified color if SLA met</li>
+                        <li>Failover: Switch to backup if SLA violated</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>⚖️ SLA-based Fallback</h4>
+                    <ul>
+                        <li>Automatic failover when SLA thresholds breached</li>
+                        <li>Switchback when primary recovers</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>📊 Load Balancing</h4>
+                    <ul>
+                        <li>ECMP across multiple paths meeting SLA</li>
+                        <li>Weighted distribution based on capacity</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!-- Interactive Quiz Button -->
+        <div class="quiz-section" style="text-align: center; margin: 2rem 0;">
+            <a href="chapter-09-quiz.html" class="quiz-btn" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #049fd9, #0277bd); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(4, 159, 217, 0.3);">
+                <i data-lucide="brain"></i>
+                <span>Take Interactive Quiz</span>
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+
+
+
+        <div class="chapter-nav">
+            <a href="chapter-08.html" class="nav-btn prev">
+                <i data-lucide="chevron-left"></i>
+                <span>Chapter 8</span>
+            </a>
+            <a href="chapter-10.html" class="nav-btn next">
+                <span>Chapter 10</span>
+                <i data-lucide="chevron-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="chapter-script.js"></script>
+</body>
+
+</html>

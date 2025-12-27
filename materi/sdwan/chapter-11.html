@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 11: Cisco Catalyst SD-WAN Security - Nextgen Center</title>
+    <meta name="description"
+        content="Chapter 11 - SD-WAN Security: Enterprise firewall, IPS, URL filtering, dan DNS security.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="chapter-style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../cisco-sdwan-tutorial.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali ke Daftar Isi</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="chapter-header">
+            <div class="chapter-badge">Chapter 11</div>
+            <h1>Cisco Catalyst SD-WAN Security</h1>
+            <p class="chapter-meta">Page 444 • Integrated Security Features</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="target"></i> Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Memahami security architecture dalam SD-WAN</li>
+                <li>Mengkonfigurasi Enterprise Firewall di edge</li>
+                <li>Mengimplementasikan IPS (Intrusion Prevention System)</li>
+                <li>Menggunakan URL Filtering dan DNS Security</li>
+            </ul>
+        </section>
+
+        <!-- Security Features Diagram -->
+        <div class="image-container">
+            <img src="images/security-features.png" alt="SD-WAN Integrated Security Features Diagram">
+            <p class="image-caption">Gambar 11.1 - Fitur keamanan terintegrasi SD-WAN: Firewall, IPS, URL Filtering, DNS
+                Security</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="shield"></i> Security Architecture</h2>
+            <div class="content-block">
+                <p>Cisco Catalyst SD-WAN menyediakan security features terintegrasi yang dapat di-enable di edge
+                    devices.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="flame"></i></div>
+                        <h4>Firewall</h4>
+                        <p>Zone-based stateful firewall</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="bug"></i></div>
+                        <h4>IPS/IDS</h4>
+                        <p>Intrusion detection & prevention</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="globe"></i></div>
+                        <h4>URL Filtering</h4>
+                        <p>Web content categorization</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="database"></i></div>
+                        <h4>DNS Security</h4>
+                        <p>Malicious domain blocking</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="flame"></i> Enterprise Firewall</h2>
+            <div class="content-block">
+                <h3>Zone-Based Firewall:</h3>
+                <p>Traffic dikelompokkan berdasarkan security zones untuk policy enforcement.</p>
+
+                <table class="data-table">
+                    <tr>
+                        <th>Zone</th>
+                        <th>Description</th>
+                        <th>Typical Policy</th>
+                    </tr>
+                    <tr>
+                        <td>VPN Zone</td>
+                        <td>Internal corporate traffic</td>
+                        <td>Permit internal</td>
+                    </tr>
+                    <tr>
+                        <td>Internet Zone</td>
+                        <td>Direct Internet Access</td>
+                        <td>Inspect outbound</td>
+                    </tr>
+                    <tr>
+                        <td>DMZ</td>
+                        <td>Demilitarized zone</td>
+                        <td>Limited access</td>
+                    </tr>
+                </table>
+
+                <h3>Firewall Policy Actions:</h3>
+                <ul>
+                    <li><strong>Pass:</strong> Allow without inspection</li>
+                    <li><strong>Drop:</strong> Silently discard</li>
+                    <li><strong>Inspect:</strong> Stateful inspection dan logging</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="bug"></i> Intrusion Prevention System (IPS)</h2>
+            <div class="content-block">
+                <p>IPS menggunakan Snort signature engine untuk mendeteksi dan memblokir threats.</p>
+
+                <div class="architecture-block">
+                    <h4>🔍 Detection Methods</h4>
+                    <ul>
+                        <li>Signature-based detection</li>
+                        <li>Protocol anomaly detection</li>
+                        <li>Threat intelligence feeds</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>⚡ Actions</h4>
+                    <ul>
+                        <li><strong>Alert:</strong> Log tanpa blocking</li>
+                        <li><strong>Drop:</strong> Block dan log</li>
+                        <li><strong>Reset:</strong> Send TCP reset</li>
+                    </ul>
+                </div>
+
+                <div class="alert warning">
+                    <i data-lucide="alert-triangle"></i>
+                    <div class="alert-content">
+                        <strong>Performance Impact</strong>
+                        <p>IPS inspection membutuhkan resource. Pastikan edge device sizing adequate untuk throughput
+                            requirements.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="globe"></i> URL Filtering</h2>
+            <div class="content-block">
+                <p>URL Filtering mengkategorisasi dan mengontrol akses web berdasarkan content categories.</p>
+
+                <h3>Categories:</h3>
+                <ul>
+                    <li>Gambling, Adult Content (Block)</li>
+                    <li>Social Media, Streaming (Allow/Limit)</li>
+                    <li>Business, Education (Allow)</li>
+                    <li>Malware, Phishing (Block)</li>
+                </ul>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Cisco Umbrella Integration</strong>
+                        <p>Untuk advanced URL filtering dan threat intelligence, integrate dengan Cisco Umbrella cloud
+                            security.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Interactive Quiz Button -->
+        <div class="quiz-section" style="text-align: center; margin: 2rem 0;">
+            <a href="chapter-11-quiz.html" class="quiz-btn" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #049fd9, #0277bd); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(4, 159, 217, 0.3);">
+                <i data-lucide="brain"></i>
+                <span>Take Interactive Quiz</span>
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+
+
+
+        <div class="chapter-nav">
+            <a href="chapter-10.html" class="nav-btn prev">
+                <i data-lucide="chevron-left"></i>
+                <span>Chapter 10</span>
+            </a>
+            <a href="chapter-12.html" class="nav-btn next">
+                <span>Chapter 12</span>
+                <i data-lucide="chevron-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="chapter-script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 10 Quiz - Localized Policy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --accent-primary: #049fd9;
+            --accent-secondary: #0277bd;
+            --success: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.1);
+            --error: #ef4444;
+            --error-bg: rgba(239, 68, 68, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --success-bg: rgba(16, 185, 129, 0.15);
+            --error-bg: rgba(239, 68, 68, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .badge {
+            background: var(--accent-primary);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .exam-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .question-counter {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .sun-icon {
+            display: block;
+        }
+
+        .main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .question-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent-primary);
+        }
+
+        .option-item.selected {
+            border-color: var(--accent-primary);
+            background: rgba(4, 159, 217, 0.1);
+        }
+
+        .option-item.correct {
+            border-color: var(--success);
+            background: var(--success-bg);
+        }
+
+        .option-item.incorrect {
+            border-color: var(--error);
+            background: var(--error-bg);
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            opacity: 0.8;
+        }
+
+        .option-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .option-item.selected .option-checkbox {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .option-item.correct .option-checkbox {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .option-item.incorrect .option-checkbox {
+            background: var(--error);
+            border-color: var(--error);
+        }
+
+        .option-checkbox svg {
+            width: 14px;
+            height: 14px;
+            color: white;
+            display: none;
+        }
+
+        .option-item.selected .option-checkbox svg,
+        .option-item.correct .option-checkbox svg,
+        .option-item.incorrect .option-checkbox svg {
+            display: block;
+        }
+
+        .option-letter {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .option-item.selected .option-letter,
+        .option-item.correct .option-letter,
+        .option-item.incorrect .option-letter {
+            color: white;
+        }
+
+        .option-item.selected .option-letter {
+            background: var(--accent-primary);
+        }
+
+        .option-item.correct .option-letter {
+            background: var(--success);
+        }
+
+        .option-item.incorrect .option-letter {
+            background: var(--error);
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .answer-feedback {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 20px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            margin-top: 24px;
+            font-weight: 600;
+        }
+
+        .answer-feedback.show {
+            display: flex;
+        }
+
+        .answer-feedback.correct {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .answer-feedback.incorrect {
+            background: var(--error-bg);
+            color: var(--error);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .nav-btn.secondary {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .nav-btn.primary {
+            background: var(--accent-primary);
+            border: none;
+            color: white;
+        }
+
+        .nav-btn.primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .progress-container {
+            margin-bottom: 32px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--success));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .results-card {
+            display: none;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .results-card.show {
+            display: block;
+        }
+
+        .results-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: var(--success-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .results-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--success);
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .results-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--success);
+            margin-bottom: 16px;
+        }
+
+        .results-detail {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 640px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .question-card {
+                padding: 20px;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-left"><span class="badge">SD-WAN</span><span class="exam-title">Chapter 10: Localized
+                Policy</span></div>
+        <div class="header-right"><span class="question-counter" id="questionCounter">1 / 12</span><button
+                class="theme-toggle" onclick="toggleTheme()"><i data-lucide="moon" class="moon-icon"></i><i
+                    data-lucide="sun" class="sun-icon"></i></button></div>
+    </header>
+    <main class="main">
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text"><span>Progress</span><span id="progressPercent">8%</span></div>
+        </div>
+        <div class="question-card" id="questionCard">
+            <div class="question-text" id="questionText"></div>
+            <div class="options-list" id="optionsList"></div>
+            <div class="answer-feedback" id="answerFeedback"><i data-lucide="check-circle"></i><span
+                    id="feedbackText"></span></div>
+        </div>
+        <div class="nav-buttons"><a href="chapter-10.html" class="nav-btn secondary"><i
+                    data-lucide="arrow-left"></i>Kembali</a><button class="nav-btn primary" id="nextBtn"
+                onclick="handleNext()"><span id="nextBtnText">Cek Jawaban</span><i
+                    data-lucide="arrow-right"></i></button></div>
+        <div class="results-card" id="resultsCard">
+            <div class="results-icon"><i data-lucide="trophy"></i></div>
+            <h2 class="results-title">Quiz Selesai!</h2>
+            <div class="results-score" id="resultsScore">0/12</div>
+            <p class="results-detail" id="resultsDetail"></p>
+            <div class="nav-buttons" style="justify-content: center;"><button class="nav-btn primary"
+                    onclick="restartQuiz()"><i data-lucide="refresh-cw"></i>Coba Lagi</button><a href="chapter-10.html"
+                    class="nav-btn secondary"><i data-lucide="book-open"></i>Kembali</a></div>
+        </div>
+    </main>
+    <script>
+        const questions = [
+            { id: 1, text: "Localized policies dikonfigurasi pada elemen mana dari Catalyst SD-WAN fabric? / Localized policies are configured on which element of the Catalyst SD-WAN fabric?", options: [{ letter: "A", text: "SD-WAN Validator" }, { letter: "B", text: "SD-WAN Controller" }, { letter: "C", text: "WAN Edge routers" }, { letter: "D", text: "Policy" }], correctAnswers: ["C"], isMultiple: false },
+            { id: 2, text: "Benar atau salah: Satu objek list dapat digunakan dalam centralized policy dan localized policy. / True or false: A single list object can be used in both a centralized policy and a localized policy.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["B"], isMultiple: false },
+            { id: 3, text: "Apa scope dari localized policy? / What is the scope of localized policy?", options: [{ letter: "A", text: "Device specific / Spesifik device" }, { letter: "B", text: "Site specific / Spesifik site" }, { letter: "C", text: "VPN specific / Spesifik VPN" }, { letter: "D", text: "Seluruh jaringan / The entire network" }], correctAnswers: ["A"], isMultiple: false },
+            { id: 4, text: "Action mana yang dapat diambil dalam localized control policy? (Pilih dua yang berlaku.) / Which of the following actions can be taken in a localized control policy? (Choose two that apply.)", options: [{ letter: "A", text: "Accept" }, { letter: "B", text: "Reject" }, { letter: "C", text: "Drop" }, { letter: "D", text: "Inspect" }, { letter: "E", text: "Pass" }], correctAnswers: ["A", "B"], isMultiple: true },
+            { id: 5, text: "Benar atau salah: Memastikan symmetric flows melalui single WAN Edge router lebih baik daripada menggunakan equal-cost multipathing karena memastikan flows tidak diblokir oleh firewall atau NAT state mismatches. / True or false: Ensuring symmetric flows through a single WAN Edge router is preferable to using equal-cost multipathing because it ensures that flows will not be blocked by a firewall or NAT state mismatches.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["B"], isMultiple: false },
+            { id: 6, text: "Action mana yang dapat diambil dalam localized data policy? (Pilih dua yang berlaku.) / Which of the following actions can be taken in a localized data policy? (Choose two that apply.)", options: [{ letter: "A", text: "Accept" }, { letter: "B", text: "Reject" }, { letter: "C", text: "Drop" }, { letter: "D", text: "Inspect" }, { letter: "E", text: "Pass" }], correctAnswers: ["A", "C"], isMultiple: true },
+            { id: 7, text: "Berapa banyak queues yang didukung pada interface WAN Edge router? / How many queues are supported on a WAN Edge router interface?", options: [{ letter: "A", text: "0" }, { letter: "B", text: "2" }, { letter: "C", text: "4" }, { letter: "D", text: "8" }, { letter: "E", text: "256" }], correctAnswers: ["D"], isMultiple: false },
+            { id: 8, text: "Queue mana yang mendukung low-latency queuing dan priority queueing pada platform WAN Edge router? / Which queues support low-latency queuing and priority queueing on WAN Edge router platforms?", options: [{ letter: "A", text: "Queue 0" }, { letter: "B", text: "Queue 1" }, { letter: "C", text: "Queue 7" }, { letter: "D", text: "Queue 8" }, { letter: "E", text: "Queues 0 dan 1" }, { letter: "F", text: "Semua queues / All queues" }], correctAnswers: ["A"], isMultiple: false },
+            { id: 9, text: "Control plane traffic secara otomatis di-map ke queue mana? / Which queue is control plane traffic automatically mapped to?", options: [{ letter: "A", text: "Queue 0" }, { letter: "B", text: "Queue 1" }, { letter: "C", text: "Queue 7" }, { letter: "D", text: "Queue 8" }], correctAnswers: ["A"], isMultiple: false },
+            { id: 10, text: "Mana saja yang merupakan bagian dari konfigurasi QoS localized policy pada WAN Edge router? (Pilih tiga yang berlaku.) / Which of the following are part of the localized policy QoS configuration on a WAN Edge router? (Choose three that apply.)", options: [{ letter: "A", text: "class-map" }, { letter: "B", text: "qos-map" }, { letter: "C", text: "shaper" }, { letter: "D", text: "qos-scheduler" }], correctAnswers: ["A", "B", "D"], isMultiple: true },
+            { id: 11, text: "Benar atau salah: Saat mengkonfigurasi QoS, assignment traffic types ke forwarding classes secara eksklusif dilakukan melalui ACLs dalam localized policies. / True or false: When configuring QoS, assignment of traffic types to forwarding classes is exclusively done through ACLs in localized policies.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["B"], isMultiple: false },
+            { id: 12, text: "Benar atau salah: Configuration groups membantu mengurangi cross-navigation dalam SD-WAN Manager, memungkinkan untuk mengkonfigurasi route policies dan ACLs dari feature profiles. / True or false: Configuration groups help reduce cross-navigation within SD-WAN Manager, making it possible to configure route policies and ACLs from feature profiles.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["A"], isMultiple: false }
+        ];
+        let currentQ = 0, selectedAns = [], isAns = false, correctCnt = 0;
+        function init() { loadQ(); lucide.createIcons(); }
+        function loadQ() { const q = questions[currentQ]; document.getElementById('questionText').textContent = q.text; document.getElementById('questionCounter').textContent = `${currentQ + 1} / ${questions.length}`; document.getElementById('progressFill').style.width = `${((currentQ + 1) / questions.length) * 100}%`; document.getElementById('progressPercent').textContent = `${Math.round(((currentQ + 1) / questions.length) * 100)}%`; selectedAns = []; isAns = false; document.getElementById('nextBtnText').textContent = 'Cek Jawaban'; document.getElementById('answerFeedback').classList.remove('show', 'correct', 'incorrect'); document.getElementById('nextBtn').disabled = true; document.getElementById('optionsList').innerHTML = q.options.map(o => `<div class="option-item" data-letter="${o.letter}" onclick="selOpt('${o.letter}')"><div class="option-checkbox"><i data-lucide="check"></i></div><span class="option-letter">${o.letter}.</span><span class="option-text">${o.text}</span></div>`).join(''); lucide.createIcons(); }
+        function selOpt(l) { if (isAns) return; const q = questions[currentQ]; const el = document.querySelector(`.option-item[data-letter="${l}"]`); if (q.isMultiple) { if (selectedAns.includes(l)) { selectedAns = selectedAns.filter(a => a !== l); el.classList.remove('selected'); } else { selectedAns.push(l); el.classList.add('selected'); } } else { document.querySelectorAll('.option-item').forEach(e => e.classList.remove('selected')); selectedAns = [l]; el.classList.add('selected'); } document.getElementById('nextBtn').disabled = selectedAns.length === 0; }
+        function handleNext() { if (!isAns) { checkAns(); } else { currentQ++; if (currentQ < questions.length) { loadQ(); } else { showRes(); } } }
+        function checkAns() { isAns = true; const q = questions[currentQ]; const c = q.correctAnswers; const ok = selectedAns.length === c.length && selectedAns.every(a => c.includes(a)); if (ok) correctCnt++; document.getElementById('answerFeedback').classList.add('show', ok ? 'correct' : 'incorrect'); document.getElementById('feedbackText').textContent = `Jawaban benar: ${c.join(', ')}`; document.querySelectorAll('.option-item').forEach(el => { el.classList.add('disabled'); if (c.includes(el.dataset.letter)) { el.classList.add('correct'); el.classList.remove('selected'); } else if (selectedAns.includes(el.dataset.letter)) { el.classList.add('incorrect'); el.classList.remove('selected'); } }); document.getElementById('nextBtnText').textContent = currentQ < questions.length - 1 ? 'Lanjut' : 'Lihat Hasil'; document.getElementById('nextBtn').disabled = false; lucide.createIcons(); }
+        function showRes() { document.getElementById('questionCard').style.display = 'none'; document.querySelector('.nav-buttons').style.display = 'none'; document.getElementById('resultsCard').classList.add('show'); document.getElementById('resultsScore').textContent = `${correctCnt}/${questions.length}`; document.getElementById('resultsDetail').textContent = `Anda menjawab ${correctCnt} dari ${questions.length} pertanyaan dengan benar.`; lucide.createIcons(); }
+        function restartQuiz() { currentQ = 0; correctCnt = 0; document.getElementById('questionCard').style.display = 'block'; document.querySelector('.nav-buttons').style.display = 'flex'; document.getElementById('resultsCard').classList.remove('show'); loadQ(); }
+        function toggleTheme() { const h = document.documentElement; if (h.getAttribute('data-theme') === 'dark') { h.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); } else { h.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); } lucide.createIcons(); }
+        if (localStorage.getItem('theme') === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); }
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

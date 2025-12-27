@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 4: Onboarding and Provisioning - Nextgen Center</title>
+    <meta name="description"
+        content="Chapter 4 - Onboarding dan Provisioning: ZTP, PnP, certificates, dan device templates.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="chapter-style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../cisco-sdwan-tutorial.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali ke Daftar Isi</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="chapter-header">
+            <div class="chapter-badge">Chapter 4</div>
+            <h1>Onboarding and Provisioning</h1>
+            <p class="chapter-meta">Page 92 • Device Deployment</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="target"></i> Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Memahami Zero-Touch Provisioning (ZTP) workflow</li>
+                <li>Menjelaskan Plug-and-Play (PnP) untuk cEdge deployment</li>
+                <li>Memahami certificate management dan authentication</li>
+                <li>Menggunakan device templates dan feature templates</li>
+            </ul>
+        </section>
+
+        <!-- ZTP Workflow Diagram -->
+        <div class="image-container">
+            <img src="images/ztp-workflow.png" alt="Zero-Touch Provisioning Workflow Diagram">
+            <p class="image-caption">Gambar 4.1 - Alur Zero-Touch Provisioning (ZTP) dari power-on hingga operational
+            </p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="zap"></i> Zero-Touch Provisioning (ZTP)</h2>
+            <div class="content-block">
+                <p>ZTP memungkinkan edge devices untuk secara otomatis terhubung ke SD-WAN fabric tanpa konfigurasi
+                    manual.</p>
+
+                <h3>ZTP Workflow:</h3>
+                <div class="architecture-block">
+                    <h4>Step 1: Device Powers On</h4>
+                    <ul>
+                        <li>Device boots dengan factory default configuration</li>
+                        <li>WAN interface receives IP via DHCP</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>Step 2: vBond Discovery</h4>
+                    <ul>
+                        <li>Device contacts ztp.viptela.com atau configured vBond</li>
+                        <li>Certificate authentication happens</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>Step 3: Controller Connection</h4>
+                    <ul>
+                        <li>vBond redirects device ke vManage dan vSmart</li>
+                        <li>Control plane tunnels established</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>Step 4: Configuration Push</h4>
+                    <ul>
+                        <li>vManage pushes device template</li>
+                        <li>Device becomes operational</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="key"></i> Certificate Management</h2>
+            <div class="content-block">
+                <p>Certificates adalah foundation untuk trust dalam SD-WAN. Semua devices harus memiliki valid
+                    certificate.</p>
+
+                <h3>Certificate Types:</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Type</th>
+                        <th>Purpose</th>
+                    </tr>
+                    <tr>
+                        <td>Root CA</td>
+                        <td>Trust anchor untuk semua certificates</td>
+                    </tr>
+                    <tr>
+                        <td>Controller Certificates</td>
+                        <td>Untuk vManage, vBond, vSmart</td>
+                    </tr>
+                    <tr>
+                        <td>WAN Edge Certificates</td>
+                        <td>Untuk vEdge/cEdge devices</td>
+                    </tr>
+                </table>
+
+                <div class="alert warning">
+                    <i data-lucide="alert-triangle"></i>
+                    <div class="alert-content">
+                        <strong>Certificate Expiry</strong>
+                        <p>Monitor certificate expiry dates. Expired certificates akan menyebabkan devices tidak dapat
+                            terhubung.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="file-text"></i> Device Templates</h2>
+            <div class="content-block">
+                <p>Device templates adalah cara untuk mendefinisikan dan menerapkan konfigurasi ke edge devices secara
+                    konsisten.</p>
+
+                <h3>Template Hierarchy:</h3>
+                <ul>
+                    <li><strong>Feature Templates:</strong> Individual features (VPN, BGP, OSPF, etc.)</li>
+                    <li><strong>Device Templates:</strong> Kumpulan feature templates untuk device type</li>
+                    <li><strong>Template Variables:</strong> Nilai yang berbeda per-device (IP, hostname)</li>
+                </ul>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="network"></i></div>
+                        <h4>System</h4>
+                        <p>Hostname, System IP, Site ID</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="layers"></i></div>
+                        <h4>VPN</h4>
+                        <p>VPN 0 (Transport), VPN 512 (Mgmt)</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="git-branch"></i></div>
+                        <h4>Routing</h4>
+                        <p>BGP, OSPF, Static routes</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="shield"></i></div>
+                        <h4>Security</h4>
+                        <p>Firewall, IPS policy</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="upload-cloud"></i> Plug-and-Play (PnP)</h2>
+            <div class="content-block">
+                <p>PnP adalah Cisco's enterprise provisioning solution yang digunakan untuk cEdge devices.</p>
+
+                <h3>PnP vs ZTP:</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Aspect</th>
+                        <th>ZTP (vEdge)</th>
+                        <th>PnP (cEdge)</th>
+                    </tr>
+                    <tr>
+                        <td>Device Type</td>
+                        <td>Viptela devices</td>
+                        <td>IOS-XE devices</td>
+                    </tr>
+                    <tr>
+                        <td>Discovery</td>
+                        <td>ztp.viptela.com</td>
+                        <td>devicehelper.cisco.com</td>
+                    </tr>
+                    <tr>
+                        <td>Protocol</td>
+                        <td>Proprietary</td>
+                        <td>Cisco PnP</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+        <!-- Interactive Quiz Button -->
+        <div class="quiz-section" style="text-align: center; margin: 2rem 0;">
+            <a href="chapter-04-quiz.html" class="quiz-btn" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #049fd9, #0277bd); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(4, 159, 217, 0.3);">
+                <i data-lucide="brain"></i>
+                <span>Take Interactive Quiz</span>
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+
+
+
+        <div class="chapter-nav">
+            <a href="chapter-03.html" class="nav-btn prev">
+                <i data-lucide="chevron-left"></i>
+                <span>Chapter 3</span>
+            </a>
+            <a href="chapter-05.html" class="nav-btn next">
+                <span>Chapter 5</span>
+                <i data-lucide="chevron-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="chapter-script.js"></script>
+</body>
+
+</html>

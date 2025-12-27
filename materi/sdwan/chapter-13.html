@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 13: Cisco Catalyst SD-WAN Programmability - Nextgen Center</title>
+    <meta name="description" content="Chapter 13 - SD-WAN Programmability: REST APIs, Python SDK, dan automation.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="chapter-style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../cisco-sdwan-tutorial.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali ke Daftar Isi</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="chapter-header">
+            <div class="chapter-badge">Chapter 13</div>
+            <h1>Cisco Catalyst SD-WAN Programmability</h1>
+            <p class="chapter-meta">Page 552 • APIs & Automation</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="target"></i> Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Memahami vManage REST API architecture</li>
+                <li>Menggunakan API untuk automation tasks</li>
+                <li>Mengimplementasikan Python SDK untuk SD-WAN</li>
+                <li>Mengintegrasikan dengan external tools (Ansible, Terraform)</li>
+            </ul>
+        </section>
+
+        <!-- vManage API Diagram -->
+        <div class="image-container">
+            <img src="images/vmanage-api.png" alt="vManage REST API Architecture Diagram">
+            <p class="image-caption">Gambar 13.1 - Arsitektur vManage REST API dengan integrasi automation tools</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="code"></i> vManage REST API</h2>
+            <div class="content-block">
+                <p>vManage menyediakan comprehensive REST API untuk semua management functions.</p>
+
+                <h3>API Categories:</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Category</th>
+                        <th>Endpoints</th>
+                        <th>Functions</th>
+                    </tr>
+                    <tr>
+                        <td>Device</td>
+                        <td>/dataservice/device/*</td>
+                        <td>Device inventory, status</td>
+                    </tr>
+                    <tr>
+                        <td>Template</td>
+                        <td>/dataservice/template/*</td>
+                        <td>Device dan feature templates</td>
+                    </tr>
+                    <tr>
+                        <td>Policy</td>
+                        <td>/dataservice/template/policy/*</td>
+                        <td>Policy configuration</td>
+                    </tr>
+                    <tr>
+                        <td>Statistics</td>
+                        <td>/dataservice/statistics/*</td>
+                        <td>Monitoring data</td>
+                    </tr>
+                </table>
+
+                <h3>Authentication:</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python - Login</span>
+                    </div>
+                    <pre><code>import requests
+
+base_url = "https://vmanage.example.com"
+login_url = f"{base_url}/j_security_check"
+
+payload = {
+    "j_username": "admin",
+    "j_password": "password"
+}
+
+session = requests.session()
+response = session.post(login_url, data=payload, verify=False)
+
+# Get XSRF token for subsequent requests
+token_url = f"{base_url}/dataservice/client/token"
+token = session.get(token_url).text</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="terminal"></i> Common API Operations</h2>
+            <div class="content-block">
+                <h3>Get Device List:</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                    </div>
+                    <pre><code># Get all devices
+devices_url = f"{base_url}/dataservice/device"
+headers = {"X-XSRF-TOKEN": token}
+response = session.get(devices_url, headers=headers)
+devices = response.json()["data"]
+
+for device in devices:
+    print(f"{device['host-name']} - {device['system-ip']}")</code></pre>
+                </div>
+
+                <h3>Push Template to Device:</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                    </div>
+                    <pre><code># Attach template to device
+attach_url = f"{base_url}/dataservice/template/device/config/attachfeature"
+payload = {
+    "deviceTemplateList": [{
+        "templateId": "template-uuid",
+        "device": [{
+            "csv-deviceId": "device-uuid",
+            "csv-deviceIP": "10.0.0.1"
+        }]
+    }]
+}
+response = session.post(attach_url, json=payload, headers=headers)</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="boxes"></i> Integration Tools</h2>
+            <div class="content-block">
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="play-circle"></i></div>
+                        <h4>Ansible</h4>
+                        <p>Cisco SD-WAN collection untuk automation</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="box"></i></div>
+                        <h4>Terraform</h4>
+                        <p>Infrastructure as Code untuk SD-WAN</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="git-branch"></i></div>
+                        <h4>CI/CD</h4>
+                        <p>GitOps workflow untuk policy deployment</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="webhook"></i></div>
+                        <h4>Webhooks</h4>
+                        <p>Event-driven automation triggers</p>
+                    </div>
+                </div>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Cisco DevNet</strong>
+                        <p>Kunjungi developer.cisco.com untuk documentation, sample code, dan sandbox environments.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Interactive Quiz Button -->
+        <div class="quiz-section" style="text-align: center; margin: 2rem 0;">
+            <a href="chapter-13-quiz.html" class="quiz-btn" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #049fd9, #0277bd); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(4, 159, 217, 0.3);">
+                <i data-lucide="brain"></i>
+                <span>Take Interactive Quiz</span>
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+
+
+
+        <div class="chapter-nav">
+            <a href="chapter-12.html" class="nav-btn prev">
+                <i data-lucide="chevron-left"></i>
+                <span>Chapter 12</span>
+            </a>
+            <a href="chapter-14.html" class="nav-btn next">
+                <span>Chapter 14</span>
+                <i data-lucide="chevron-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="chapter-script.js"></script>
+</body>
+
+</html>

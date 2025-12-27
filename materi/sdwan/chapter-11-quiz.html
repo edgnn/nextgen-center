@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 11 Quiz - Security</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --accent-primary: #049fd9;
+            --accent-secondary: #0277bd;
+            --success: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.1);
+            --error: #ef4444;
+            --error-bg: rgba(239, 68, 68, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --success-bg: rgba(16, 185, 129, 0.15);
+            --error-bg: rgba(239, 68, 68, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .badge {
+            background: var(--accent-primary);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .exam-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .question-counter {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .sun-icon {
+            display: block;
+        }
+
+        .main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .question-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent-primary);
+        }
+
+        .option-item.selected {
+            border-color: var(--accent-primary);
+            background: rgba(4, 159, 217, 0.1);
+        }
+
+        .option-item.correct {
+            border-color: var(--success);
+            background: var(--success-bg);
+        }
+
+        .option-item.incorrect {
+            border-color: var(--error);
+            background: var(--error-bg);
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            opacity: 0.8;
+        }
+
+        .option-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .option-item.selected .option-checkbox {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .option-item.correct .option-checkbox {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .option-item.incorrect .option-checkbox {
+            background: var(--error);
+            border-color: var(--error);
+        }
+
+        .option-checkbox svg {
+            width: 14px;
+            height: 14px;
+            color: white;
+            display: none;
+        }
+
+        .option-item.selected .option-checkbox svg,
+        .option-item.correct .option-checkbox svg,
+        .option-item.incorrect .option-checkbox svg {
+            display: block;
+        }
+
+        .option-letter {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .option-item.selected .option-letter,
+        .option-item.correct .option-letter,
+        .option-item.incorrect .option-letter {
+            color: white;
+        }
+
+        .option-item.selected .option-letter {
+            background: var(--accent-primary);
+        }
+
+        .option-item.correct .option-letter {
+            background: var(--success);
+        }
+
+        .option-item.incorrect .option-letter {
+            background: var(--error);
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .answer-feedback {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 20px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            margin-top: 24px;
+            font-weight: 600;
+        }
+
+        .answer-feedback.show {
+            display: flex;
+        }
+
+        .answer-feedback.correct {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .answer-feedback.incorrect {
+            background: var(--error-bg);
+            color: var(--error);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .nav-btn.secondary {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .nav-btn.primary {
+            background: var(--accent-primary);
+            border: none;
+            color: white;
+        }
+
+        .nav-btn.primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .progress-container {
+            margin-bottom: 32px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--success));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .results-card {
+            display: none;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .results-card.show {
+            display: block;
+        }
+
+        .results-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: var(--success-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .results-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--success);
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .results-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--success);
+            margin-bottom: 16px;
+        }
+
+        .results-detail {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 640px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .question-card {
+                padding: 20px;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-left"><span class="badge">SD-WAN</span><span class="exam-title">Chapter 11: Security</span>
+        </div>
+        <div class="header-right"><span class="question-counter" id="questionCounter">1 / 17</span><button
+                class="theme-toggle" onclick="toggleTheme()"><i data-lucide="moon" class="moon-icon"></i><i
+                    data-lucide="sun" class="sun-icon"></i></button></div>
+    </header>
+    <main class="main">
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text"><span>Progress</span><span id="progressPercent">6%</span></div>
+        </div>
+        <div class="question-card" id="questionCard">
+            <div class="question-text" id="questionText"></div>
+            <div class="options-list" id="optionsList"></div>
+            <div class="answer-feedback" id="answerFeedback"><i data-lucide="check-circle"></i><span
+                    id="feedbackText"></span></div>
+        </div>
+        <div class="nav-buttons"><a href="chapter-11.html" class="nav-btn secondary"><i
+                    data-lucide="arrow-left"></i>Kembali</a><button class="nav-btn primary" id="nextBtn"
+                onclick="handleNext()"><span id="nextBtnText">Cek Jawaban</span><i
+                    data-lucide="arrow-right"></i></button></div>
+        <div class="results-card" id="resultsCard">
+            <div class="results-icon"><i data-lucide="trophy"></i></div>
+            <h2 class="results-title">Quiz Selesai!</h2>
+            <div class="results-score" id="resultsScore">0/17</div>
+            <p class="results-detail" id="resultsDetail"></p>
+            <div class="nav-buttons" style="justify-content: center;"><button class="nav-btn primary"
+                    onclick="restartQuiz()"><i data-lucide="refresh-cw"></i>Coba Lagi</button><a href="chapter-11.html"
+                    class="nav-btn secondary"><i data-lucide="book-open"></i>Kembali</a></div>
+        </div>
+    </main>
+    <script>
+        const questions = [
+            { id: 1, text: "Benar atau salah: Cisco Catalyst SD-WAN Enterprise Firewall with Application Awareness tidak VPN aware. / True or false: The Cisco Catalyst SD-WAN Enterprise Firewall with Application Awareness is not VPN aware.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["B"], isMultiple: false },
+            { id: 2, text: "Action apa yang dapat diset dalam firewall policy? (Pilih tiga.) / What actions can be set in a firewall policy? (Choose three.)", options: [{ letter: "A", text: "Pass" }, { letter: "B", text: "Inspect" }, { letter: "C", text: "Redirect" }, { letter: "D", text: "Export" }, { letter: "E", text: "Drop" }], correctAnswers: ["A", "B", "E"], isMultiple: true },
+            { id: 3, text: "Benar atau salah: Logging tidak tersedia untuk Enterprise Firewall with Application Awareness policies. / True or false: Logging is not available for Enterprise Firewall with Application Awareness policies.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["B"], isMultiple: false },
+            { id: 4, text: "Signature sets apa yang tersedia untuk dipilih dalam IDS/IPS policy? (Pilih tiga.) / What signature sets are available for selection in an IDS/IPS policy? (Choose three.)", options: [{ letter: "A", text: "Strict" }, { letter: "B", text: "Balanced" }, { letter: "C", text: "Relaxed" }, { letter: "D", text: "Connectivity" }, { letter: "E", text: "Security" }], correctAnswers: ["B", "D", "E"], isMultiple: true },
+            { id: 5, text: "Mode Snort engine mana yang didukung saat engine failure atau engine reboot? (Pilih dua.) / Which Snort engine modes are supported during an engine failure or engine reboot? (Choose two.)", options: [{ letter: "A", text: "Fail-block" }, { letter: "B", text: "Fail-close" }, { letter: "C", text: "Fail-pass" }, { letter: "D", text: "Fail-wide" }, { letter: "E", text: "Fail-open" }], correctAnswers: ["B", "E"], isMultiple: true },
+            { id: 6, text: "Benar atau salah: Sebelum IDS/IPS policy dapat dikonfigurasi, network operator harus upload security virtual image ke SD-WAN Manager. / True or false: Before an IDS/IPS policy can be configured, the network operator must upload a security virtual image to SD-WAN Manager.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["A"], isMultiple: false },
+            { id: 7, text: "Benar atau salah: URL filtering membutuhkan minimum 4 GB DRAM dan 4 GB flash untuk di-deploy. / True or false: URL filtering requires a minimum of 4 GB DRAM and 4 GB flash to be deployed.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["B"], isMultiple: false },
+            { id: 8, text: "Fitur URL filtering apa yang dapat digunakan untuk secara eksplisit memblokir website tertentu? / What URL filtering feature can be leveraged to explicitly block certain websites?", options: [{ letter: "A", text: "Categories" }, { letter: "B", text: "Reputation" }, { letter: "C", text: "URL blacklist" }, { letter: "D", text: "URL whitelist" }], correctAnswers: ["C"], isMultiple: false },
+            { id: 9, text: "Visibility URL filtering mencakup informasi mana? (Pilih dua.) / URL filtering visibility includes which of the following information? (Choose two.)", options: [{ letter: "A", text: "URLs yang diakses / URLs accessed" }, { letter: "B", text: "Session count" }, { letter: "C", text: "Website reputation" }, { letter: "D", text: "Blocked dan allowed categories berdasarkan persentase / Blocked and allowed categories by percentage" }], correctAnswers: ["B", "D"], isMultiple: true },
+            { id: 10, text: "Benar atau salah: Ukuran file maksimum yang dapat diekspor untuk file analysis adalah 1000 MB. / True or false: The maximum exportable file size for file analysis is 1000 MB.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["B"], isMultiple: false },
+            { id: 11, text: "Tugas apa yang terlibat dalam mengkonfigurasi file analysis untuk Advanced Malware Protection? (Pilih tiga.) / Which tasks are involved in configuring file analysis for Advanced Malware Protection? (Choose three.)", options: [{ letter: "A", text: "Konfigurasi Threat Grid API key / Configure the Threat Grid API key" }, { letter: "B", text: "Konfigurasi file types list / Configure the file types list" }, { letter: "C", text: "Aktifkan file analysis / Enable file analysis" }, { letter: "D", text: "Aktifkan HTTPS inbound ke WAN Edge router / Enable HTTPS inbound to the WAN Edge router" }, { letter: "E", text: "Konfigurasi security rule untuk Threat Grid / Configure a security rule for Threat Grid" }], correctAnswers: ["A", "B", "C"], isMultiple: true },
+            { id: 12, text: "Benar atau salah: AMP visibility dapat menampilkan malware filename. / True or false: AMP visibility can display the malware filename.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["A"], isMultiple: false },
+            { id: 13, text: "Bagaimana Cisco Umbrella API token di-generate? / How is the Cisco Umbrella API token generated?", options: [{ letter: "A", text: "Otomatis saat SD-WAN Manager bootup / Automatically during SD-WAN Manager bootup" }, { letter: "B", text: "Manual di settings Umbrella SD-WAN Manager / Manually in the SD-WAN Manager Umbrella settings" }, { letter: "C", text: "Oleh Cisco SE dan diberikan ke customer via email / By the Cisco SE and provided to the customer by email" }, { letter: "D", text: "Di portal Cisco Umbrella / In the Cisco Umbrella portal" }], correctAnswers: ["D"], isMultiple: false },
+            { id: 14, text: "Jika customer ingin proses DNS web layer security redirection mengabaikan set domain tertentu, fitur apa yang dapat digunakan? / If a customer wants the DNS web layer security redirection process to ignore a specific set of domains, what feature can be leveraged?", options: [{ letter: "A", text: "Corporate domain bypass" }, { letter: "B", text: "Domain filtering" }, { letter: "C", text: "Local domain bypass" }, { letter: "D", text: "Domain rules" }], correctAnswers: ["C"], isMultiple: false },
+            { id: 15, text: "Tipe privilege apa yang dapat di-assign ke user group di SD-WAN Manager? (Pilih dua.) / Which privilege types can be assigned to a user group in SD-WAN Manager? (Choose two.)", options: [{ letter: "A", text: "Read" }, { letter: "B", text: "Erase" }, { letter: "C", text: "Reboot" }, { letter: "D", text: "Administer" }, { letter: "E", text: "Write" }], correctAnswers: ["A", "E"], isMultiple: true },
+            { id: 16, text: "Benar atau salah: RBAC by VPN memungkinkan beberapa user untuk mengkonfigurasi beberapa fitur VPN tapi tidak yang lain. / True or false: RBAC by VPN allows some users to configure some VPN features but not others.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["B"], isMultiple: false },
+            { id: 17, text: "Tipe remote authentication apa yang didukung SD-WAN Manager? (Pilih tiga.) / Which remote authentication types does SD-WAN Manager support? (Choose three.)", options: [{ letter: "A", text: "Single sign-on (SSO)" }, { letter: "B", text: "RADIUS" }, { letter: "C", text: "Local" }, { letter: "D", text: "TACACS" }], correctAnswers: ["A", "B", "D"], isMultiple: true }
+        ];
+        let currentQ = 0, selectedAns = [], isAns = false, correctCnt = 0;
+        function init() { loadQ(); lucide.createIcons(); }
+        function loadQ() { const q = questions[currentQ]; document.getElementById('questionText').textContent = q.text; document.getElementById('questionCounter').textContent = `${currentQ + 1} / ${questions.length}`; document.getElementById('progressFill').style.width = `${((currentQ + 1) / questions.length) * 100}%`; document.getElementById('progressPercent').textContent = `${Math.round(((currentQ + 1) / questions.length) * 100)}%`; selectedAns = []; isAns = false; document.getElementById('nextBtnText').textContent = 'Cek Jawaban'; document.getElementById('answerFeedback').classList.remove('show', 'correct', 'incorrect'); document.getElementById('nextBtn').disabled = true; document.getElementById('optionsList').innerHTML = q.options.map(o => `<div class="option-item" data-letter="${o.letter}" onclick="selOpt('${o.letter}')"><div class="option-checkbox"><i data-lucide="check"></i></div><span class="option-letter">${o.letter}.</span><span class="option-text">${o.text}</span></div>`).join(''); lucide.createIcons(); }
+        function selOpt(l) { if (isAns) return; const q = questions[currentQ]; const el = document.querySelector(`.option-item[data-letter="${l}"]`); if (q.isMultiple) { if (selectedAns.includes(l)) { selectedAns = selectedAns.filter(a => a !== l); el.classList.remove('selected'); } else { selectedAns.push(l); el.classList.add('selected'); } } else { document.querySelectorAll('.option-item').forEach(e => e.classList.remove('selected')); selectedAns = [l]; el.classList.add('selected'); } document.getElementById('nextBtn').disabled = selectedAns.length === 0; }
+        function handleNext() { if (!isAns) { checkAns(); } else { currentQ++; if (currentQ < questions.length) { loadQ(); } else { showRes(); } } }
+        function checkAns() { isAns = true; const q = questions[currentQ]; const c = q.correctAnswers; const ok = selectedAns.length === c.length && selectedAns.every(a => c.includes(a)); if (ok) correctCnt++; document.getElementById('answerFeedback').classList.add('show', ok ? 'correct' : 'incorrect'); document.getElementById('feedbackText').textContent = `Jawaban benar: ${c.join(', ')}`; document.querySelectorAll('.option-item').forEach(el => { el.classList.add('disabled'); if (c.includes(el.dataset.letter)) { el.classList.add('correct'); el.classList.remove('selected'); } else if (selectedAns.includes(el.dataset.letter)) { el.classList.add('incorrect'); el.classList.remove('selected'); } }); document.getElementById('nextBtnText').textContent = currentQ < questions.length - 1 ? 'Lanjut' : 'Lihat Hasil'; document.getElementById('nextBtn').disabled = false; lucide.createIcons(); }
+        function showRes() { document.getElementById('questionCard').style.display = 'none'; document.querySelector('.nav-buttons').style.display = 'none'; document.getElementById('resultsCard').classList.add('show'); document.getElementById('resultsScore').textContent = `${correctCnt}/${questions.length}`; document.getElementById('resultsDetail').textContent = `Anda menjawab ${correctCnt} dari ${questions.length} pertanyaan dengan benar.`; lucide.createIcons(); }
+        function restartQuiz() { currentQ = 0; correctCnt = 0; document.getElementById('questionCard').style.display = 'block'; document.querySelector('.nav-buttons').style.display = 'flex'; document.getElementById('resultsCard').classList.remove('show'); loadQ(); }
+        function toggleTheme() { const h = document.documentElement; if (h.getAttribute('data-theme') === 'dark') { h.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); } else { h.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); } lucide.createIcons(); }
+        if (localStorage.getItem('theme') === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); }
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

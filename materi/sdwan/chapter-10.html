@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 10: Localized Policies - Nextgen Center</title>
+    <meta name="description" content="Chapter 10 - Localized Policies: QoS, ACLs, dan route policies di edge device.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="chapter-style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../cisco-sdwan-tutorial.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali ke Daftar Isi</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="chapter-header">
+            <div class="chapter-badge">Chapter 10</div>
+            <h1>Localized Policies</h1>
+            <p class="chapter-meta">Page 412 • Edge Device Policies</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="target"></i> Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Memahami localized policy types dan use cases</li>
+                <li>Mengkonfigurasi QoS policies di edge</li>
+                <li>Mengimplementasikan Access Control Lists (ACLs)</li>
+                <li>Menggunakan route policies untuk local routing decisions</li>
+            </ul>
+        </section>
+
+        <!-- QoS Queues Diagram -->
+        <div class="image-container">
+            <img src="images/qos-queues.png" alt="SD-WAN QoS Queue Structure Diagram">
+            <p class="image-caption">Gambar 10.1 - Struktur 8 queue QoS dalam SD-WAN dengan alokasi bandwidth</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="hard-drive"></i> Localized Policy Types</h2>
+            <div class="content-block">
+                <p>Localized policies di-define dan di-apply langsung di edge device tanpa melalui vSmart.</p>
+
+                <table class="data-table">
+                    <tr>
+                        <th>Policy Type</th>
+                        <th>Purpose</th>
+                        <th>Applied To</th>
+                    </tr>
+                    <tr>
+                        <td>QoS Policy</td>
+                        <td>Traffic prioritization</td>
+                        <td>Interface/Tunnel</td>
+                    </tr>
+                    <tr>
+                        <td>Access List</td>
+                        <td>Permit/Deny traffic</td>
+                        <td>Interface</td>
+                    </tr>
+                    <tr>
+                        <td>Route Policy</td>
+                        <td>Control route import/export</td>
+                        <td>VPN</td>
+                    </tr>
+                    <tr>
+                        <td>Rewrite Rule</td>
+                        <td>DSCP remarking</td>
+                        <td>Interface</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="gauge"></i> QoS Configuration</h2>
+            <div class="content-block">
+                <h3>QoS Components:</h3>
+
+                <div class="architecture-block">
+                    <h4>📊 Class Maps</h4>
+                    <ul>
+                        <li>Define traffic classes based on DSCP, source/dest</li>
+                        <li>Up to 8 forwarding classes supported</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>⚙️ Schedulers</h4>
+                    <ul>
+                        <li>Bandwidth allocation per class</li>
+                        <li>Queue depth and drop behavior</li>
+                        <li>Buffer allocation</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>🎯 Shapers</h4>
+                    <ul>
+                        <li>Rate limiting untuk traffic egress</li>
+                        <li>Burst size control</li>
+                    </ul>
+                </div>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Default QoS Classes</strong>
+                        <p>SD-WAN memiliki 8 default forwarding classes: Queue0 (control) sampai Queue7 (best effort).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="shield-check"></i> Access Control Lists</h2>
+            <div class="content-block">
+                <p>ACLs di SD-WAN mengontrol traffic permit/deny berdasarkan packet criteria.</p>
+
+                <h3>ACL Types:</h3>
+                <ul>
+                    <li><strong>IPv4 ACL:</strong> Standard dan extended untuk IPv4</li>
+                    <li><strong>IPv6 ACL:</strong> For IPv6 traffic control</li>
+                    <li><strong>Implicit ACL:</strong> Built-in rules untuk control traffic</li>
+                </ul>
+
+                <h3>Match Criteria:</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Criteria</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>Source/Dest IP</td>
+                        <td>Prefix matching</td>
+                    </tr>
+                    <tr>
+                        <td>Protocol</td>
+                        <td>TCP, UDP, ICMP, etc</td>
+                    </tr>
+                    <tr>
+                        <td>Port</td>
+                        <td>Source and destination</td>
+                    </tr>
+                    <tr>
+                        <td>DSCP</td>
+                        <td>Differentiated services</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+        <!-- Interactive Quiz Button -->
+        <div class="quiz-section" style="text-align: center; margin: 2rem 0;">
+            <a href="chapter-10-quiz.html" class="quiz-btn" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #049fd9, #0277bd); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(4, 159, 217, 0.3);">
+                <i data-lucide="brain"></i>
+                <span>Take Interactive Quiz</span>
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+
+
+
+        <div class="chapter-nav">
+            <a href="chapter-09.html" class="nav-btn prev">
+                <i data-lucide="chevron-left"></i>
+                <span>Chapter 9</span>
+            </a>
+            <a href="chapter-11.html" class="nav-btn next">
+                <span>Chapter 11</span>
+                <i data-lucide="chevron-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="chapter-script.js"></script>
+</body>
+
+</html>

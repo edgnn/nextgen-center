@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 1: Introduction to Cisco Catalyst SD-WAN - Nextgen Center</title>
+    <meta name="description"
+        content="Chapter 1 - Introduction to Cisco Catalyst SD-WAN: Konsep dasar, evolusi WAN, dan overview arsitektur SD-WAN.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="chapter-style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../cisco-sdwan-tutorial.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali ke Daftar Isi</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="chapter-header">
+            <div class="chapter-badge">Chapter 1</div>
+            <h1>Introduction to Cisco Catalyst SD-WAN</h1>
+            <p class="chapter-meta">Page 2 • Fundamental Concepts</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="target"></i> Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Memahami evolusi teknologi WAN dari MPLS ke SD-WAN</li>
+                <li>Menjelaskan tantangan WAN tradisional dan bagaimana SD-WAN mengatasinya</li>
+                <li>Mengidentifikasi manfaat utama Cisco Catalyst SD-WAN</li>
+                <li>Memahami arsitektur high-level Cisco SD-WAN</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="history"></i> Evolution of WAN Technologies</h2>
+            <div class="content-block">
+                <h3>Traditional WAN Challenges</h3>
+                <p>Jaringan WAN tradisional berbasis MPLS menghadapi beberapa tantangan:</p>
+                <ul>
+                    <li><strong>High Cost:</strong> Biaya bandwidth MPLS yang mahal</li>
+                    <li><strong>Complexity:</strong> Konfigurasi manual di setiap device</li>
+                    <li><strong>Inflexibility:</strong> Perubahan memerlukan waktu lama</li>
+                    <li><strong>Cloud Connectivity:</strong> Tidak optimal untuk akses cloud/SaaS</li>
+                    <li><strong>Visibility:</strong> Terbatasnya visibility terhadap aplikasi</li>
+                </ul>
+            </div>
+
+            <div class="content-block">
+                <h3>SD-WAN Solution</h3>
+                <p>Software-Defined WAN mengatasi tantangan tersebut dengan:</p>
+                <ul>
+                    <li><strong>Transport Independence:</strong> Menggunakan Internet, MPLS, LTE, atau kombinasinya</li>
+                    <li><strong>Centralized Management:</strong> Single pane of glass untuk management</li>
+                    <li><strong>Application Awareness:</strong> Routing berdasarkan aplikasi dan SLA</li>
+                    <li><strong>Security Integration:</strong> Built-in security features</li>
+                    <li><strong>Cloud-Ready:</strong> Optimized untuk cloud dan SaaS</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="layers"></i> Cisco Catalyst SD-WAN Overview</h2>
+            <div class="content-block">
+                <p>Cisco Catalyst SD-WAN (sebelumnya Cisco SD-WAN powered by Viptela) adalah solusi SD-WAN
+                    enterprise-grade yang menyediakan:</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="shield"></i></div>
+                        <h4>Secure</h4>
+                        <p>End-to-end encryption dengan IPsec tunnels</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="zap"></i></div>
+                        <h4>Scalable</h4>
+                        <p>Mendukung ribuan sites dengan management terpusat</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="git-branch"></i></div>
+                        <h4>Flexible</h4>
+                        <p>Transport agnostic dan policy-driven routing</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="cloud"></i></div>
+                        <h4>Cloud-Ready</h4>
+                        <p>Native integration dengan cloud providers</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="network"></i> High-Level Architecture</h2>
+            <div class="content-block">
+                <p>Arsitektur Cisco Catalyst SD-WAN terdiri dari dua plane utama:</p>
+
+                <div class="image-container">
+                    <img src="images/sdwan-architecture.png" alt="Cisco SD-WAN Architecture Diagram">
+                    <p class="image-caption">Gambar 1.1 - Arsitektur High-Level Cisco Catalyst SD-WAN dengan komponen
+                        utama</p>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>🔷 Management & Orchestration Plane</h4>
+                    <ul>
+                        <li><strong>vManage:</strong> Centralized NMS untuk configuration, monitoring, dan
+                            troubleshooting</li>
+                        <li><strong>vBond:</strong> Orchestrator untuk device authentication dan onboarding</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>🔷 Control Plane</h4>
+                    <ul>
+                        <li><strong>vSmart:</strong> Controller yang mendistribusikan routing dan policy information
+                        </li>
+                        <li>Menggunakan OMP (Overlay Management Protocol)</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>🔷 Data Plane</h4>
+                    <ul>
+                        <li><strong>vEdge/cEdge:</strong> Edge routers yang melakukan forwarding traffic</li>
+                        <li>Membentuk IPsec tunnels untuk secure data transport</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="check-circle"></i> Key Benefits</h2>
+            <div class="benefits-list">
+                <div class="benefit-item">
+                    <span class="benefit-icon">💰</span>
+                    <div>
+                        <strong>Cost Reduction</strong>
+                        <p>Mengurangi biaya WAN hingga 50% dengan memanfaatkan Internet broadband</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">⚡</span>
+                    <div>
+                        <strong>Faster Deployment</strong>
+                        <p>Zero-Touch Provisioning memungkinkan deployment dalam hitungan menit</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">📊</span>
+                    <div>
+                        <strong>Better Visibility</strong>
+                        <p>Application-level visibility dan analytics</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">🔒</span>
+                    <div>
+                        <strong>Enhanced Security</strong>
+                        <p>Integrated security dengan firewall, IPS, dan URL filtering</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Button -->
+        <div style="text-align: center; margin: 32px 0;">
+            <a href="chapter-01-quiz.html" class="nav-btn next"
+                style="display: inline-flex; gap: 10px; padding: 16px 32px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 12px; font-size: 1rem;">
+                <i data-lucide="help-circle"></i>
+                <span>Take Interactive Quiz</span>
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Navigation -->
+        <div class="chapter-nav">
+            <a href="../cisco-sdwan-tutorial.html" class="nav-btn prev">
+                <i data-lucide="list"></i>
+                <span>Daftar Isi</span>
+            </a>
+            <a href="chapter-02.html" class="nav-btn next">
+                <span>Chapter 2</span>
+                <i data-lucide="chevron-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="chapter-script.js"></script>
+</body>
+
+</html>

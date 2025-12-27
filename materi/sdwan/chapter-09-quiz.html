@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 9 Quiz - Application-Aware Routing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --accent-primary: #049fd9;
+            --accent-secondary: #0277bd;
+            --success: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.1);
+            --error: #ef4444;
+            --error-bg: rgba(239, 68, 68, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --success-bg: rgba(16, 185, 129, 0.15);
+            --error-bg: rgba(239, 68, 68, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .badge {
+            background: var(--accent-primary);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .exam-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .question-counter {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .sun-icon {
+            display: block;
+        }
+
+        .main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .question-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent-primary);
+        }
+
+        .option-item.selected {
+            border-color: var(--accent-primary);
+            background: rgba(4, 159, 217, 0.1);
+        }
+
+        .option-item.correct {
+            border-color: var(--success);
+            background: var(--success-bg);
+        }
+
+        .option-item.incorrect {
+            border-color: var(--error);
+            background: var(--error-bg);
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            opacity: 0.8;
+        }
+
+        .option-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .option-item.selected .option-checkbox {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .option-item.correct .option-checkbox {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .option-item.incorrect .option-checkbox {
+            background: var(--error);
+            border-color: var(--error);
+        }
+
+        .option-checkbox svg {
+            width: 14px;
+            height: 14px;
+            color: white;
+            display: none;
+        }
+
+        .option-item.selected .option-checkbox svg,
+        .option-item.correct .option-checkbox svg,
+        .option-item.incorrect .option-checkbox svg {
+            display: block;
+        }
+
+        .option-letter {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .option-item.selected .option-letter,
+        .option-item.correct .option-letter,
+        .option-item.incorrect .option-letter {
+            color: white;
+        }
+
+        .option-item.selected .option-letter {
+            background: var(--accent-primary);
+        }
+
+        .option-item.correct .option-letter {
+            background: var(--success);
+        }
+
+        .option-item.incorrect .option-letter {
+            background: var(--error);
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .answer-feedback {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 20px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            margin-top: 24px;
+            font-weight: 600;
+        }
+
+        .answer-feedback.show {
+            display: flex;
+        }
+
+        .answer-feedback.correct {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .answer-feedback.incorrect {
+            background: var(--error-bg);
+            color: var(--error);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .nav-btn.secondary {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .nav-btn.primary {
+            background: var(--accent-primary);
+            border: none;
+            color: white;
+        }
+
+        .nav-btn.primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .progress-container {
+            margin-bottom: 32px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--success));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .results-card {
+            display: none;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .results-card.show {
+            display: block;
+        }
+
+        .results-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: var(--success-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .results-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--success);
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .results-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--success);
+            margin-bottom: 16px;
+        }
+
+        .results-detail {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 640px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .question-card {
+                padding: 20px;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-left"><span class="badge">SD-WAN</span><span class="exam-title">Chapter 9: Application-Aware
+                Routing</span></div>
+        <div class="header-right"><span class="question-counter" id="questionCounter">1 / 13</span><button
+                class="theme-toggle" onclick="toggleTheme()"><i data-lucide="moon" class="moon-icon"></i><i
+                    data-lucide="sun" class="sun-icon"></i></button></div>
+    </header>
+    <main class="main">
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text"><span>Progress</span><span id="progressPercent">8%</span></div>
+        </div>
+        <div class="question-card" id="questionCard">
+            <div class="question-text" id="questionText"></div>
+            <div class="options-list" id="optionsList"></div>
+            <div class="answer-feedback" id="answerFeedback"><i data-lucide="check-circle"></i><span
+                    id="feedbackText"></span></div>
+        </div>
+        <div class="nav-buttons"><a href="chapter-09.html" class="nav-btn secondary"><i
+                    data-lucide="arrow-left"></i>Kembali</a><button class="nav-btn primary" id="nextBtn"
+                onclick="handleNext()"><span id="nextBtnText">Cek Jawaban</span><i
+                    data-lucide="arrow-right"></i></button></div>
+        <div class="results-card" id="resultsCard">
+            <div class="results-icon"><i data-lucide="trophy"></i></div>
+            <h2 class="results-title">Quiz Selesai!</h2>
+            <div class="results-score" id="resultsScore">0/13</div>
+            <p class="results-detail" id="resultsDetail"></p>
+            <div class="nav-buttons" style="justify-content: center;"><button class="nav-btn primary"
+                    onclick="restartQuiz()"><i data-lucide="refresh-cw"></i>Coba Lagi</button><a href="chapter-09.html"
+                    class="nav-btn secondary"><i data-lucide="book-open"></i>Kembali</a></div>
+        </div>
+    </main>
+    <script>
+        const questions = [
+            { id: 1, text: "Apa scope dari application-aware routing policy? / What is the scope of an application-aware routing policy?", options: [{ letter: "A", text: "Per site" }, { letter: "B", text: "Per VPN" }, { letter: "C", text: "Per direction / Per arah" }, { letter: "D", text: "Per site, per VPN" }, { letter: "E", text: "Per site, per direction" }, { letter: "F", text: "Per site, per VPN, per direction" }], correctAnswers: ["D"], isMultiple: false },
+            { id: 2, text: "Di mana app-route policies di-apply dan di-enforce? / Where are app-route policies applied and enforced?", options: [{ letter: "A", text: "Applied di SD-WAN Controller; enforced di SD-WAN Controller" }, { letter: "B", text: "Applied di SD-WAN Controller; enforced di WAN Edge device" }, { letter: "C", text: "Applied di WAN Edge device; enforced di SD-WAN Controller" }, { letter: "D", text: "Applied di WAN Edge device; enforced di WAN Edge device" }], correctAnswers: ["B"], isMultiple: false },
+            { id: 3, text: "Opsi konfigurasi administratif mana yang mempengaruhi perhitungan statistik loss, latency, dan jitter untuk application-aware routing? (Pilih semua yang berlaku.) / Which administratively configured options affect the calculation of the loss, latency, and jitter statistics used for application-aware routing? (Choose all that apply.)", options: [{ letter: "A", text: "BFD hello interval" }, { letter: "B", text: "BFD hello multiplier" }, { letter: "C", text: "Jumlah SLA classes / Number of SLA classes" }, { letter: "D", text: "App-route poll interval" }, { letter: "E", text: "Jumlah tunnels / Number of tunnels" }, { letter: "F", text: "Jumlah colors / Number of colors" }, { letter: "G", text: "App-route multiplier" }], correctAnswers: ["A", "D", "G"], isMultiple: true },
+            { id: 4, text: "Berapa jumlah maksimum app-route poll intervals yang dapat digunakan untuk perhitungan tunnel performance? / What is the maximum number of app-route poll intervals that can be used for tunnel performance calculations?", options: [{ letter: "A", text: "2" }, { letter: "B", text: "4" }, { letter: "C", text: "6" }, { letter: "D", text: "8" }, { letter: "E", text: "16" }], correctAnswers: ["C"], isMultiple: false },
+            { id: 5, text: "Kapan tunnels dievaluasi untuk kepatuhan dengan SLA classes? / When are tunnels evaluated/reevaluated for compliance with the SLA classes?", options: [{ letter: "A", text: "Setelah setiap BFD packet diterima / After every BFD packet is received" }, { letter: "B", text: "Setelah setiap hello interval / After every hello interval" }, { letter: "C", text: "Setelah setiap hello multiplier / After every hello multiplier" }, { letter: "D", text: "Setelah setiap app-route poll interval / After every app-route poll interval" }], correctAnswers: ["D"], isMultiple: false },
+            { id: 6, text: "Berapa banyak SLA classes berbeda yang dapat di-apply ke satu WAN Edge router? / How many different SLA classes can be applied to a single WAN Edge router?", options: [{ letter: "A", text: "16" }, { letter: "B", text: "4" }, { letter: "C", text: "8" }, { letter: "D", text: "256" }, { letter: "E", text: "Unlimited / Tidak terbatas" }], correctAnswers: ["A"], isMultiple: false },
+            { id: 7, text: "Berapa banyak SLA classes berbeda yang dapat dikonfigurasi dalam Catalyst SD-WAN Controller policy? / How many different SLA classes can be configured in a Catalyst SD-WAN Controller policy?", options: [{ letter: "A", text: "256" }, { letter: "B", text: "4" }, { letter: "C", text: "8" }, { letter: "D", text: "16" }, { letter: "E", text: "Unlimited / Tidak terbatas" }], correctAnswers: ["D"], isMultiple: false },
+            { id: 8, text: "Kapan traffic diteruskan melalui backup SLA preferred color? / When is traffic forwarded across the backup SLA preferred color?", options: [{ letter: "A", text: "Ketika tidak ada tunnels yang dikonfigurasi atau aktif dengan preferred SLA color / When no tunnels are configured or active with the preferred SLA color(s)" }, { letter: "B", text: "Ketika tidak ada preferred SLA color yang saat ini memenuhi SLA class / When none of the preferred SLA color(s) are currently meeting the required SLA class" }, { letter: "C", text: "Ketika tidak ada colors yang saat ini memenuhi SLA class / When no colors are currently meeting the required SLA class" }], correctAnswers: ["C"], isMultiple: false },
+            { id: 9, text: "Benar atau salah: Ketika opsi strict dikonfigurasi dalam AAR policy, policy akan drop traffic jika preferred color gagal memenuhi persyaratan SLA class. / True or false: When the strict option is configured in an AAR policy, the policy drops the traffic if the preferred color(s) fails to meet the SLA class requirements.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["B"], isMultiple: false },
+            { id: 10, text: "Benar atau salah: Agar application-aware routing policy memiliki efek, harus ada beberapa equal-cost routes dalam routing table. / True or false: In order for an application-aware routing policy to have any effect, there must be multiple equal-cost routes in the routing table.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["A"], isMultiple: false },
+            { id: 11, text: "Benar atau salah: Policy groups dapat digunakan untuk mengkonfigurasi policies yang perlu mempertimbangkan SLA. / True or false: Policy groups can be used to configure policies that need to take SLA into consideration.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["A"], isMultiple: false },
+            { id: 12, text: "Apa saja mode yang tersedia yang diizinkan oleh enhanced application-aware routing secara default? (Pilih semua yang berlaku.) / What are the available modes that enhanced application-aware routing permits by default? (Choose all that apply.)", options: [{ letter: "A", text: "Fast mode" }, { letter: "B", text: "Aggressive mode" }, { letter: "C", text: "Conservative mode" }, { letter: "D", text: "Slow mode" }, { letter: "E", text: "Moderate mode" }], correctAnswers: ["A", "B", "C"], isMultiple: true },
+            { id: 13, text: "Benar atau salah: SLA dampening menyediakan jendela tunggu yang mencegah perubahan path reprogramming dan karenanya ketidakstabilan jaringan saat transport belum sepenuhnya pulih. / True or false: SLA dampening provides a waiting window that prevents path reprogramming changes and hence network instability when the transport is not fully recovered.", options: [{ letter: "A", text: "Benar / True" }, { letter: "B", text: "Salah / False" }], correctAnswers: ["A"], isMultiple: false }
+        ];
+        let currentQ = 0, selectedAns = [], isAns = false, correctCnt = 0;
+        function init() { loadQ(); lucide.createIcons(); }
+        function loadQ() { const q = questions[currentQ]; document.getElementById('questionText').textContent = q.text; document.getElementById('questionCounter').textContent = `${currentQ + 1} / ${questions.length}`; document.getElementById('progressFill').style.width = `${((currentQ + 1) / questions.length) * 100}%`; document.getElementById('progressPercent').textContent = `${Math.round(((currentQ + 1) / questions.length) * 100)}%`; selectedAns = []; isAns = false; document.getElementById('nextBtnText').textContent = 'Cek Jawaban'; document.getElementById('answerFeedback').classList.remove('show', 'correct', 'incorrect'); document.getElementById('nextBtn').disabled = true; document.getElementById('optionsList').innerHTML = q.options.map(o => `<div class="option-item" data-letter="${o.letter}" onclick="selOpt('${o.letter}')"><div class="option-checkbox"><i data-lucide="check"></i></div><span class="option-letter">${o.letter}.</span><span class="option-text">${o.text}</span></div>`).join(''); lucide.createIcons(); }
+        function selOpt(l) { if (isAns) return; const q = questions[currentQ]; const el = document.querySelector(`.option-item[data-letter="${l}"]`); if (q.isMultiple) { if (selectedAns.includes(l)) { selectedAns = selectedAns.filter(a => a !== l); el.classList.remove('selected'); } else { selectedAns.push(l); el.classList.add('selected'); } } else { document.querySelectorAll('.option-item').forEach(e => e.classList.remove('selected')); selectedAns = [l]; el.classList.add('selected'); } document.getElementById('nextBtn').disabled = selectedAns.length === 0; }
+        function handleNext() { if (!isAns) { checkAns(); } else { currentQ++; if (currentQ < questions.length) { loadQ(); } else { showRes(); } } }
+        function checkAns() { isAns = true; const q = questions[currentQ]; const c = q.correctAnswers; const ok = selectedAns.length === c.length && selectedAns.every(a => c.includes(a)); if (ok) correctCnt++; document.getElementById('answerFeedback').classList.add('show', ok ? 'correct' : 'incorrect'); document.getElementById('feedbackText').textContent = `Jawaban benar: ${c.join(', ')}`; document.querySelectorAll('.option-item').forEach(el => { el.classList.add('disabled'); if (c.includes(el.dataset.letter)) { el.classList.add('correct'); el.classList.remove('selected'); } else if (selectedAns.includes(el.dataset.letter)) { el.classList.add('incorrect'); el.classList.remove('selected'); } }); document.getElementById('nextBtnText').textContent = currentQ < questions.length - 1 ? 'Lanjut' : 'Lihat Hasil'; document.getElementById('nextBtn').disabled = false; lucide.createIcons(); }
+        function showRes() { document.getElementById('questionCard').style.display = 'none'; document.querySelector('.nav-buttons').style.display = 'none'; document.getElementById('resultsCard').classList.add('show'); document.getElementById('resultsScore').textContent = `${correctCnt}/${questions.length}`; document.getElementById('resultsDetail').textContent = `Anda menjawab ${correctCnt} dari ${questions.length} pertanyaan dengan benar.`; lucide.createIcons(); }
+        function restartQuiz() { currentQ = 0; correctCnt = 0; document.getElementById('questionCard').style.display = 'block'; document.querySelector('.nav-buttons').style.display = 'flex'; document.getElementById('resultsCard').classList.remove('show'); loadQ(); }
+        function toggleTheme() { const h = document.documentElement; if (h.getAttribute('data-theme') === 'dark') { h.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); } else { h.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); } lucide.createIcons(); }
+        if (localStorage.getItem('theme') === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); }
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

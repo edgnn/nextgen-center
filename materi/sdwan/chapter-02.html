@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 2: Cisco Catalyst SD-WAN Components - Nextgen Center</title>
+    <meta name="description" content="Chapter 2 - Komponen SD-WAN: vManage, vBond, vSmart, dan vEdge/cEdge.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="chapter-style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../cisco-sdwan-tutorial.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali ke Daftar Isi</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="chapter-header">
+            <div class="chapter-badge">Chapter 2</div>
+            <h1>Cisco Catalyst SD-WAN Components</h1>
+            <p class="chapter-meta">Page 14 • Core Architecture Components</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="target"></i> Learning Objectives</h2>
+            <ul class="objectives-list">
+                <li>Memahami peran dan fungsi vManage dalam SD-WAN</li>
+                <li>Menjelaskan fungsi vBond sebagai orchestrator</li>
+                <li>Memahami peran vSmart controller dalam control plane</li>
+                <li>Membedakan vEdge dan cEdge sebagai WAN edge devices</li>
+            </ul>
+        </section>
+
+        <!-- Components Overview Diagram -->
+        <div class="image-container">
+            <img src="images/sdwan-components.png" alt="Cisco SD-WAN Components Diagram">
+            <p class="image-caption">Gambar 2.1 - Komponen utama Cisco Catalyst SD-WAN: vManage, vBond, vSmart, dan Edge
+                Devices</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="monitor"></i> vManage - Network Management System</h2>
+            <div class="content-block">
+                <p>vManage adalah centralized management system yang menyediakan GUI dan API untuk mengelola seluruh
+                    SD-WAN fabric.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="settings"></i></div>
+                        <h4>Configuration</h4>
+                        <p>Template-based configuration untuk semua devices</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="bar-chart-2"></i></div>
+                        <h4>Monitoring</h4>
+                        <p>Real-time dan historical monitoring</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="wrench"></i></div>
+                        <h4>Troubleshooting</h4>
+                        <p>Built-in tools untuk diagnostik</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="code"></i></div>
+                        <h4>REST API</h4>
+                        <p>Programmability dan automation</p>
+                    </div>
+                </div>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Deployment Options</strong>
+                        <p>vManage dapat di-deploy sebagai VM (VMware, KVM) atau sebagai cloud-hosted service.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="link"></i> vBond - Orchestrator</h2>
+            <div class="content-block">
+                <p>vBond adalah orchestrator yang bertanggung jawab untuk authenticating dan authorizing WAN edge
+                    devices ke SD-WAN fabric.</p>
+
+                <h3>Fungsi Utama vBond:</h3>
+                <ul>
+                    <li><strong>Initial Authentication:</strong> Memverifikasi device certificates</li>
+                    <li><strong>NAT Traversal:</strong> Memfasilitasi koneksi antar devices di balik NAT</li>
+                    <li><strong>Load Balancing:</strong> Mendistribusikan edge devices ke vSmart controllers</li>
+                    <li><strong>vManage Discovery:</strong> Mengarahkan devices ke vManage untuk management</li>
+                </ul>
+
+                <div class="alert warning">
+                    <i data-lucide="alert-triangle"></i>
+                    <div class="alert-content">
+                        <strong>Requirements</strong>
+                        <p>vBond harus memiliki public IP address atau port forwarding agar dapat dijangkau oleh edge
+                            devices.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="cpu"></i> vSmart - Controller</h2>
+            <div class="content-block">
+                <p>vSmart adalah brain dari SD-WAN yang mengelola control plane menggunakan OMP (Overlay Management
+                    Protocol).</p>
+
+                <h3>Fungsi Utama vSmart:</h3>
+                <ul>
+                    <li><strong>Route Distribution:</strong> Mendistribusikan routing information antar edge devices
+                    </li>
+                    <li><strong>Policy Enforcement:</strong> Menerapkan centralized policies</li>
+                    <li><strong>Key Exchange:</strong> Memfasilitasi IPsec key exchange untuk data plane tunnels</li>
+                    <li><strong>Service Chaining:</strong> Mengontrol traffic flow melalui service nodes</li>
+                </ul>
+
+                <table class="data-table">
+                    <tr>
+                        <th>Feature</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>Protocol</td>
+                        <td>OMP (Overlay Management Protocol)</td>
+                    </tr>
+                    <tr>
+                        <td>Connection</td>
+                        <td>DTLS/TLS tunnels ke edge devices</td>
+                    </tr>
+                    <tr>
+                        <td>Scalability</td>
+                        <td>Satu vSmart dapat handle ribuan edge devices</td>
+                    </tr>
+                    <tr>
+                        <td>Redundancy</td>
+                        <td>Minimal 2 vSmart untuk HA</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="router"></i> WAN Edge Devices</h2>
+            <div class="content-block">
+                <h3>vEdge vs cEdge</h3>
+                <p>Cisco menyediakan dua jenis WAN edge devices:</p>
+
+                <table class="data-table">
+                    <tr>
+                        <th>Aspect</th>
+                        <th>vEdge</th>
+                        <th>cEdge</th>
+                    </tr>
+                    <tr>
+                        <td>OS</td>
+                        <td>Viptela OS</td>
+                        <td>Cisco IOS-XE</td>
+                    </tr>
+                    <tr>
+                        <td>Hardware</td>
+                        <td>Viptela hardware (vEdge 100-5000)</td>
+                        <td>Cisco ISR, ASR, Catalyst 8000</td>
+                    </tr>
+                    <tr>
+                        <td>CLI</td>
+                        <td>Viptela CLI</td>
+                        <td>IOS-XE CLI</td>
+                    </tr>
+                    <tr>
+                        <td>Features</td>
+                        <td>SD-WAN native</td>
+                        <td>SD-WAN + traditional routing</td>
+                    </tr>
+                </table>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Trend</strong>
+                        <p>Cisco saat ini lebih fokus pada cEdge (Catalyst 8000 series) untuk deployment baru.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+        <!-- Quiz Button -->
+        <div style="text-align: center; margin: 32px 0;">
+            <a href="chapter-02-quiz.html" class="nav-btn next"
+                style="display: inline-flex; gap: 10px; padding: 16px 32px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 12px; font-size: 1rem;">
+                <i data-lucide="help-circle"></i>
+                <span>Take Interactive Quiz</span>
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="chapter-nav">
+            <a href="chapter-01.html" class="nav-btn prev">
+                <i data-lucide="chevron-left"></i>
+                <span>Chapter 1</span>
+            </a>
+            <a href="chapter-03.html" class="nav-btn next">
+                <span>Chapter 3</span>
+                <i data-lucide="chevron-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="chapter-script.js"></script>
+</body>
+
+</html>
