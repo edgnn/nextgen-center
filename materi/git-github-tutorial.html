@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cara Menghubungkan Repository ke GitHub - Nextgen Center</title>
+
+    <meta name="description"
+        content="Tutorial lengkap cara menghubungkan repository lokal ke GitHub, push code, dan deploy ke GitHub Pages.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --glow-1: rgba(99, 102, 241, 0.4);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --bg-card: rgba(0, 0, 0, 0.02);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+
+        [data-theme="light"] .header {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .theme-toggle:hover svg {
+            color: white;
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .sun-icon {
+            display: block;
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px 60px;
+        }
+
+        /* Title Section */
+        .title-section {
+            text-align: center;
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .title-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--accent-primary);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .title-badge svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .title-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Step Section */
+        .step {
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .step:last-of-type {
+            border-bottom: none;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .step-content ul,
+        .step-content ol {
+            padding-left: 24px;
+            margin-bottom: 20px;
+        }
+
+        .step-content li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .step-content li strong {
+            color: var(--text-primary);
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #1e1e2e;
+            border-radius: 12px;
+            margin: 16px 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: #2d2d3a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-lang {
+            font-size: 0.75rem;
+            color: #a0a0b0;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .code-copy {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 6px;
+            color: #a0a0b0;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .code-copy:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .code-copy svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 16px;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            font-family: 'JetBrains Mono', Consolas, monospace;
+            font-size: 0.85rem;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .code-block .comment {
+            color: #6a9955;
+        }
+
+        /* Alert */
+        .alert {
+            display: flex;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin: 16px 0;
+            border-left: 4px solid;
+        }
+
+        .alert svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-content strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .alert-content p {
+            margin: 0 !important;
+            font-size: 0.9rem;
+        }
+
+        .alert.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: var(--warning);
+        }
+
+        .alert.warning svg {
+            color: var(--warning);
+        }
+
+        .alert.info {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--info);
+        }
+
+        .alert.info svg {
+            color: var(--info);
+        }
+
+        .alert.success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+        }
+
+        .alert.success svg {
+            color: var(--success);
+        }
+
+        /* Diagram */
+        .diagram {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .diagram-box {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin: 4px;
+        }
+
+        .diagram-arrow {
+            color: var(--accent-primary);
+            font-size: 1.2rem;
+        }
+
+        /* Navigation */
+        .nav-bottom {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .nav-bottom a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-bottom a:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .nav-bottom a svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .step-title {
+                font-size: 1.1rem;
+            }
+
+            .code-block code {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="../index.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Title -->
+        <div class="title-section">
+            <div class="title-badge">
+                <i data-lucide="git-branch"></i>
+                Tutorial
+            </div>
+            <h1>Menghubungkan Repository ke GitHub</h1>
+            <p class="title-desc">Panduan lengkap cara push code dari lokal ke GitHub dan deploy ke GitHub Pages</p>
+        </div>
+
+        <!-- Persiapan -->
+        <section class="step">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h2 class="step-title">Persiapan</h2>
+            </div>
+            <div class="step-content">
+                <p>Sebelum memulai, pastikan kamu sudah memiliki:</p>
+
+                <ul>
+                    <li><strong>Git terinstall</strong> - Download di <a href="https://git-scm.com/downloads"
+                            target="_blank" style="color: var(--accent-primary)">git-scm.com</a></li>
+                    <li><strong>Akun GitHub</strong> - Daftar di <a href="https://github.com" target="_blank"
+                            style="color: var(--accent-primary)">github.com</a></li>
+                    <li><strong>Personal Access Token (PAT)</strong> - Untuk autentikasi</li>
+                </ul>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Cek Git terinstall</strong>
+                        <p>Buka terminal/cmd dan ketik: <code>git --version</code></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Buat PAT -->
+        <section class="step">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h2 class="step-title">Buat Personal Access Token</h2>
+            </div>
+            <div class="step-content">
+                <p>Token ini diperlukan untuk autentikasi saat push ke GitHub:</p>
+
+                <ol>
+                    <li>Login ke GitHub</li>
+                    <li>Klik avatar → <strong>Settings</strong></li>
+                    <li>Scroll ke bawah → <strong>Developer settings</strong></li>
+                    <li>Personal access tokens → <strong>Tokens (classic)</strong></li>
+                    <li>Klik <strong>Generate new token</strong></li>
+                    <li>Beri nama, pilih expiration</li>
+                    <li>Centang scope: <strong>repo</strong> (full control)</li>
+                    <li>Klik <strong>Generate token</strong></li>
+                </ol>
+
+                <div class="alert warning">
+                    <i data-lucide="alert-triangle"></i>
+                    <div class="alert-content">
+                        <strong>Penting!</strong>
+                        <p>Copy dan simpan token! Token hanya muncul sekali, tidak bisa dilihat lagi.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inisialisasi Git -->
+        <section class="step">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h2 class="step-title">Inisialisasi Git di Folder Lokal</h2>
+            </div>
+            <div class="step-content">
+                <p>Buka terminal di folder proyek kamu, lalu jalankan:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">bash</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="comment"># Masuk ke folder proyek</span>
+cd D:\Projects\NamaProyek
+
+<span class="comment"># Inisialisasi git repository</span>
+git init
+
+<span class="comment"># Konfigurasi user (sekali saja)</span>
+git config --global user.name "Username Kamu"
+git config --global user.email "email@example.com"</code></pre>
+                </div>
+
+                <p>Perintah <code>git init</code> akan membuat folder <code>.git</code> yang melacak semua perubahan
+                    file.</p>
+            </div>
+        </section>
+
+        <!-- Buat Repository di GitHub -->
+        <section class="step">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <h2 class="step-title">Buat Repository di GitHub</h2>
+            </div>
+            <div class="step-content">
+                <ol>
+                    <li>Buka <a href="https://github.com/new" target="_blank"
+                            style="color: var(--accent-primary)">github.com/new</a></li>
+                    <li>Isi <strong>Repository name</strong> (contoh: my-project)</li>
+                    <li>Pilih <strong>Public</strong> atau <strong>Private</strong></li>
+                    <li>JANGAN centang "Add README" (biarkan kosong)</li>
+                    <li>Klik <strong>Create repository</strong></li>
+                </ol>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Tips</strong>
+                        <p>Biarkan repository kosong agar tidak konflik dengan file lokal.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hubungkan ke GitHub -->
+        <section class="step">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <h2 class="step-title">Hubungkan Lokal ke GitHub</h2>
+            </div>
+            <div class="step-content">
+                <p>Tambahkan remote origin dengan token untuk autentikasi:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">bash</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="comment"># Format URL dengan token</span>
+git remote add origin https://USERNAME:TOKEN@github.com/USERNAME/REPO.git
+
+<span class="comment"># Contoh:</span>
+git remote add origin https://johndoe:ghp_xxx123@github.com/johndoe/my-project.git</code></pre>
+                </div>
+
+                <p>Ganti <code>USERNAME</code>, <code>TOKEN</code>, dan <code>REPO</code> dengan milikmu.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">bash</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="comment"># Verifikasi remote sudah terhubung</span>
+git remote -v</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Push Pertama -->
+        <section class="step">
+            <div class="step-header">
+                <div class="step-number">6</div>
+                <h2 class="step-title">Push Pertama Kali</h2>
+            </div>
+            <div class="step-content">
+                <p>Jalankan perintah berikut untuk upload semua file ke GitHub:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">bash</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="comment"># Tambahkan semua file</span>
+git add .
+
+<span class="comment"># Commit dengan pesan</span>
+git commit -m "Initial commit"
+
+<span class="comment"># Push ke GitHub (pertama kali)</span>
+git push -u origin main</code></pre>
+                </div>
+
+                <div class="alert success">
+                    <i data-lucide="check-circle"></i>
+                    <div class="alert-content">
+                        <strong>Berhasil!</strong>
+                        <p>Jika tidak ada error, file sudah terupload ke GitHub.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Push Selanjutnya -->
+        <section class="step">
+            <div class="step-header">
+                <div class="step-number">7</div>
+                <h2 class="step-title">Push Perubahan Selanjutnya</h2>
+            </div>
+            <div class="step-content">
+                <p>Setiap kali ada perubahan file, jalankan:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">bash</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="comment"># 1. Lihat status perubahan</span>
+git status
+
+<span class="comment"># 2. Tambahkan ke staging</span>
+git add .
+
+<span class="comment"># 3. Commit</span>
+git commit -m "Deskripsi perubahan"
+
+<span class="comment"># 4. Push</span>
+git push</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alur Kerja -->
+        <section class="step">
+            <div class="step-header">
+                <div class="step-number">📋</div>
+                <h2 class="step-title">Ringkasan Alur Kerja</h2>
+            </div>
+            <div class="step-content">
+                <div class="diagram">
+                    <div class="diagram-box">📝 Edit File</div><br>
+                    <span class="diagram-arrow">↓</span><br>
+                    <div class="diagram-box">git add .</div><br>
+                    <span class="diagram-arrow">↓</span><br>
+                    <div class="diagram-box">git commit -m "pesan"</div><br>
+                    <span class="diagram-arrow">↓</span><br>
+                    <div class="diagram-box">git push</div><br>
+                    <span class="diagram-arrow">↓</span><br>
+                    <div class="diagram-box">🌐 GitHub Pages Live!</div>
+                </div>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>GitHub Pages</strong>
+                        <p>Untuk mengaktifkan GitHub Pages, buka Settings → Pages → pilih branch "main" → Save. Website
+                            akan tersedia di https://username.github.io/repo-name/</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="nav-bottom">
+            <a href="../index.html">
+                <i data-lucide="home"></i>
+                Kembali ke Beranda
+            </a>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.getAttribute('data-theme') === 'light') {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+            lucide.createIcons();
+        }
+
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                button.innerHTML = '<i data-lucide="check"></i> Copied!';
+                lucide.createIcons();
+                setTimeout(() => {
+                    button.innerHTML = '<i data-lucide="copy"></i> Copy';
+                    lucide.createIcons();
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>
