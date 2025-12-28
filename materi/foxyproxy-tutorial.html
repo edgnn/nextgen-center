@@ -568,7 +568,8 @@
 
                 <p><strong>Yang dibutuhkan:</strong></p>
                 <ul>
-                    <li>SSH Client (SecureCRT / MobaXterm / PuTTY)</li>
+                    <li><strong>Windows:</strong> SSH Client (SecureCRT / MobaXterm / PuTTY)</li>
+                    <li><strong>macOS:</strong> Terminal (built-in)</li>
                     <li>Browser Firefox atau Chrome</li>
                     <li>Extension FoxyProxy</li>
                     <li>Akses SSH ke jump server</li>
@@ -589,15 +590,46 @@
                 <div class="tabs">
                     <button class="tab-btn active" onclick="showTab('securecrt')">SecureCRT</button>
                     <button class="tab-btn" onclick="showTab('mobaxterm')">MobaXterm</button>
+                    <button class="tab-btn" onclick="showTab('terminal-macos')">Terminal macOS</button>
                 </div>
 
                 <!-- SecureCRT Tab -->
                 <div id="securecrt" class="tab-content active">
                     <ol>
                         <li>Buka <strong>Session Options</strong></li>
+                        <li>Pilih <strong>Connection → SSH2</strong></li>
+                        <li>Isi konfigurasi SSH2:
+                            <table class="config-table">
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Value</th>
+                                </tr>
+                                <tr>
+                                    <td>Hostname</td>
+                                    <td><code>36.66.64.178</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Port</td>
+                                    <td><code>22</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Username</td>
+                                    <td><code>sdwan</code></td>
+                                </tr>
+                            </table>
+                        </li>
+                    </ol>
+
+                    <div class="image-wrapper medium">
+                        <img src="images/proxy_securecrt_ssh2.png" alt="SecureCRT SSH2 Configuration"
+                            onclick="openLightbox(this)">
+                        <div class="image-caption">Konfigurasi SSH2 di SecureCRT</div>
+                    </div>
+
+                    <ol start="4">
                         <li>Pilih <strong>Connection → Port Forwarding</strong></li>
                         <li>Klik <strong>Add</strong> untuk menambahkan port forwarding baru</li>
-                        <li>Isi konfigurasi:
+                        <li>Isi konfigurasi Port Forwarding:
                             <table class="config-table">
                                 <tr>
                                     <th>Field</th>
@@ -660,6 +692,50 @@
                         <img src="images/proxy_mobaxterm.png" alt="MobaXterm Dynamic Forwarding"
                             onclick="openLightbox(this)">
                         <div class="image-caption">Konfigurasi Dynamic Port Forwarding di MobaXterm</div>
+                    </div>
+                </div>
+
+                <!-- Terminal macOS Tab -->
+                <div id="terminal-macos" class="tab-content">
+                    <p><strong>Tutorial connect SSH jump host on macOS:</strong></p>
+                    <ol>
+                        <li>Buka aplikasi <strong>Terminal</strong> di macOS</li>
+                        <li>Ketikan command berikut di terminal:
+                            <div class="code-box">ssh -D 1080 -N -C sdwan@36.66.64.178</div>
+                        </li>
+                        <li>Masukkan password ketika diminta</li>
+                        <li>Biarkan terminal tetap terbuka (tunnel aktif selama terminal terbuka)</li>
+                    </ol>
+
+                    <table class="config-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Keterangan</th>
+                        </tr>
+                        <tr>
+                            <td><code>-D 1080</code></td>
+                            <td>Dynamic port forwarding pada port 1080 (SOCKS proxy)</td>
+                        </tr>
+                        <tr>
+                            <td><code>-N</code></td>
+                            <td>Tidak menjalankan remote command (hanya tunnel)</td>
+                        </tr>
+                        <tr>
+                            <td><code>-C</code></td>
+                            <td>Mengaktifkan kompresi data</td>
+                        </tr>
+                        <tr>
+                            <td><code>sdwan@36.66.64.178</code></td>
+                            <td>Username dan IP jump server</td>
+                        </tr>
+                    </table>
+
+                    <div class="alert info">
+                        <i data-lucide="info"></i>
+                        <div class="alert-content">
+                            <strong>Note</strong>
+                            <p>Untuk macOS, gunakan port <code>1080</code> pada konfigurasi FoxyProxy (bukan 200).</p>
+                        </div>
                     </div>
                 </div>
 
