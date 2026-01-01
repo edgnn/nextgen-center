@@ -3,20 +3,30 @@
    ============================================ */
 
 // ============================================
-// DATA - EMPLOYEES
+// DATA - EMPLOYEES (with NIK)
 // ============================================
 const employees = [
-    { id: 1, name: "Youngky Ramadhan", category: "SHIFTING" },
-    { id: 2, name: "Ali Ridho Salatin", category: "SHIFTING" },
-    { id: 3, name: "Fachri Ilmawandi", category: "SHIFTING" },
-    { id: 4, name: "Andry Wahyudi", category: "SHIFTING" },
-    { id: 5, name: "M Taufik", category: "SHIFTING" },
-    { id: 6, name: "M Yarham", category: "SHIFTING" },
-    { id: 7, name: "Edi Gunawan", category: "OFFICE HOUR" },
-    { id: 8, name: "Milan Trista", category: "OFFICE HOUR" },
-    { id: 9, name: "Jajang Haris Hidayat", category: "OFFICE HOUR" },
-    { id: 10, name: "Juwarti", category: "OFFICE HOUR" }
+    { id: 1, name: "Youngky Ramadhan", nik: "107522", category: "SHIFTING" },
+    { id: 2, name: "Ali Ridho Salatin", nik: "213496", category: "SHIFTING" },
+    { id: 3, name: "Fachri Ilmawandi", nik: "213494", category: "SHIFTING" },
+    { id: 4, name: "Andry Wahyudi", nik: "213497", category: "SHIFTING" },
+    { id: 5, name: "Muhammad Taufik", nik: "213504", category: "SHIFTING" },
+    { id: 6, name: "M Yarham", nik: "213500", category: "SHIFTING" },
+    { id: 7, name: "Edi Gunawan", nik: "213502", category: "OFFICE HOUR" },
+    { id: 8, name: "Milan Trista", nik: "213512", category: "OFFICE HOUR" },
+    { id: 9, name: "Jajang Haris Hidayat", nik: "213503", category: "OFFICE HOUR" },
+    { id: 10, name: "Juwarti", nik: "213513", category: "OFFICE HOUR" }
 ];
+
+// ============================================
+// DATA - COMPANY INFO (for Daily Activity Report)
+// ============================================
+const companyInfo = {
+    jabatan: "SUPPORT INFRASTRUKTUR",
+    dept: "NEXTGEN SERVICE MANAGEMENT",
+    atasan1: { name: "HAFIDH AL AFIF", nik: "890641" },
+    atasan2: { name: "", nik: "" }
+};
 
 // ============================================
 // DATA - SHIFT DESCRIPTIONS
@@ -97,7 +107,7 @@ const scheduleData = {
         3: { 1: "S1", 2: "O1", 3: "S2", 4: "O2", 5: "LIBUR", 6: "LIBUR", 7: "S1", 8: "O1", 9: "S2", 10: "O2", 11: "LIBUR", 12: "LIBUR", 13: "S1", 14: "O1", 15: "S2", 16: "O2", 17: "LIBUR", 18: "LIBUR", 19: "S1", 20: "O1", 21: "S2", 22: "O2", 23: "LIBUR", 24: "LIBUR", 25: "S1", 26: "O1", 27: "O2", 28: "O2", 29: "LIBUR", 30: "LIBUR" },
         // Andry Wahyudi
         4: { 1: "O1", 2: "S1", 3: "O2", 4: "S2", 5: "LIBUR", 6: "LIBUR", 7: "O1", 8: "S1", 9: "O2", 10: "S2", 11: "LIBUR", 12: "LIBUR", 13: "O1", 14: "S1", 15: "O2", 16: "S2", 17: "LIBUR", 18: "LIBUR", 19: "O1", 20: "S1", 21: "O2", 22: "S2", 23: "LIBUR", 24: "LIBUR", 25: "O1", 26: "S1", 27: "O2", 28: "O2", 29: "LIBUR", 30: "LIBUR" },
-        // M Taufik
+        // Muhammad Taufik
         5: { 1: "S2", 2: "O2", 3: "LIBUR", 4: "LIBUR", 5: "O1", 6: "S1", 7: "S2", 8: "O2", 9: "LIBUR", 10: "LIBUR", 11: "O1", 12: "S1", 13: "S2", 14: "O2", 15: "LIBUR", 16: "LIBUR", 17: "O1", 18: "S1", 19: "S2", 20: "O2", 21: "LIBUR", 22: "LIBUR", 23: "O1", 24: "S1", 25: "S2", 26: "O2", 27: "LIBUR", 28: "LIBUR", 29: "O1", 30: "O1" },
         // M Yarham
         6: { 1: "O2", 2: "S2", 3: "LIBUR", 4: "LIBUR", 5: "S1", 6: "O1", 7: "O2", 8: "S2", 9: "LIBUR", 10: "LIBUR", 11: "S1", 12: "O1", 13: "O2", 14: "S2", 15: "LIBUR", 16: "LIBUR", 17: "S1", 18: "O1", 19: "O2", 20: "S2", 21: "LIBUR", 22: "LIBUR", 23: "S1", 24: "O1", 25: "O2", 26: "O2", 27: "LIBUR", 28: "LIBUR", 29: "S1", 30: "O1" },
@@ -120,7 +130,7 @@ const scheduleData = {
         3: { 1: "S1", 2: "O1", 3: "S2", 4: "O2", 5: "O2", 6: "LIBUR", 7: "S1", 8: "O1", 9: "O2", 10: "O2", 11: "LIBUR", 12: "LIBUR", 13: "S1", 14: "O1", 15: "O2", 16: "O2", 17: "O2", 18: "LIBUR", 19: "S1", 20: "O1", 21: "O2", 22: "O2", 23: "LIBUR", 24: "LIBUR", 25: "LIBUR", 26: "A1", 27: "O2", 28: "O2", 29: "LIBUR", 30: "LIBUR", 31: "O1" },
         // Andry Wahyudi
         4: { 1: "O1", 2: "S1", 3: "O2", 4: "O2", 5: "LIBUR", 6: "O1", 7: "O1", 8: "S1", 9: "O2", 10: "S2", 11: "LIBUR", 12: "O1", 13: "O1", 14: "S1", 15: "O2", 16: "O2", 17: "LIBUR", 18: "LIBUR", 19: "O1", 20: "O1", 21: "O2", 22: "S2", 23: "LIBUR", 24: "LIBUR", 25: "A1", 26: "LIBUR", 27: "O2", 28: "O2", 29: "LIBUR", 30: "LIBUR", 31: "O1" },
-        // M Taufik
+        // Muhammad Taufik
         5: { 1: "O2", 2: "O2", 3: "O2", 4: "LIBUR", 5: "O1", 6: "S1", 7: "O2", 8: "O2", 9: "O2", 10: "LIBUR", 11: "O1", 12: "S1", 13: "O2", 14: "O2", 15: "LIBUR", 16: "LIBUR", 17: "O1", 18: "S1", 19: "O2", 20: "O2", 21: "LIBUR", 22: "LIBUR", 23: "O1", 24: "S1", 25: "A2", 26: "LIBUR", 27: "LIBUR", 28: "LIBUR", 29: "S1", 30: "O1", 31: "O2" },
         // M Yarham
         6: { 1: "O2", 2: "O2", 3: "LIBUR", 4: "LIBUR", 5: "S1", 6: "O1", 7: "O2", 8: "O2", 9: "LIBUR", 10: "LIBUR", 11: "O1", 12: "O1", 13: "O2", 14: "S2", 15: "O2", 16: "LIBUR", 17: "O1", 18: "O1", 19: "O2", 20: "S2", 21: "O2", 22: "LIBUR", 23: "O1", 24: "O1", 25: "LIBUR", 26: "A2", 27: "LIBUR", 28: "LIBUR", 29: "S1", 30: "O1", 31: "S2" },
@@ -841,3 +851,270 @@ function updateDashboard() {
         nextTitleEl.textContent = `⏰ Shift Berikutnya - ${nextStartTime} (${nextShiftCount} orang)`;
     }
 }
+
+// ============================================
+// DAILY ACTIVITY REPORT EXPORT
+// ============================================
+
+// Overtime configuration
+const overtimeConfig = {
+    "S1": { hours: 3, start: "17:00", end: "20:00", description: "Overtime 3 Jam (17:00 - 20:00)" },
+    "S2": { hours: 3, start: "05:00", end: "08:00", description: "Overtime 3 Jam (5.00 - 8.00)" },
+    "A1": { hours: 12, start: "08:00", end: "20:00", description: "Overtime 12 Jam (8.00 - 20.00)" },
+    "A2": { hours: 12, start: "20:00", end: "08:00", description: "Overtime 12 Jam (20.00 - 8.00)" }
+};
+
+// Shift working hours configuration
+const shiftWorkingHours = {
+    "O1": { start: "08:00", end: "17:00" },
+    "O2": { start: "20:00", end: "05:00" },
+    "S1": { start: "08:00", end: "20:00" },
+    "S2": { start: "20:00", end: "08:00" },
+    "R1": { start: "08:00", end: "20:00" },
+    "R2": { start: "08:00", end: "23:00" },
+    "H1": { start: "08:00", end: "17:00" },
+    "H2": { start: "15:00", end: "23:00" },
+    "A1": { start: "08:00", end: "20:00" },
+    "A2": { start: "20:00", end: "08:00" }
+};
+
+// Get HADIR status based on shift and day type
+function getHadirStatus(shift, dateKey, dayOfWeek) {
+    if (!shift || shift === "LIBUR") {
+        // Check if it's weekend
+        if (dayOfWeek === 0) return "MINGGU";
+        if (dayOfWeek === 6) return "SABTU";
+        return "LIBUR";
+    }
+
+    // Check if national holiday
+    if (nationalHolidays[dateKey]) {
+        return "LIBUR NASIONAL";
+    }
+
+    return "WFO";
+}
+
+// Get Daily Activity text based on day type and shift
+function getDailyActivityText(shift, dateKey, dayOfWeek, defaultActivity) {
+    if (!shift || shift === "LIBUR") {
+        return "LIBUR";
+    }
+
+    // Check if national holiday (A1, A2 shifts)
+    if (nationalHolidays[dateKey] || shift === "A1" || shift === "A2") {
+        return "LEMBUR HARI BESAR NASIONAL";
+    }
+
+    // Check if weekend (Saturday = 6, Sunday = 0)
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+        return "LEMBUR Monitoring Surveillance SDWAN & Neucentrix";
+    }
+
+    // Regular day
+    return defaultActivity;
+}
+
+// Get Keterangan (remarks) based on shift
+function getKeterangan(shift, dateKey) {
+    if (!shift || shift === "LIBUR") {
+        return "";
+    }
+
+    // Check for overtime shifts
+    if (overtimeConfig[shift]) {
+        return overtimeConfig[shift].description;
+    }
+
+    // Regular shift
+    return "Shift";
+}
+
+// Initialize Download Modal
+function initDownloadModal() {
+    const overlay = document.getElementById('downloadModalOverlay');
+    const closeBtn = document.getElementById('downloadModalClose');
+    const openBtn = document.getElementById('openDownloadModal');
+    const generateBtn = document.getElementById('generateExcelBtn');
+
+    // Populate employee dropdown
+    const employeeSelect = document.getElementById('downloadEmployee');
+    employees.forEach(emp => {
+        const option = document.createElement('option');
+        option.value = emp.id;
+        option.textContent = `${emp.name} (${emp.nik})`;
+        employeeSelect.appendChild(option);
+    });
+
+    // Populate month dropdown
+    const monthSelect = document.getElementById('downloadMonth');
+    monthNames.forEach((name, index) => {
+        const option = document.createElement('option');
+        option.value = index + 1;
+        option.textContent = name;
+        if (index + 1 === currentMonth) option.selected = true;
+        monthSelect.appendChild(option);
+    });
+
+    // Populate year dropdown
+    const yearSelect = document.getElementById('downloadYear');
+    [2024, 2025, 2026].forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        if (year === currentYear) option.selected = true;
+        yearSelect.appendChild(option);
+    });
+
+    // Event listeners
+    openBtn.addEventListener('click', () => {
+        overlay.classList.add('active');
+    });
+
+    closeBtn.addEventListener('click', () => {
+        overlay.classList.remove('active');
+    });
+
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.classList.remove('active');
+    });
+
+    generateBtn.addEventListener('click', generateDailyActivityExcel);
+}
+
+// Generate Daily Activity Excel
+function generateDailyActivityExcel() {
+    const employeeId = parseInt(document.getElementById('downloadEmployee').value);
+    const month = parseInt(document.getElementById('downloadMonth').value);
+    const year = parseInt(document.getElementById('downloadYear').value);
+    const defaultActivity = document.getElementById('defaultActivity').value;
+
+    const employee = employees.find(emp => emp.id === employeeId);
+    if (!employee) {
+        alert('Pilih karyawan terlebih dahulu');
+        return;
+    }
+
+    const monthKey = `${year}-${String(month).padStart(2, '0')}`;
+    const monthData = scheduleData[monthKey] || {};
+    const empSchedule = monthData[employeeId] || {};
+
+    const daysInMonth = new Date(year, month, 0).getDate();
+
+    // Build worksheet data
+    const wsData = [];
+
+    // Header rows
+    wsData.push(["Daily Activity ", "", "", "", "", "", "", "", "", ""]);
+    wsData.push(["NIK / Perner", "", `: ${employee.nik}`, "", "", "", "", "", "", ""]);
+    wsData.push(["Nama", "", `:  ${employee.name.toUpperCase()}`, "", "", "", "", "", "", ""]);
+    wsData.push(["Jabatan", "", `:  ${companyInfo.jabatan}`, "", "", "", "", "", "", ""]);
+    wsData.push(["Dept / Divisi", "", `:  ${companyInfo.dept}`, "", "", "", "", "", "", ""]);
+    wsData.push(["NO", "TANGGAL", "HADIR", "WAKTU KERJA", "", "DAILY ACTIVITY", "KETERANGAN", "", "", ""]);
+    wsData.push(["", "", "", "Start", "End", "", "", "", "", ""]);
+
+    // Daily data rows
+    for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(year, month - 1, day);
+        const dayOfWeek = date.getDay();
+        const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+        const shift = empSchedule[day] || "";
+        const hadir = getHadirStatus(shift, dateKey, dayOfWeek);
+        const dailyActivity = getDailyActivityText(shift, dateKey, dayOfWeek, defaultActivity);
+        const keterangan = getKeterangan(shift, dateKey);
+
+        // Get working hours
+        let startTime = "";
+        let endTime = "";
+        if (shift && shift !== "LIBUR" && shiftWorkingHours[shift]) {
+            startTime = shiftWorkingHours[shift].start;
+            endTime = shiftWorkingHours[shift].end;
+        }
+
+        wsData.push([
+            day,
+            date,
+            hadir,
+            startTime,
+            endTime,
+            dailyActivity,
+            keterangan,
+            "",
+            "",
+            ""
+        ]);
+    }
+
+    // Footer with signatures
+    wsData.push([]);
+    wsData.push([
+        `Pekerja\n\n\n\n(${employee.name.toUpperCase()})\nNIK : ${employee.nik}`,
+        "",
+        "",
+        "",
+        "",
+        `Atasan 1\n\n\n\n(${companyInfo.atasan1.name})\nNIK : ${companyInfo.atasan1.nik}`,
+        `Atasan 2\n\n\n\n\n(….................................)`,
+        "",
+        "",
+        ""
+    ]);
+
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+    // Set column widths
+    ws['!cols'] = [
+        { wch: 5 },   // NO
+        { wch: 12 },  // TANGGAL
+        { wch: 16 },  // HADIR
+        { wch: 10 },  // Start
+        { wch: 10 },  // End
+        { wch: 45 },  // DAILY ACTIVITY
+        { wch: 30 },  // KETERANGAN
+        { wch: 5 },
+        { wch: 5 },
+        { wch: 5 }
+    ];
+
+    // Merge cells for header
+    ws['!merges'] = [
+        { s: { r: 0, c: 0 }, e: { r: 0, c: 9 } },  // Title
+        { s: { r: 5, c: 3 }, e: { r: 5, c: 4 } },  // WAKTU KERJA header
+    ];
+
+    // Format date cells
+    const dateFormat = 'yyyy-mm-dd';
+    for (let i = 7; i < 7 + daysInMonth; i++) {
+        const cellRef = XLSX.utils.encode_cell({ r: i, c: 1 });
+        if (ws[cellRef]) {
+            ws[cellRef].t = 'd';
+            ws[cellRef].z = dateFormat;
+        }
+    }
+
+    XLSX.utils.book_append_sheet(wb, ws, "Kertas kerja");
+
+    // Generate filename
+    const monthNameUpper = monthNames[month - 1].toUpperCase();
+    const employeeNameFile = employee.name.toUpperCase().replace(/ /g, '_');
+    const filename = `Daily_Activity_Penggajian_${monthNameUpper}_${year}_${employeeNameFile}_${employee.nik}.xlsx`;
+
+    // Download
+    XLSX.writeFile(wb, filename);
+
+    // Close modal
+    document.getElementById('downloadModalOverlay').classList.remove('active');
+}
+
+// Add init to DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Existing inits are already called, add download modal init
+    setTimeout(() => {
+        if (document.getElementById('downloadModalOverlay')) {
+            initDownloadModal();
+        }
+    }, 100);
+});

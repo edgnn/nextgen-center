@@ -86,6 +86,9 @@
                     <span>▶</span>
                 </button>
             </div>
+            <a href="daily-activity.html" class="download-report-btn">
+                📋 Daily Activity
+            </a>
         </div>
 
         <!-- Calendar Container -->
@@ -150,8 +153,60 @@
                 </div>
             </div>
         </div>
+
+        <!-- Download Daily Activity Modal -->
+        <div class="modal-overlay" id="downloadModalOverlay">
+            <div class="modal download-modal">
+                <div class="modal-header">
+                    <h3 class="modal-title">📥 Download Daily Activity Report</h3>
+                    <button class="modal-close" id="downloadModalClose">✕</button>
+                </div>
+                <div class="modal-body" id="downloadModalBody">
+                    <div class="download-form">
+                        <div class="form-group">
+                            <label>Karyawan</label>
+                            <select id="downloadEmployee" class="select-input">
+                                <!-- Options populated by JS -->
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Bulan</label>
+                                <select id="downloadMonth" class="select-input">
+                                    <!-- Options populated by JS -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Tahun</label>
+                                <select id="downloadYear" class="select-input">
+                                    <!-- Options populated by JS -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Default Daily Activity</label>
+                            <input type="text" id="defaultActivity" class="text-input"
+                                value="Monitoring Surveillance SDWAN & Neucentrix" />
+                        </div>
+                        <div class="form-info">
+                            <p>📌 <strong>Catatan:</strong></p>
+                            <ul>
+                                <li>Hari Libur Nasional: <em>LEMBUR HARI BESAR NASIONAL</em></li>
+                                <li>Hari Sabtu/Minggu: <em>LEMBUR Monitoring Surveillance SDWAN & Neucentrix</em></li>
+                                <li>Hari Biasa: <em>sesuai input di atas</em></li>
+                            </ul>
+                        </div>
+                        <button class="download-btn" id="generateExcelBtn">
+                            📥 Download Excel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- SheetJS for Excel Export -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <script src="app.js"></script>
 </body>
 
