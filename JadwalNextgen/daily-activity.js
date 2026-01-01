@@ -498,11 +498,11 @@ async function downloadExcel() {
         // Merge info area A4:G7
         worksheet.mergeCells('A4:G7');
 
-        // Set info cell content with aligned colons
+        // Set info cell content with aligned colons using fixed spacing
         const infoCell = worksheet.getCell('A4');
-        infoCell.value = `NIK / Perner\t: ${currentEmployee.nik}\nNama\t\t\t: ${currentEmployee.name.toUpperCase()}\nJabatan\t\t: ${companyInfo.jabatan}\nDept / Divisi\t: ${companyInfo.dept}`;
+        infoCell.value = `NIK / Perner   : ${currentEmployee.nik}\nNama           : ${currentEmployee.name.toUpperCase()}\nJabatan        : ${companyInfo.jabatan}\nDept / Divisi  : ${companyInfo.dept}`;
         infoCell.alignment = { vertical: 'top', wrapText: true };
-        infoCell.font = { size: 11, name: 'Consolas' };
+        infoCell.font = { size: 11 };
 
         // ===============================
         // TABLE HEADER (Row 8)
