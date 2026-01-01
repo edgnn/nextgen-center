@@ -440,6 +440,30 @@ async function downloadExcel() {
             { width: 35 },  // G - KETERANGAN
         ];
 
+        // ===============================
+        // HEADER SECTION (Rows 1-3)
+        // A1:G3 merged - Logo left, Title center
+        // ===============================
+
+        // Add rows 1-3 first
+        worksheet.addRow([]); // Row 1
+        worksheet.addRow([]); // Row 2  
+        worksheet.addRow([]); // Row 3
+
+        // Merge header area A1:G3
+        worksheet.mergeCells('A1:G3');
+
+        // Set header cell content and style
+        const headerCell = worksheet.getCell('A1');
+        headerCell.value = '                                                              Daily Activity';
+        headerCell.font = { bold: true, size: 28 };
+        headerCell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+
+        // Set row heights for header
+        worksheet.getRow(1).height = 25;
+        worksheet.getRow(2).height = 25;
+        worksheet.getRow(3).height = 25;
+
         // Load and add logo image
         try {
             const logoResponse = await fetch('infomedia-logo.png');
@@ -451,46 +475,38 @@ async function downloadExcel() {
                 extension: 'png',
             });
 
-            // Add logo to worksheet (top-left, A1:B2)
+            // Add logo to worksheet (top-left corner inside merged area)
             worksheet.addImage(logoId, {
                 tl: { col: 0, row: 0 },
-                ext: { width: 150, height: 50 }
+                ext: { width: 180, height: 60 }
             });
         } catch (logoError) {
             console.warn('Could not load logo:', logoError);
         }
 
-        // Row 1: Header with logo (left) and title (center)
-        const headerRow = worksheet.addRow(['', '', '', '', 'Daily Activity', '', '']);
-        headerRow.height = 30;
-        headerRow.getCell(5).font = { bold: true, size: 18 };
-        headerRow.getCell(5).alignment = { horizontal: 'center', vertical: 'middle' };
-        // Merge title cells (E1:F1)
-        worksheet.mergeCells('E1:F1');
+        // ===============================
+        // INFO SECTION (Rows 4-7)
+        // A4:G7 merged - NIK, Nama, Jabatan, Dept
+        // ===============================
 
-        // Row 2: Empty (for logo space)
-        worksheet.addRow([]);
+        // Add rows 4-7
+        worksheet.addRow([]); // Row 4
+        worksheet.addRow([]); // Row 5
+        worksheet.addRow([]); // Row 6
+        worksheet.addRow([]); // Row 7
 
-        // Row 3: NIK / Perner with merged value cells
-        const nikRow = worksheet.addRow([`NIK / Perner:${currentEmployee.nik}`]);
-        worksheet.mergeCells(`A3:C3`);
+        // Merge info area A4:G7
+        worksheet.mergeCells('A4:G7');
 
-        // Row 4: Nama with merged value cells  
-        const namaRow = worksheet.addRow([`Nama:${currentEmployee.name.toUpperCase()}`]);
-        worksheet.mergeCells(`A4:C4`);
+        // Set info cell content
+        const infoCell = worksheet.getCell('A4');
+        infoCell.value = `NIK / Perner: ${currentEmployee.nik}\nNama: ${currentEmployee.name.toUpperCase()}\nJabatan: ${companyInfo.jabatan}\nDept / Divisi: ${companyInfo.dept}`;
+        infoCell.alignment = { vertical: 'top', wrapText: true };
+        infoCell.font = { size: 11 };
 
-        // Row 5: Jabatan with merged value cells
-        const jabatanRow = worksheet.addRow([`Jabatan:${companyInfo.jabatan}`]);
-        worksheet.mergeCells(`A5:C5`);
-
-        // Row 6: Dept / Divisi with merged value cells
-        const deptRow = worksheet.addRow([`Dept / Divisi:${companyInfo.dept}`]);
-        worksheet.mergeCells(`A6:C6`);
-
-        // Row 7: Empty
-        worksheet.addRow([]);
-
-        // Row 8: Table Header
+        // ===============================
+        // TABLE HEADER (Row 8)
+        // ===============================
         const tableHeaderRow = worksheet.addRow(['NO', 'TANGGAL', 'HADIR', 'Start', 'End', 'DAILY ACTIVITY', 'KETERANGAN']);
         tableHeaderRow.eachCell((cell) => {
             cell.font = { bold: true };
@@ -508,8 +524,10 @@ async function downloadExcel() {
             cell.alignment = { horizontal: 'center', vertical: 'middle' };
         });
 
-        // Data rows
-        let dataStartRow = 9;
+        // ===============================
+        // DATA ROWS (Row 9 onwards)
+        // ===============================
+        const dataStartRow = 9;
         activityData.forEach((row, index) => {
             const dataRow = worksheet.addRow([
                 row.no,
@@ -542,63 +560,44 @@ async function downloadExcel() {
             }
         });
 
-        // Calculate signature section start row
-        const sigStartRow = dataStartRow + activityData.length + 1;
+        // ===============================
+        // SIGNATURE SECTION
+        // Calculate start row based on data length
+        // ===============================
+        const lastDataRow = dataStartRow + activityData.length - 1;
+        const sigStartRow = lastDataRow + 2; // 1 empty row after data
 
-        // Empty rows before signatures
-        worksheet.addRow([]);
-        worksheet.addRow([]);
-
-        // Signature titles row
-        const sigTitleRow = worksheet.addRow(['Pekerja', '', '', '', 'Atasan 1', '', 'Atasan 2']);
-        const sigTitleRowNum = sigTitleRow.number;
-        sigTitleRow.getCell(1).font = { bold: true };
-        sigTitleRow.getCell(1).alignment = { horizontal: 'center' };
-        sigTitleRow.getCell(5).font = { bold: true };
-        sigTitleRow.getCell(5).alignment = { horizontal: 'center' };
-        sigTitleRow.getCell(7).font = { bold: true };
-        sigTitleRow.getCell(7).alignment = { horizontal: 'center' };
-        // Merge Pekerja (A), Atasan 1 (E-F), Atasan 2 (G)
-        worksheet.mergeCells(`A${sigTitleRowNum}:B${sigTitleRowNum}`);
-        worksheet.mergeCells(`E${sigTitleRowNum}:F${sigTitleRowNum}`);
-
-        // Empty rows for signature space
-        worksheet.addRow([]);
-        worksheet.addRow([]);
+        // Add empty row after data
         worksheet.addRow([]);
 
-        // Signature names row
-        const nameRow = worksheet.addRow([
-            `(${currentEmployee.name.toUpperCase()})`,
-            '', '', '',
-            `(${companyInfo.atasan1.name})`,
-            '',
-            '(……………………………)'
-        ]);
-        const nameRowNum = nameRow.number;
-        nameRow.getCell(1).alignment = { horizontal: 'center' };
-        nameRow.getCell(5).alignment = { horizontal: 'center' };
-        nameRow.getCell(7).alignment = { horizontal: 'center' };
-        // Merge cells for names
-        worksheet.mergeCells(`A${nameRowNum}:B${nameRowNum}`);
-        worksheet.mergeCells(`E${nameRowNum}:F${nameRowNum}`);
+        // Signature section spans 6 rows (e.g., 43-48 for 31 days of data)
+        // Add 6 rows for signature section
+        for (let i = 0; i < 6; i++) {
+            worksheet.addRow([]);
+        }
 
-        // NIK row for signatures
-        const nikSigRow = worksheet.addRow([
-            `NIK: ${currentEmployee.nik}`,
-            '', '', '',
-            `NIK: ${companyInfo.atasan1.nik}`,
-            '',
-            ''
-        ]);
-        const nikSigRowNum = nikSigRow.number;
-        nikSigRow.getCell(1).alignment = { horizontal: 'center' };
-        nikSigRow.getCell(1).font = { size: 10 };
-        nikSigRow.getCell(5).alignment = { horizontal: 'center' };
-        nikSigRow.getCell(5).font = { size: 10 };
-        // Merge cells for NIKs
-        worksheet.mergeCells(`A${nikSigRowNum}:B${nikSigRowNum}`);
-        worksheet.mergeCells(`E${nikSigRowNum}:F${nikSigRowNum}`);
+        const sigEndRow = sigStartRow + 5;
+
+        // Merge Pekerja section (A:E, 6 rows)
+        worksheet.mergeCells(`A${sigStartRow}:E${sigEndRow}`);
+        const pekerjaCell = worksheet.getCell(`A${sigStartRow}`);
+        pekerjaCell.value = `Pekerja\n\n\n\n(${currentEmployee.name.toUpperCase()})\nNIK: ${currentEmployee.nik}`;
+        pekerjaCell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+        pekerjaCell.font = { size: 11 };
+
+        // Merge Atasan 1 section (F, 6 rows)
+        worksheet.mergeCells(`F${sigStartRow}:F${sigEndRow}`);
+        const atasan1Cell = worksheet.getCell(`F${sigStartRow}`);
+        atasan1Cell.value = `Atasan 1\n\n\n\n(${companyInfo.atasan1.name})\nNIK: ${companyInfo.atasan1.nik}`;
+        atasan1Cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+        atasan1Cell.font = { size: 11 };
+
+        // Merge Atasan 2 section (G, 6 rows)
+        worksheet.mergeCells(`G${sigStartRow}:G${sigEndRow}`);
+        const atasan2Cell = worksheet.getCell(`G${sigStartRow}`);
+        atasan2Cell.value = `Atasan 2\n\n\n\n\n(……………………………)`;
+        atasan2Cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+        atasan2Cell.font = { size: 11 };
 
         // Generate filename
         const monthNameUpper = monthNames[currentMonth - 1].toUpperCase();
