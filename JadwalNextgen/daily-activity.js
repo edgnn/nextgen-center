@@ -442,7 +442,7 @@ async function downloadExcel() {
 
         // ===============================
         // HEADER SECTION (Rows 1-3)
-        // Logo in A1:D3 area, Title in E1:F3 area
+        // A1:G3 merged - Logo left, Title center
         // ===============================
 
         // Add rows 1-3 first
@@ -450,14 +450,14 @@ async function downloadExcel() {
         worksheet.addRow([]); // Row 2  
         worksheet.addRow([]); // Row 3
 
-        // Set header cell content and style - Title in E1:F3 area
-        const headerCell = worksheet.getCell('E1');
-        headerCell.value = 'Daily Activity';
-        headerCell.font = { bold: true, size: 28 };
-        headerCell.alignment = { horizontal: 'left', vertical: 'middle' };
+        // Merge entire header area A1:G3
+        worksheet.mergeCells('A1:G3');
 
-        // Merge title area E1:F3
-        worksheet.mergeCells('E1:F3');
+        // Set header cell content - Title centered with space for logo
+        const headerCell = worksheet.getCell('A1');
+        headerCell.value = '                                        Daily Activity';
+        headerCell.font = { bold: true, size: 28 };
+        headerCell.alignment = { horizontal: 'center', vertical: 'middle' };
 
         // Set row heights for header
         worksheet.getRow(1).height = 25;
