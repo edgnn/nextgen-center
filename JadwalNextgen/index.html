@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Kerja Nextgen</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1 class="logo">
+                    <span class="logo-icon">📅</span>
+                    Jadwal Kerja Nextgen
+                </h1>
+            </div>
+            <div class="header-right">
+                <a href="../" class="home-btn" aria-label="Back to Home">
+                    <span class="home-icon">🏠</span>
+                    <span class="home-text">Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <span class="sun-icon">☀️</span>
+                    <span class="moon-icon">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Live Dashboard -->
+        <div class="live-dashboard" id="liveDashboard">
+            <div class="dashboard-header">
+                <div class="dashboard-time">
+                    <span class="live-indicator"></span>
+                    <span class="current-time" id="currentTime">--:--:--</span>
+                </div>
+                <div class="dashboard-date" id="currentDate">-- -- ----</div>
+            </div>
+            <div class="dashboard-content">
+                <div class="dashboard-section working-now">
+                    <h4 class="dashboard-section-title">👷 Sedang Bekerja Sekarang</h4>
+                    <div class="dashboard-employees" id="workingNow">
+                        <!-- Will be populated by JS -->
+                    </div>
+                </div>
+                <div class="dashboard-section next-shift">
+                    <h4 class="dashboard-section-title next-shift-title" id="nextShiftTitle">⏰ Shift Berikutnya</h4>
+                    <div class="dashboard-employees" id="nextShift">
+                        <!-- Will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="filter-group">
+                <label for="employeeFilter">Karyawan:</label>
+                <select id="employeeFilter" class="select-input">
+                    <option value="all">Semua Karyawan</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="categoryFilter">Kategori:</label>
+                <select id="categoryFilter" class="select-input">
+                    <option value="all">Semua</option>
+                    <option value="SHIFTING">SHIFTING</option>
+                    <option value="OFFICE HOUR">OFFICE HOUR</option>
+                </select>
+            </div>
+            <div class="month-navigation">
+                <button class="nav-btn" id="prevMonth">
+                    <span>◀</span>
+                </button>
+                <div class="month-year-selects">
+                    <select id="monthSelect" class="select-input month-select"></select>
+                    <select id="yearSelect" class="select-input year-select"></select>
+                </div>
+                <button class="nav-btn" id="nextMonth">
+                    <span>▶</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Calendar Container -->
+        <div class="calendar-wrapper">
+            <div class="calendar-container" id="calendarContainer">
+                <!-- Calendar will be generated here -->
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <h3 class="legend-title">Keterangan Shift</h3>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <span class="legend-color shift-o1"></span>
+                    <span class="legend-text">O1 - 08.00-17.00 (Normal)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color shift-o2"></span>
+                    <span class="legend-text">O2 - 20.00-05.00 (Normal)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color shift-s1"></span>
+                    <span class="legend-text">S1 - 08.00-20.00</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color shift-s2"></span>
+                    <span class="legend-text">S2 - 20.00-08.00</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color shift-h1"></span>
+                    <span class="legend-text">H1 - 08.00-17.00 (Lembur)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color shift-h2"></span>
+                    <span class="legend-text">H2 - 15.00-23.00 (Lembur)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color shift-a1"></span>
+                    <span class="legend-text">A1 - 08.00-20.00 (Hari Besar)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color shift-a2"></span>
+                    <span class="legend-text">A2 - 20.00-08.00 (Hari Besar)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color shift-libur"></span>
+                    <span class="legend-text">L - LIBUR</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modalTitle">Detail Jadwal</h3>
+                    <button class="modal-close" id="modalClose">✕</button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Content will be generated -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
