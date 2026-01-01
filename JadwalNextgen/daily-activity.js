@@ -415,93 +415,212 @@ function updateSignatures() {
     document.getElementById('sigPekerja').textContent = `(${currentEmployee.name.toUpperCase()})`;
     document.getElementById('sigPekerjaNik').textContent = `NIK : ${currentEmployee.nik}`;
 }
-
 // ============================================
-// DOWNLOAD EXCEL
+// DOWNLOAD EXCEL (Using ExcelJS with Image Support)
 // ============================================
-function downloadExcel() {
+async function downloadExcel() {
     if (!currentEmployee || activityData.length === 0) {
         alert('Muat data terlebih dahulu');
         return;
     }
 
-    // Build worksheet data
-    const wsData = [];
+    try {
+        // Create workbook and worksheet
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Kertas kerja');
 
-    // Header rows
-    wsData.push(["Daily Activity ", "", "", "", "", "", "", "", "", ""]);
-    wsData.push(["NIK / Perner", "", `: ${currentEmployee.nik}`, "", "", "", "", "", "", ""]);
-    wsData.push(["Nama", "", `:  ${currentEmployee.name.toUpperCase()}`, "", "", "", "", "", "", ""]);
-    wsData.push(["Jabatan", "", `:  ${companyInfo.jabatan}`, "", "", "", "", "", "", ""]);
-    wsData.push(["Dept / Divisi", "", `:  ${companyInfo.dept}`, "", "", "", "", "", "", ""]);
-    wsData.push(["NO", "TANGGAL", "HADIR", "WAKTU KERJA", "", "DAILY ACTIVITY", "KETERANGAN", "", "", ""]);
-    wsData.push(["", "", "", "Start", "End", "", "", "", "", ""]);
+        // Set column widths
+        worksheet.columns = [
+            { width: 5 },   // A - NO
+            { width: 22 },  // B - TANGGAL
+            { width: 16 },  // C - HADIR
+            { width: 10 },  // D - Start
+            { width: 10 },  // E - End
+            { width: 50 },  // F - DAILY ACTIVITY
+            { width: 35 },  // G - KETERANGAN
+        ];
 
-    // Daily data rows
-    activityData.forEach(row => {
-        // Format date as string (e.g., "1 Desember 2025")
-        const dateStr = row.dateStr;
+        // Load and add logo image
+        try {
+            const logoResponse = await fetch('infomedia-logo.png');
+            const logoBlob = await logoResponse.blob();
+            const logoBase64 = await blobToBase64(logoBlob);
 
-        wsData.push([
-            row.no,
-            dateStr,
-            row.hadir,
-            row.startTime,
-            row.endTime,
-            row.dailyActivity,
-            row.keterangan,
-            "",
-            "",
-            ""
+            const logoId = workbook.addImage({
+                base64: logoBase64,
+                extension: 'png',
+            });
+
+            // Add logo to worksheet (top-left, spanning A1:B3)
+            worksheet.addImage(logoId, {
+                tl: { col: 0, row: 0 },
+                ext: { width: 180, height: 60 }
+            });
+        } catch (logoError) {
+            console.warn('Could not load logo:', logoError);
+        }
+
+        // Add empty rows for logo space
+        worksheet.addRow([]);
+        worksheet.addRow([]);
+        worksheet.addRow([]);
+
+        // Row 4: Title "Daily Activity" (merged, centered)
+        const titleRow = worksheet.addRow(['Daily Activity']);
+        titleRow.getCell(1).font = { bold: true, size: 16 };
+        titleRow.getCell(1).alignment = { horizontal: 'center' };
+        worksheet.mergeCells('A4:G4');
+
+        // Row 5: Empty
+        worksheet.addRow([]);
+
+        // Row 6-9: Employee Info
+        worksheet.addRow(['NIK / Perner', ':', currentEmployee.nik]);
+        worksheet.addRow(['Nama', ':', currentEmployee.name.toUpperCase()]);
+        worksheet.addRow(['Jabatan', ':', companyInfo.jabatan]);
+        worksheet.addRow(['Dept / Divisi', ':', companyInfo.dept]);
+
+        // Row 10: Empty
+        worksheet.addRow([]);
+
+        // Row 11: Table Header
+        const headerRow = worksheet.addRow(['NO', 'TANGGAL', 'HADIR', 'Start', 'End', 'DAILY ACTIVITY', 'KETERANGAN']);
+        headerRow.eachCell((cell) => {
+            cell.font = { bold: true };
+            cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FFE0E0E0' }
+            };
+            cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+            };
+            cell.alignment = { horizontal: 'center', vertical: 'middle' };
+        });
+
+        // Data rows
+        activityData.forEach(row => {
+            const dataRow = worksheet.addRow([
+                row.no,
+                row.dateStr,
+                row.hadir,
+                row.startTime,
+                row.endTime,
+                row.dailyActivity,
+                row.keterangan
+            ]);
+
+            dataRow.eachCell((cell) => {
+                cell.border = {
+                    top: { style: 'thin' },
+                    left: { style: 'thin' },
+                    bottom: { style: 'thin' },
+                    right: { style: 'thin' }
+                };
+            });
+
+            // Highlight weekend/holiday rows
+            if (row.isLibur || row.isHoliday || row.isWeekend) {
+                dataRow.eachCell((cell) => {
+                    cell.fill = {
+                        type: 'pattern',
+                        pattern: 'solid',
+                        fgColor: { argb: row.isHoliday ? 'FFFFD9D9' : (row.isWeekend ? 'FFFFF3CD' : 'FFF0F0F0') }
+                    };
+                });
+            }
+        });
+
+        // Empty row before signatures
+        worksheet.addRow([]);
+        worksheet.addRow([]);
+
+        // Signature section
+        const sigRow = worksheet.addRow([
+            'Pekerja',
+            '',
+            '',
+            '',
+            'Atasan 1',
+            '',
+            'Atasan 2'
         ]);
-    });
+        sigRow.eachCell((cell, colNumber) => {
+            cell.font = { bold: true };
+            cell.alignment = { horizontal: 'center' };
+        });
 
-    // Footer with signatures
-    wsData.push([]);
-    wsData.push([
-        `Pekerja\n\n\n\n(${currentEmployee.name.toUpperCase()})\nNIK : ${currentEmployee.nik}`,
-        "",
-        "",
-        "",
-        "",
-        `Atasan 1\n\n\n\n(${companyInfo.atasan1.name})\nNIK : ${companyInfo.atasan1.nik}`,
-        `Atasan 2\n\n\n\n\n(….................................)`,
-        "",
-        "",
-        ""
-    ]);
+        // Empty rows for signature space
+        worksheet.addRow([]);
+        worksheet.addRow([]);
+        worksheet.addRow([]);
 
-    // Create workbook
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.aoa_to_sheet(wsData);
+        // Signature names
+        const nameRow = worksheet.addRow([
+            `(${currentEmployee.name.toUpperCase()})`,
+            '',
+            '',
+            '',
+            `(${companyInfo.atasan1.name})`,
+            '',
+            '(……………………………)'
+        ]);
+        nameRow.eachCell((cell) => {
+            cell.alignment = { horizontal: 'center' };
+        });
 
-    // Set column widths
-    ws['!cols'] = [
-        { wch: 5 },   // NO
-        { wch: 20 },  // TANGGAL
-        { wch: 16 },  // HADIR
-        { wch: 10 },  // Start
-        { wch: 10 },  // End
-        { wch: 50 },  // DAILY ACTIVITY
-        { wch: 35 },  // KETERANGAN
-        { wch: 5 },
-        { wch: 5 },
-        { wch: 5 }
-    ];
+        // NIK row
+        const nikRow = worksheet.addRow([
+            `NIK: ${currentEmployee.nik}`,
+            '',
+            '',
+            '',
+            `NIK: ${companyInfo.atasan1.nik}`,
+            '',
+            ''
+        ]);
+        nikRow.eachCell((cell) => {
+            cell.alignment = { horizontal: 'center' };
+            cell.font = { size: 10 };
+        });
 
-    // Merge cells for header
-    ws['!merges'] = [
-        { s: { r: 0, c: 0 }, e: { r: 0, c: 9 } },  // Title
-        { s: { r: 5, c: 3 }, e: { r: 5, c: 4 } },  // WAKTU KERJA header
-    ];
+        // Generate filename
+        const monthNameUpper = monthNames[currentMonth - 1].toUpperCase();
+        const employeeNameFile = currentEmployee.name.toUpperCase().replace(/ /g, '_');
+        const filename = `Daily_Activity_Penggajian_${monthNameUpper}_${currentYear}_${employeeNameFile}_${currentEmployee.nik}.xlsx`;
 
-    XLSX.utils.book_append_sheet(wb, ws, "Kertas kerja");
+        // Download file
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = URL.createObjectURL(blob);
 
-    // Generate filename
-    const monthNameUpper = monthNames[currentMonth - 1].toUpperCase();
-    const employeeNameFile = currentEmployee.name.toUpperCase().replace(/ /g, '_');
-    const filename = `Daily_Activity_Penggajian_${monthNameUpper}_${currentYear}_${employeeNameFile}_${currentEmployee.nik}.xlsx`;
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
 
-    // Download using SheetJS writeFile
-    XLSX.writeFile(wb, filename);
+    } catch (error) {
+        console.error('Error generating Excel:', error);
+        alert('Error generating Excel: ' + error.message);
+    }
 }
+
+// Helper function to convert blob to base64
+function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64 = reader.result.split(',')[1];
+            resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
+}
+
