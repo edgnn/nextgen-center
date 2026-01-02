@@ -934,22 +934,22 @@ async function downloadPdf() {
     pdfBtn.disabled = true;
 
     try {
-        // Create a container for PDF content - must be visible for html2canvas
+        // Sync data from input fields to activityData before generating PDF
+        syncInputFieldsToData();
+
+        // Create a container for PDF content
         const pdfContainer = document.createElement('div');
         pdfContainer.id = 'pdf-content';
         pdfContainer.style.cssText = `
-            position: fixed;
+            position: absolute;
             top: 0;
-            left: 0;
+            left: -9999px;
             width: 1100px;
             padding: 20px;
             background: white;
             font-family: Arial, sans-serif;
             font-size: 11px;
             color: #1a1a1a;
-            z-index: -9999;
-            opacity: 0;
-            pointer-events: none;
         `;
 
         // Build PDF content HTML
@@ -957,29 +957,33 @@ async function downloadPdf() {
         document.body.appendChild(pdfContainer);
 
         // Wait for DOM to update and images to load
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 800));
 
         // Generate filename
         const monthNameUpper = monthNames[currentMonth - 1].toUpperCase();
         const employeeNameFile = currentEmployee.name.toUpperCase().replace(/ /g, '_');
         const filename = `Daily_Activity_${monthNameUpper}_${currentYear}_${employeeNameFile}.pdf`;
 
-        // Make container temporarily visible for rendering
-        pdfContainer.style.opacity = '1';
-        pdfContainer.style.zIndex = '9999';
+        // Move container to visible position for html2canvas rendering
+        pdfContainer.style.left = '0';
+
+        // Wait a bit more for the position change to take effect
+        await new Promise(resolve => setTimeout(resolve, 200));
 
         // Configure html2pdf options for 1-page fit
         const options = {
             margin: [5, 5, 5, 5],
             filename: filename,
-            image: { type: 'jpeg', quality: 0.95 },
+            image: { type: 'jpeg', quality: 0.98 },
             html2canvas: {
-                scale: 1.5,
+                scale: 2,
                 useCORS: true,
                 allowTaint: true,
                 logging: false,
                 width: 1100,
-                windowWidth: 1100
+                windowWidth: 1100,
+                scrollX: 0,
+                scrollY: 0
             },
             jsPDF: {
                 unit: 'mm',
@@ -1003,6 +1007,24 @@ async function downloadPdf() {
         pdfBtn.innerHTML = originalText;
         pdfBtn.disabled = false;
     }
+}
+
+// ============================================
+// SYNC INPUT FIELDS TO DATA
+// ============================================
+function syncInputFieldsToData() {
+    // Get all input fields in the table and sync their values to activityData
+    const tbody = document.getElementById('activityTableBody');
+    if (!tbody) return;
+
+    const inputs = tbody.querySelectorAll('input[data-index]');
+    inputs.forEach(input => {
+        const index = parseInt(input.dataset.index);
+        const field = input.dataset.field;
+        if (activityData[index] && field) {
+            activityData[index][field] = input.value;
+        }
+    });
 }
 
 // ============================================
