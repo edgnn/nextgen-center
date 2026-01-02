@@ -261,6 +261,21 @@
             border-color: var(--text-muted);
         }
 
+        .col-end.editable-cell input,
+        .col-start.editable-cell input {
+            width: 70px;
+            text-align: center;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .editable-cell input:disabled {
+            background: var(--bg-tertiary);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
         /* Day name badge */
         .day-badge {
             display: inline-block;
@@ -352,6 +367,15 @@
         .btn-download:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+        }
+
+        .btn-pdf {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-pdf:hover {
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
         }
 
         .btn-back {
@@ -520,6 +544,9 @@
 
         <!-- Action Bar -->
         <div class="action-bar" id="actionBar" style="display: none;">
+            <button class="btn-download btn-pdf" id="downloadPdfBtn">
+                📄 Download PDF
+            </button>
             <button class="btn-download" id="downloadBtn">
                 📥 Download Excel
             </button>
@@ -528,6 +555,8 @@
 
     <!-- ExcelJS for Excel Export with Image Support -->
     <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+    <!-- html2pdf.js for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="daily-activity.js"></script>
 </body>
 

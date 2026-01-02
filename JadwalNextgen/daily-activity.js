@@ -228,6 +228,7 @@ function initSelectors() {
 function initEventListeners() {
     document.getElementById('loadDataBtn').addEventListener('click', loadData);
     document.getElementById('downloadBtn').addEventListener('click', downloadExcel);
+    document.getElementById('downloadPdfBtn').addEventListener('click', downloadPdf);
 }
 
 // ============================================
@@ -380,8 +381,24 @@ function renderTable() {
                     </span>
                 </td>
                 <td class="col-hadir">${row.hadir}</td>
-                <td class="col-start">${row.startTime}</td>
-                <td class="col-end">${row.endTime}</td>
+                <td class="col-start editable-cell">
+                    <input type="text" value="${row.startTime}" 
+                           placeholder="HH:MM"
+                           pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]"
+                           data-index="${index}" data-field="startTime"
+                           onchange="updateStartTimeAndOvertime(this)"
+                           oninput="formatTimeInput(this)">
+                </td>
+                <td class="col-end editable-cell">
+                    <input type="text" value="${row.endTime}" 
+                           placeholder="HH:MM"
+                           pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]"
+                           data-index="${index}" data-field="endTime"
+                           data-start-time="${row.startTime}"
+                           id="endTime-${index}"
+                           onchange="updateEndTimeAndOvertime(this)"
+                           oninput="formatTimeInput(this)">
+                </td>
                 <td class="col-activity editable-cell">
                     <input type="text" value="${row.dailyActivity}" 
                            data-index="${index}" data-field="dailyActivity"
@@ -390,6 +407,7 @@ function renderTable() {
                 <td class="col-keterangan editable-cell">
                     <input type="text" value="${row.keterangan}" 
                            data-index="${index}" data-field="keterangan"
+                           id="keterangan-${index}"
                            onchange="updateActivityData(this)">
                 </td>
             </tr>
@@ -406,6 +424,230 @@ function updateActivityData(input) {
     const index = parseInt(input.dataset.index);
     const field = input.dataset.field;
     activityData[index][field] = input.value;
+}
+
+// ============================================
+// FORMAT TIME INPUT (24-hour format HH:MM)
+// ============================================
+function formatTimeInput(input) {
+    let value = input.value;
+
+    // Remove non-numeric and non-colon characters
+    value = value.replace(/[^0-9:]/g, '');
+
+    // Auto-add colon after 2 digits if not present
+    if (value.length === 2 && !value.includes(':')) {
+        value = value + ':';
+    }
+
+    // Limit to 5 characters (HH:MM)
+    if (value.length > 5) {
+        value = value.substring(0, 5);
+    }
+
+    // Validate hours (00-23)
+    if (value.length >= 2) {
+        let hours = parseInt(value.substring(0, 2));
+        if (hours > 23) {
+            value = '23' + value.substring(2);
+        }
+    }
+
+    // Validate minutes (00-59)
+    if (value.length === 5) {
+        let minutes = parseInt(value.substring(3, 5));
+        if (minutes > 59) {
+            value = value.substring(0, 3) + '59';
+        }
+    }
+
+    input.value = value;
+}
+
+// ============================================
+// UPDATE END TIME AND CALCULATE OVERTIME
+// ============================================
+function updateEndTimeAndOvertime(input) {
+    const index = parseInt(input.dataset.index);
+    const newEndTime = input.value;
+    const row = activityData[index];
+
+    // Update end time in data
+    activityData[index].endTime = newEndTime;
+
+    // Get current start time from data (may have been updated)
+    const startTime = activityData[index].startTime;
+
+    // Calculate overtime based on context
+    let overtimeInfo = "";
+
+    if (startTime && newEndTime) {
+        if (row.isLibur || row.isWeekend || row.isHoliday) {
+            // For libur/weekend/holiday: calculate total hours as lembur
+            overtimeInfo = calculateWeekendOvertime(startTime, newEndTime, row);
+        } else {
+            // For regular days: calculate overtime from default end time
+            overtimeInfo = calculateOvertime(startTime, newEndTime, row);
+        }
+    }
+
+    // Update keterangan field
+    activityData[index].keterangan = overtimeInfo;
+
+    // Update keterangan input in the DOM
+    const keteranganInput = document.getElementById(`keterangan-${index}`);
+    if (keteranganInput) {
+        keteranganInput.value = overtimeInfo;
+    }
+}
+
+// ============================================
+// UPDATE START TIME AND CALCULATE OVERTIME
+// ============================================
+function updateStartTimeAndOvertime(input) {
+    const index = parseInt(input.dataset.index);
+    const newStartTime = input.value;
+    const row = activityData[index];
+
+    // Update start time in data
+    activityData[index].startTime = newStartTime;
+
+    // Update the data-start-time attribute on the end time input
+    const endTimeInput = document.getElementById(`endTime-${index}`);
+    if (endTimeInput) {
+        endTimeInput.dataset.startTime = newStartTime;
+    }
+
+    // Get current end time
+    const endTime = activityData[index].endTime;
+
+    // Calculate overtime based on context
+    let overtimeInfo = "";
+
+    if (newStartTime && endTime) {
+        if (row.isLibur || row.isWeekend || row.isHoliday) {
+            // For libur/weekend/holiday: calculate total hours as lembur
+            overtimeInfo = calculateWeekendOvertime(newStartTime, endTime, row);
+        } else {
+            // For regular days: calculate overtime from default end time
+            overtimeInfo = calculateOvertime(newStartTime, endTime, row);
+        }
+    }
+
+    // Update keterangan field
+    activityData[index].keterangan = overtimeInfo;
+
+    // Update keterangan input in the DOM
+    const keteranganInput = document.getElementById(`keterangan-${index}`);
+    if (keteranganInput) {
+        keteranganInput.value = overtimeInfo;
+    }
+}
+
+// ============================================
+// CALCULATE WEEKEND/LIBUR OVERTIME (Total hours worked)
+// ============================================
+function calculateWeekendOvertime(startTime, endTime, row) {
+    if (!startTime || !endTime) return "";
+
+    // Parse times
+    const [startHour, startMin] = startTime.split(':').map(Number);
+    const [endHour, endMin] = endTime.split(':').map(Number);
+
+    // Convert to minutes from midnight
+    let startMinutes = startHour * 60 + startMin;
+    let endMinutes = endHour * 60 + endMin;
+
+    // Handle overnight shift (end time is next day)
+    if (endMinutes <= startMinutes) {
+        endMinutes += 24 * 60; // Add 24 hours
+    }
+
+    // Calculate total work duration in hours
+    const totalMinutes = endMinutes - startMinutes;
+    const totalHours = totalMinutes / 60;
+    const roundedHours = Math.round(totalHours * 10) / 10; // Round to 1 decimal
+
+    if (roundedHours > 0) {
+        if (row.isHoliday) {
+            return `Lembur Hari Besar ${roundedHours} Jam (${startTime} - ${endTime})`;
+        } else if (row.isWeekend) {
+            return `Lembur Weekend ${roundedHours} Jam (${startTime} - ${endTime})`;
+        } else {
+            return `Lembur ${roundedHours} Jam (${startTime} - ${endTime})`;
+        }
+    }
+
+    return "";
+}
+
+// ============================================
+// CALCULATE OVERTIME HOURS
+// ============================================
+function calculateOvertime(startTime, endTime, row) {
+    if (!startTime || !endTime) return "";
+
+    // Define default end times for each shift type
+    const shiftDefaultEndTimes = {
+        "O1": "17:00",  // Office Hour Day: 08:00 - 17:00
+        "O2": "05:00",  // Office Hour Night: 20:00 - 05:00
+        "S1": "20:00",  // Shift Day: 08:00 - 20:00
+        "S2": "08:00",  // Shift Night: 20:00 - 08:00
+        "H1": "17:00",  // Half Day: 08:00 - 17:00
+        "H2": "23:00",  // Half Night: 15:00 - 23:00
+        "R1": "20:00",  // Reserved 1
+        "R2": "23:00",  // Reserved 2
+        "A1": "20:00",  // Holiday Day: 08:00 - 20:00
+        "A2": "08:00"   // Holiday Night: 20:00 - 08:00
+    };
+
+    // Determine shift type based on start time
+    let shiftType = "O1"; // Default
+    const [startHour] = startTime.split(':').map(Number);
+
+    if (startHour === 20) {
+        shiftType = "O2"; // Night shift starting at 20:00
+    } else if (startHour === 8) {
+        shiftType = "O1"; // Day shift starting at 08:00
+    } else if (startHour === 15) {
+        shiftType = "H2"; // Half shift starting at 15:00
+    }
+
+    // Get default end time for this shift
+    const defaultEndTime = shiftDefaultEndTimes[shiftType] || "17:00";
+
+    // Parse times
+    const [defaultEndHour, defaultEndMin] = defaultEndTime.split(':').map(Number);
+    const [newEndHour, newEndMin] = endTime.split(':').map(Number);
+
+    // Convert to minutes from midnight
+    let defaultEndMinutes = defaultEndHour * 60 + defaultEndMin;
+    let newEndMinutes = newEndHour * 60 + newEndMin;
+
+    // Handle overnight shift (O2, S2, A2)
+    if (shiftType === "O2" || shiftType === "S2" || shiftType === "A2") {
+        // For overnight shifts, add 24 hours if end time is in morning
+        if (defaultEndMinutes < 12 * 60) defaultEndMinutes += 24 * 60;
+        if (newEndMinutes < 12 * 60) newEndMinutes += 24 * 60;
+    }
+
+    // Calculate overtime in minutes
+    const overtimeMinutes = newEndMinutes - defaultEndMinutes;
+
+    if (overtimeMinutes > 0) {
+        // Convert to hours
+        const overtimeHours = overtimeMinutes / 60;
+        const roundedOT = Math.round(overtimeHours * 10) / 10; // Round to 1 decimal
+
+        // Format: Overtime X Jam (defaultEnd - newEnd)
+        return `Overtime ${roundedOT} Jam (${defaultEndTime} - ${endTime})`;
+    } else if (row.isHoliday) {
+        return `Lembur Hari Besar Nasional (${startTime} - ${endTime})`;
+    } else if (row.isWeekend && !row.isLibur) {
+        return `Lembur Weekend (${startTime} - ${endTime})`;
+    }
+
+    return "Shift";
 }
 
 // ============================================
@@ -676,3 +918,169 @@ function blobToBase64(blob) {
     });
 }
 
+// ============================================
+// DOWNLOAD PDF (Using html2pdf.js)
+// ============================================
+async function downloadPdf() {
+    if (!currentEmployee || activityData.length === 0) {
+        alert('Muat data terlebih dahulu');
+        return;
+    }
+
+    // Show loading state
+    const pdfBtn = document.getElementById('downloadPdfBtn');
+    const originalText = pdfBtn.innerHTML;
+    pdfBtn.innerHTML = '⏳ Generating PDF...';
+    pdfBtn.disabled = true;
+
+    try {
+        // Create a container for PDF content
+        const pdfContainer = document.createElement('div');
+        pdfContainer.id = 'pdf-content';
+        pdfContainer.style.cssText = `
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 1100px;
+            padding: 20px;
+            background: white;
+            font-family: 'Inter', Arial, sans-serif;
+            font-size: 11px;
+            color: #1a1a1a;
+        `;
+
+        // Build PDF content HTML
+        pdfContainer.innerHTML = buildPdfContent();
+        document.body.appendChild(pdfContainer);
+
+        // Generate filename
+        const monthNameUpper = monthNames[currentMonth - 1].toUpperCase();
+        const employeeNameFile = currentEmployee.name.toUpperCase().replace(/ /g, '_');
+        const filename = `Daily_Activity_${monthNameUpper}_${currentYear}_${employeeNameFile}.pdf`;
+
+        // Configure html2pdf options for 1-page fit
+        const options = {
+            margin: [5, 5, 5, 5], // top, left, bottom, right in mm
+            filename: filename,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+                scale: 2,
+                useCORS: true,
+                logging: false
+            },
+            jsPDF: {
+                unit: 'mm',
+                format: 'a4',
+                orientation: 'landscape'
+            },
+            pagebreak: { mode: 'avoid-all' }
+        };
+
+        // Generate PDF
+        await html2pdf().set(options).from(pdfContainer).save();
+
+        // Cleanup
+        document.body.removeChild(pdfContainer);
+
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        alert('Error generating PDF: ' + error.message);
+    } finally {
+        // Restore button state
+        pdfBtn.innerHTML = originalText;
+        pdfBtn.disabled = false;
+    }
+}
+
+// ============================================
+// BUILD PDF CONTENT HTML
+// ============================================
+function buildPdfContent() {
+    let html = '';
+
+    // Header with logo and title
+    html += `
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e5e7eb;">
+            <img src="infomedia-logo.png" alt="Logo" style="height: 50px;">
+            <h1 style="font-size: 24px; font-weight: 700; margin: 0; text-align: center; flex: 1;">Daily Activity</h1>
+            <div style="width: 100px;"></div>
+        </div>
+    `;
+
+    // Employee info
+    html += `
+        <div style="margin-bottom: 15px; padding: 10px; background: #f9fafb; border-left: 3px solid #3b82f6;">
+            <div style="margin-bottom: 4px;"><strong>NIK / Perner</strong> : ${currentEmployee.nik}</div>
+            <div style="margin-bottom: 4px;"><strong>Nama</strong> : ${currentEmployee.name.toUpperCase()}</div>
+            <div style="margin-bottom: 4px;"><strong>Jabatan</strong> : ${companyInfo.jabatan}</div>
+            <div><strong>Dept / Divisi</strong> : ${companyInfo.dept}</div>
+        </div>
+    `;
+
+    // Activity table
+    html += `
+        <table style="width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 15px;">
+            <thead>
+                <tr style="background: #e5e7eb;">
+                    <th style="border: 1px solid #d1d5db; padding: 6px 4px; width: 25px;">NO</th>
+                    <th style="border: 1px solid #d1d5db; padding: 6px 4px; width: 100px;">TANGGAL</th>
+                    <th style="border: 1px solid #d1d5db; padding: 6px 4px; width: 70px;">HADIR</th>
+                    <th style="border: 1px solid #d1d5db; padding: 6px 4px; width: 45px;">Start</th>
+                    <th style="border: 1px solid #d1d5db; padding: 6px 4px; width: 45px;">End</th>
+                    <th style="border: 1px solid #d1d5db; padding: 6px 4px;">DAILY ACTIVITY</th>
+                    <th style="border: 1px solid #d1d5db; padding: 6px 4px; width: 150px;">KETERANGAN</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    activityData.forEach(row => {
+        let bgColor = 'white';
+        if (row.isHoliday) bgColor = '#fef2f2';
+        else if (row.isWeekend) bgColor = '#fffbeb';
+        else if (row.isLibur) bgColor = '#f3f4f6';
+
+        html += `
+            <tr style="background: ${bgColor};">
+                <td style="border: 1px solid #d1d5db; padding: 4px; text-align: center;">${row.no}</td>
+                <td style="border: 1px solid #d1d5db; padding: 4px;">${row.dateStr}</td>
+                <td style="border: 1px solid #d1d5db; padding: 4px;">${row.hadir}</td>
+                <td style="border: 1px solid #d1d5db; padding: 4px; text-align: center;">${row.startTime}</td>
+                <td style="border: 1px solid #d1d5db; padding: 4px; text-align: center;">${row.endTime}</td>
+                <td style="border: 1px solid #d1d5db; padding: 4px;">${row.dailyActivity}</td>
+                <td style="border: 1px solid #d1d5db; padding: 4px;">${row.keterangan}</td>
+            </tr>
+        `;
+    });
+
+    html += '</tbody></table>';
+
+    // Signature section
+    html += `
+        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+            <div style="text-align: center; width: 30%;">
+                <div style="margin-bottom: 50px;">Pekerja</div>
+                <div style="border-top: 1px solid #000; padding-top: 5px;">
+                    <strong>(${currentEmployee.name.toUpperCase()})</strong><br>
+                    <span style="font-size: 10px;">NIK: ${currentEmployee.nik}</span>
+                </div>
+            </div>
+            <div style="text-align: center; width: 30%;">
+                <div style="margin-bottom: 50px;">Atasan 1</div>
+                <div style="border-top: 1px solid #000; padding-top: 5px;">
+                    <strong>(${companyInfo.atasan1.name})</strong><br>
+                    <span style="font-size: 10px;">NIK: ${companyInfo.atasan1.nik}</span>
+                </div>
+            </div>
+            <div style="text-align: center; width: 30%;">
+                <div style="margin-bottom: 50px;">Atasan 2</div>
+                <div style="border-top: 1px solid #000; padding-top: 5px;">
+                    <strong>(……………………………)</strong><br>
+                    <span style="font-size: 10px;">&nbsp;</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    return html;
+}
