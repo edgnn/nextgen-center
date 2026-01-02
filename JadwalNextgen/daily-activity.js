@@ -522,7 +522,7 @@ async function downloadExcel() {
 
         // Set info cell content with aligned colons using fixed spacing
         const infoCell = worksheet.getCell('A4');
-        infoCell.value = `NIK / Perner   : ${currentEmployee.nik}\nNama           : ${currentEmployee.name.toUpperCase()}\nJabatan        : ${companyInfo.jabatan}\nDept / Divisi  : ${companyInfo.dept}`;
+        infoCell.value = `NIK / Perner   : ${currentEmployee.nik}\nNama             : ${currentEmployee.name.toUpperCase()}\nJabatan          : ${companyInfo.jabatan}\nDept / Divisi  : ${companyInfo.dept}`;
         infoCell.alignment = { vertical: 'top', wrapText: true };
         infoCell.font = { size: 11 };
 
