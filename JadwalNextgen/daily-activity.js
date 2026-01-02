@@ -429,15 +429,37 @@ async function downloadExcel() {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Kertas kerja');
 
-        // Set column widths
+        // ===============================
+        // PAGE SETUP - FIT TO 1 PAGE
+        // ===============================
+        worksheet.pageSetup = {
+            paperSize: 9, // A4 Paper
+            orientation: 'landscape', // Landscape untuk muat lebih banyak kolom
+            fitToPage: true, // Enable fit to page
+            fitToWidth: 1, // Fit to 1 page width
+            fitToHeight: 1, // Fit to 1 page height
+            horizontalCentered: true, // Center horizontally
+            verticalCentered: false, // Don't center vertically
+            margins: {
+                left: 0.25,
+                right: 0.25,
+                top: 0.5,
+                bottom: 0.5,
+                header: 0.3,
+                footer: 0.3
+            },
+            printArea: null // Will be set after adding all content
+        };
+
+        // Set column widths (Optimized for A4 Landscape - 1 page fit)
         worksheet.columns = [
-            { width: 5 },   // A - NO
-            { width: 22 },  // B - TANGGAL
-            { width: 16 },  // C - HADIR
-            { width: 10 },  // D - Start
-            { width: 10 },  // E - End
-            { width: 50 },  // F - DAILY ACTIVITY
-            { width: 35 },  // G - KETERANGAN
+            { width: 4 },   // A - NO (reduced)
+            { width: 18 },  // B - TANGGAL (reduced)
+            { width: 12 },  // C - HADIR (reduced)
+            { width: 7 },   // D - Start (reduced)
+            { width: 7 },   // E - End (reduced)
+            { width: 45 },  // F - DAILY ACTIVITY (reduced)
+            { width: 30 },  // G - KETERANGAN (reduced)
         ];
 
         // ===============================
@@ -598,6 +620,24 @@ async function downloadExcel() {
         atasan2Cell.value = `Atasan 2\n\n\n\n\n(……………………………)`;
         atasan2Cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
         atasan2Cell.font = { size: 11 };
+
+        // ===============================
+        // SET PRINT AREA - Cover all content
+        // ===============================
+        worksheet.pageSetup.printArea = `A1:G${sigEndRow}`;
+
+        // ===============================
+        // COMPACT ROW HEIGHTS FOR BETTER FIT
+        // ===============================
+        // Adjust data row heights to be more compact
+        for (let i = dataStartRow; i <= lastDataRow; i++) {
+            worksheet.getRow(i).height = 15; // Compact height for data rows
+        }
+
+        // Adjust signature row heights
+        for (let i = sigStartRow; i <= sigEndRow; i++) {
+            worksheet.getRow(i).height = 18; // Slightly taller for signature section
+        }
 
         // Generate filename
         const monthNameUpper = monthNames[currentMonth - 1].toUpperCase();
