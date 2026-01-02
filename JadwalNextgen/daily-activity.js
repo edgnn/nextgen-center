@@ -934,39 +934,52 @@ async function downloadPdf() {
     pdfBtn.disabled = true;
 
     try {
-        // Create a container for PDF content
+        // Create a container for PDF content - must be visible for html2canvas
         const pdfContainer = document.createElement('div');
         pdfContainer.id = 'pdf-content';
         pdfContainer.style.cssText = `
-            position: absolute;
-            left: -9999px;
+            position: fixed;
             top: 0;
+            left: 0;
             width: 1100px;
             padding: 20px;
             background: white;
-            font-family: 'Inter', Arial, sans-serif;
+            font-family: Arial, sans-serif;
             font-size: 11px;
             color: #1a1a1a;
+            z-index: -9999;
+            opacity: 0;
+            pointer-events: none;
         `;
 
         // Build PDF content HTML
         pdfContainer.innerHTML = buildPdfContent();
         document.body.appendChild(pdfContainer);
 
+        // Wait for DOM to update and images to load
+        await new Promise(resolve => setTimeout(resolve, 500));
+
         // Generate filename
         const monthNameUpper = monthNames[currentMonth - 1].toUpperCase();
         const employeeNameFile = currentEmployee.name.toUpperCase().replace(/ /g, '_');
         const filename = `Daily_Activity_${monthNameUpper}_${currentYear}_${employeeNameFile}.pdf`;
 
+        // Make container temporarily visible for rendering
+        pdfContainer.style.opacity = '1';
+        pdfContainer.style.zIndex = '9999';
+
         // Configure html2pdf options for 1-page fit
         const options = {
-            margin: [5, 5, 5, 5], // top, left, bottom, right in mm
+            margin: [5, 5, 5, 5],
             filename: filename,
-            image: { type: 'jpeg', quality: 0.98 },
+            image: { type: 'jpeg', quality: 0.95 },
             html2canvas: {
-                scale: 2,
+                scale: 1.5,
                 useCORS: true,
-                logging: false
+                allowTaint: true,
+                logging: false,
+                width: 1100,
+                windowWidth: 1100
             },
             jsPDF: {
                 unit: 'mm',
