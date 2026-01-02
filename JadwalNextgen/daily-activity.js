@@ -334,9 +334,29 @@ function buildActivityData() {
         if (!isLibur && shift) {
             if (overtimeConfig[shift]) {
                 keterangan = overtimeConfig[shift].description;
-            } else {
+            } else if (isWeekend || isHoliday) {
+                // Untuk kerja di weekend atau holiday, tampilkan keterangan lembur dengan jam kerja
+                if (shiftWorkingHours[shift]) {
+                    const workHours = shiftWorkingHours[shift];
+                    // Hitung jam kerja
+                    const [startH, startM] = workHours.start.split(':').map(Number);
+                    const [endH, endM] = workHours.end.split(':').map(Number);
+                    let startMinutes = startH * 60 + startM;
+                    let endMinutes = endH * 60 + endM;
+                    if (endMinutes <= startMinutes) endMinutes += 24 * 60;
+                    const totalHours = (endMinutes - startMinutes) / 60;
+
+                    if (isHoliday) {
+                        keterangan = `Lembur Hari Besar ${totalHours} Jam (${workHours.start} - ${workHours.end})`;
+                    } else {
+                        keterangan = `Lembur Weekend ${totalHours} Jam (${workHours.start} - ${workHours.end})`;
+                    }
+                }
+            } else if (currentEmployee.category !== "OFFICE HOUR") {
+                // Hanya isi "Shift" untuk karyawan SHIFTING di hari kerja biasa, bukan OFFICE HOUR
                 keterangan = "Shift";
             }
+            // Untuk karyawan OFFICE HOUR di hari kerja biasa, keterangan tetap kosong jika tidak ada lembur
         }
 
         activityData.push({
@@ -402,6 +422,7 @@ function renderTable() {
                 <td class="col-activity editable-cell">
                     <input type="text" value="${row.dailyActivity}" 
                            data-index="${index}" data-field="dailyActivity"
+                           id="dailyActivity-${index}"
                            onchange="updateActivityData(this)">
                 </td>
                 <td class="col-keterangan editable-cell">
@@ -480,15 +501,28 @@ function updateEndTimeAndOvertime(input) {
 
     // Calculate overtime based on context
     let overtimeInfo = "";
+    let newDailyActivity = null;
 
     if (startTime && newEndTime) {
         if (row.isLibur || row.isWeekend || row.isHoliday) {
             // For libur/weekend/holiday: calculate total hours as lembur
             overtimeInfo = calculateWeekendOvertime(startTime, newEndTime, row);
+
+            // Jika hari libur/weekend/holiday dan ada waktu kerja, ubah dailyActivity ke LEMBUR
+            if (row.isHoliday) {
+                newDailyActivity = "LEMBUR HARI BESAR NASIONAL";
+            } else if (row.isWeekend) {
+                newDailyActivity = "LEMBUR Monitoring Surveillance SDWAN & Neucentrix";
+            } else if (row.isLibur) {
+                newDailyActivity = "LEMBUR Monitoring Surveillance SDWAN & Neucentrix";
+            }
         } else {
             // For regular days: calculate overtime from default end time
             overtimeInfo = calculateOvertime(startTime, newEndTime, row);
         }
+    } else if (row.isLibur) {
+        // Jika waktu dikosongkan dan hari libur, kembalikan ke LIBUR
+        newDailyActivity = "LIBUR";
     }
 
     // Update keterangan field
@@ -498,6 +532,15 @@ function updateEndTimeAndOvertime(input) {
     const keteranganInput = document.getElementById(`keterangan-${index}`);
     if (keteranganInput) {
         keteranganInput.value = overtimeInfo;
+    }
+
+    // Update dailyActivity if needed
+    if (newDailyActivity !== null) {
+        activityData[index].dailyActivity = newDailyActivity;
+        const dailyActivityInput = document.getElementById(`dailyActivity-${index}`);
+        if (dailyActivityInput) {
+            dailyActivityInput.value = newDailyActivity;
+        }
     }
 }
 
@@ -523,15 +566,28 @@ function updateStartTimeAndOvertime(input) {
 
     // Calculate overtime based on context
     let overtimeInfo = "";
+    let newDailyActivity = null;
 
     if (newStartTime && endTime) {
         if (row.isLibur || row.isWeekend || row.isHoliday) {
             // For libur/weekend/holiday: calculate total hours as lembur
             overtimeInfo = calculateWeekendOvertime(newStartTime, endTime, row);
+
+            // Jika hari libur/weekend/holiday dan ada waktu kerja, ubah dailyActivity ke LEMBUR
+            if (row.isHoliday) {
+                newDailyActivity = "LEMBUR HARI BESAR NASIONAL";
+            } else if (row.isWeekend) {
+                newDailyActivity = "LEMBUR Monitoring Surveillance SDWAN & Neucentrix";
+            } else if (row.isLibur) {
+                newDailyActivity = "LEMBUR Monitoring Surveillance SDWAN & Neucentrix";
+            }
         } else {
             // For regular days: calculate overtime from default end time
             overtimeInfo = calculateOvertime(newStartTime, endTime, row);
         }
+    } else if (row.isLibur) {
+        // Jika waktu dikosongkan dan hari libur, kembalikan ke LIBUR
+        newDailyActivity = "LIBUR";
     }
 
     // Update keterangan field
@@ -541,6 +597,15 @@ function updateStartTimeAndOvertime(input) {
     const keteranganInput = document.getElementById(`keterangan-${index}`);
     if (keteranganInput) {
         keteranganInput.value = overtimeInfo;
+    }
+
+    // Update dailyActivity if needed
+    if (newDailyActivity !== null) {
+        activityData[index].dailyActivity = newDailyActivity;
+        const dailyActivityInput = document.getElementById(`dailyActivity-${index}`);
+        if (dailyActivityInput) {
+            dailyActivityInput.value = newDailyActivity;
+        }
     }
 }
 
@@ -647,6 +712,10 @@ function calculateOvertime(startTime, endTime, row) {
         return `Lembur Weekend (${startTime} - ${endTime})`;
     }
 
+    // Untuk karyawan OFFICE HOUR, keterangan kosong jika tidak ada lembur
+    if (currentEmployee.category === "OFFICE HOUR") {
+        return "";
+    }
     return "Shift";
 }
 
@@ -717,9 +786,9 @@ async function downloadExcel() {
         // Merge entire header area A1:G3
         worksheet.mergeCells('A1:G3');
 
-        // Set header cell content - Title centered with space for logo
+        // Set header cell content - Title centered
         const headerCell = worksheet.getCell('A1');
-        headerCell.value = '                                        Daily Activity';
+        headerCell.value = 'Daily Activity';
         headerCell.font = { bold: true, size: 28 };
         headerCell.alignment = { horizontal: 'center', vertical: 'middle' };
 
@@ -739,10 +808,11 @@ async function downloadExcel() {
                 extension: 'png',
             });
 
-            // Add logo to worksheet (top-left corner inside merged area)
+            // Add logo to worksheet (positioned with margin from edges)
+            // col: 0.2 adds left margin, row: 0.5 centers vertically in header area
             worksheet.addImage(logoId, {
-                tl: { col: 0, row: 0 },
-                ext: { width: 180, height: 60 }
+                tl: { col: 0.15, row: 0.4 },
+                ext: { width: 180, height: 55 }
             });
         } catch (logoError) {
             console.warn('Could not load logo:', logoError);
