@@ -147,9 +147,11 @@ const shiftWorkingHours = {
 // Overtime configuration
 const overtimeConfig = {
     "S1": { hours: 3, description: "Overtime 3 Jam (17:00 - 20:00)" },
-    "S2": { hours: 3, description: "Overtime 3 Jam (5.00 - 8.00)" },
-    "A1": { hours: 12, description: "Overtime 12 Jam (8.00 - 20.00)" },
-    "A2": { hours: 12, description: "Overtime 12 Jam (20.00 - 8.00)" }
+    "S2": { hours: 3, description: "Overtime 3 Jam (05:00 - 08:00)" },
+    "H1": { hours: 8, description: "Lembur 8 Jam (08:00 - 17:00)" },
+    "H2": { hours: 8, description: "Lembur 8 Jam (15:00 - 23:00)" },
+    "A1": { hours: 11, description: "Lembur Hari Besar 11 Jam (08:00 - 20:00)" },
+    "A2": { hours: 11, description: "Lembur Hari Besar 11 Jam (20:00 - 08:00)" }
 };
 
 // ============================================
@@ -323,6 +325,8 @@ function buildActivityData() {
             dailyActivity = "LIBUR";
         } else if (isHoliday || shift === "A1" || shift === "A2") {
             dailyActivity = "LEMBUR HARI BESAR NASIONAL";
+        } else if (shift === "H1" || shift === "H2") {
+            dailyActivity = "LEMBUR Monitoring Surveillance SDWAN & Neucentrix";
         } else if (isWeekend) {
             dailyActivity = "LEMBUR Monitoring Surveillance SDWAN & Neucentrix";
         } else {
