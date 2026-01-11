@@ -1,0 +1,17 @@
+{
+  "name": "web-ssh-client",
+  "version": "1.0.0",
+  "description": "Web-based SSH client with SecureCRT/Termius-inspired design",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ssh2": "^1.15.0",
+    "ws": "^8.16.0"
+  },
+  "author": "Nextgen Center",
+  "license": "MIT"
+}
