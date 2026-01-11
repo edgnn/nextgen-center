@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre Config SD-WAN - Nextgen Center</title>
+    <meta name="description"
+        content="Panduan Pre-Configuration untuk berbagai device Cisco SD-WAN. Manual provisioning dan Day 0 configuration.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-primary: #049fd9;
+            --accent-secondary: #0277bd;
+            --accent-gradient: linear-gradient(135deg, #049fd9 0%, #0277bd 50%, #01579b 100%);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --glow-1: rgba(4, 159, 217, 0.4);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --bg-card: rgba(0, 0, 0, 0.02);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+
+        [data-theme="light"] .header {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .theme-toggle:hover svg {
+            color: white;
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .sun-icon {
+            display: block;
+        }
+
+        .main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 20px 60px;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .preconfig-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 24px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+        }
+
+        .preconfig-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.3;
+        }
+
+        .title-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .info-section {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .info-header svg {
+            width: 24px;
+            height: 24px;
+            color: var(--accent-primary);
+        }
+
+        .info-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .info-content {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .device-section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .section-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .section-icon svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .device-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .device-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .device-card:hover {
+            transform: translateX(8px);
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .device-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .device-icon svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        .device-info {
+            flex: 1;
+        }
+
+        .device-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .device-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .device-arrow {
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+
+        .device-card:hover .device-arrow {
+            color: var(--success);
+            transform: translateX(4px);
+        }
+
+        .device-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .coming-soon {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .coming-soon .device-icon {
+            background: var(--bg-tertiary);
+        }
+
+        .coming-soon-badge {
+            padding: 4px 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .nav-bottom {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .nav-bottom a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-bottom a:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .nav-bottom a svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .device-card {
+                padding: 16px;
+            }
+
+            .device-title {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../index.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="title-section">
+            <div class="preconfig-badge">
+                <i data-lucide="terminal"></i>
+                Pre-Configuration Guide
+            </div>
+            <h1>Pre Config SD-WAN Devices</h1>
+            <p class="title-desc">Panduan manual provisioning dan Day 0 configuration untuk berbagai device Cisco SD-WAN
+            </p>
+        </div>
+
+        <div class="info-section">
+            <div class="info-header">
+                <i data-lucide="info"></i>
+                <h3>Tentang Pre-Configuration</h3>
+            </div>
+            <div class="info-content">
+                <p>Pre-configuration diperlukan untuk onboarding device ke SD-WAN fabric secara manual. Gunakan panduan
+                    ini jika:</p>
+                <ul style="margin-top: 12px; margin-left: 20px;">
+                    <li>Device tidak memiliki akses internet untuk PnP</li>
+                    <li>Menggunakan on-premise vManage</li>
+                    <li>Environment lab atau testing yang terisolasi</li>
+                    <li>Kebijakan keamanan tidak mengizinkan cloud PnP</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="device-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i data-lucide="router"></i>
+                </div>
+                <h2 class="section-title">Cisco Catalyst Edge Routers</h2>
+            </div>
+
+            <div class="device-list">
+                <a href="sdwan/c8300-preconfig.html" class="device-card">
+                    <div class="device-icon">
+                        <i data-lucide="server"></i>
+                    </div>
+                    <div class="device-info">
+                        <div class="device-title">Cisco Catalyst C8300</div>
+                        <div class="device-desc">Pre-config untuk C8300-1N1S-6T, C8300-1N1S-4T2X, dan model lainnya
+                        </div>
+                    </div>
+                    <div class="device-arrow"><i data-lucide="chevron-right"></i></div>
+                </a>
+
+                <div class="device-card coming-soon">
+                    <div class="device-icon">
+                        <i data-lucide="server"></i>
+                    </div>
+                    <div class="device-info">
+                        <div class="device-title">Cisco Catalyst C8200</div>
+                        <div class="device-desc">Pre-config untuk C8200L-1N-4T dan model lainnya</div>
+                    </div>
+                    <span class="coming-soon-badge">Coming Soon</span>
+                </div>
+
+                <div class="device-card coming-soon">
+                    <div class="device-icon">
+                        <i data-lucide="server"></i>
+                    </div>
+                    <div class="device-info">
+                        <div class="device-title">Cisco Catalyst C8500</div>
+                        <div class="device-desc">Pre-config untuk C8500-12X dan model lainnya</div>
+                    </div>
+                    <span class="coming-soon-badge">Coming Soon</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="device-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i data-lucide="wifi"></i>
+                </div>
+                <h2 class="section-title">Cisco ISR Routers</h2>
+            </div>
+
+            <div class="device-list">
+                <div class="device-card coming-soon">
+                    <div class="device-icon">
+                        <i data-lucide="server"></i>
+                    </div>
+                    <div class="device-info">
+                        <div class="device-title">Cisco ISR1100-4GLTE</div>
+                        <div class="device-desc">Pre-config untuk ISR1100-4G/6G series dengan LTE</div>
+                    </div>
+                    <span class="coming-soon-badge">Coming Soon</span>
+                </div>
+
+                <div class="device-card coming-soon">
+                    <div class="device-icon">
+                        <i data-lucide="server"></i>
+                    </div>
+                    <div class="device-info">
+                        <div class="device-title">Cisco ISR4000 Series</div>
+                        <div class="device-desc">Pre-config untuk ISR4321, ISR4331, ISR4351</div>
+                    </div>
+                    <span class="coming-soon-badge">Coming Soon</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-bottom">
+            <a href="../index.html">
+                <i data-lucide="home"></i>
+                Kembali ke Beranda
+            </a>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.getAttribute('data-theme') === 'light') {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+            lucide.createIcons();
+        }
+
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
+</body>
+
+</html>

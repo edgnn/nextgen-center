@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre Config Cisco Catalyst C8300 untuk SD-WAN - Nextgen Center</title>
+    <meta name="description"
+        content="Panduan lengkap Pre-Configuration Cisco Catalyst C8300 untuk SD-WAN deployment. Step-by-step konfigurasi awal sebelum onboarding ke vManage.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="chapter-style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../preconfig-sdwan.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali ke Pre Config SD-WAN</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="chapter-header">
+            <div class="chapter-badge" style="background: linear-gradient(135deg, #10b981, #059669);">Pre-Config Guide
+            </div>
+            <h1>Pre Config Cisco Catalyst C8300 untuk SD-WAN</h1>
+            <p class="chapter-meta">Manual Provisioning • Cisco IOS-XE</p>
+        </div>
+
+        <section class="content-section">
+            <h2><i data-lucide="target"></i> Tujuan</h2>
+            <ul class="objectives-list">
+                <li>Melakukan konfigurasi awal (Day 0) pada Cisco Catalyst C8300</li>
+                <li>Menyiapkan device untuk onboarding ke SD-WAN fabric</li>
+                <li>Mengkonfigurasi parameter dasar: System IP, Site ID, Organization</li>
+                <li>Menghubungkan device ke vBond, vSmart, dan vManage</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="info"></i> Kapan Menggunakan Pre-Config?</h2>
+            <div class="content-block">
+                <p>Pre-configuration manual diperlukan dalam skenario berikut:</p>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="wifi-off"></i></div>
+                        <h4>Tidak Ada Internet</h4>
+                        <p>Device tidak bisa akses PnP portal</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="server"></i></div>
+                        <h4>On-Premise vManage</h4>
+                        <p>Menggunakan private cloud deployment</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="shield"></i></div>
+                        <h4>Security Requirements</h4>
+                        <p>Tidak diizinkan menggunakan cloud PnP</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="clock"></i></div>
+                        <h4>Lab/Testing</h4>
+                        <p>Environment lab yang terisolasi</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="clipboard-list"></i> Prerequisites</h2>
+            <div class="content-block">
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Persiapan Sebelum Konfigurasi</strong>
+                        <p>Pastikan Anda sudah memiliki informasi berikut dari tim vManage administrator.</p>
+                    </div>
+                </div>
+
+                <table class="data-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Contoh</th>
+                        <th>Keterangan</th>
+                    </tr>
+                    <tr>
+                        <td>System IP</td>
+                        <td>10.255.1.1</td>
+                        <td>Unique identifier untuk device dalam overlay</td>
+                    </tr>
+                    <tr>
+                        <td>Site ID</td>
+                        <td>100</td>
+                        <td>Lokasi site (harus unique per-site)</td>
+                    </tr>
+                    <tr>
+                        <td>Organization Name</td>
+                        <td>MYCOMPANY-SDWAN</td>
+                        <td>Harus sama persis dengan vManage</td>
+                    </tr>
+                    <tr>
+                        <td>vBond IP/FQDN</td>
+                        <td>vbond.company.com atau 203.0.113.10</td>
+                        <td>vBond orchestrator address</td>
+                    </tr>
+                    <tr>
+                        <td>WAN IP Address</td>
+                        <td>192.168.1.1/24</td>
+                        <td>IP untuk transport interface</td>
+                    </tr>
+                    <tr>
+                        <td>Default Gateway</td>
+                        <td>192.168.1.254</td>
+                        <td>Gateway untuk WAN interface</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="terminal"></i> Pre-Configuration Step-by-Step</h2>
+            <div class="content-block">
+                <div class="alert warning">
+                    <i data-lucide="alert-triangle"></i>
+                    <div class="alert-content">
+                        <strong>Penting!</strong>
+                        <p>Ganti semua nilai dalam kurung siku [ ] dengan nilai sebenarnya sesuai environment Anda.</p>
+                    </div>
+                </div>
+
+                <h3>Step 1: Reset Device ke Factory Default (Opsional)</h3>
+                <p>Jika device sebelumnya pernah dikonfigurasi, lakukan factory reset:</p>
+                <pre><code>Router# request platform software sdwan software reset</code></pre>
+                <p>Tunggu device reboot dan masuk ke mode initial configuration.</p>
+
+                <h3>Step 2: System Configuration</h3>
+                <p>Konfigurasi system SD-WAN parameters:</p>
+                <pre><code>[HOSTNAME](config)# system
+[HOSTNAME](config-system)# system-ip [SYSTEM-IP]
+[HOSTNAME](config-system)# site-id [SITE-ID]
+[HOSTNAME](config-system)# organization-name [ORG-NAME]
+[HOSTNAME](config-system)# sp-organization-name [SP-ORG-NAME]
+[HOSTNAME](config-system)# vbond [VBOND-FQDN] port 12346
+[HOSTNAME](config-system)# commit</code></pre>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Multi-Tenant Note</strong>
+                        <p><code>sp-organization-name</code> diperlukan untuk deployment multi-tenant. Untuk
+                            single-tenant, parameter ini bisa diabaikan.</p>
+                    </div>
+                </div>
+
+                <h3>Step 3: Interface WAN Configuration</h3>
+                <p>Konfigurasi interface WAN dengan IP address:</p>
+                <pre><code>[HOSTNAME](config)# interface GigabitEthernet0/0/0
+[HOSTNAME](config-if)# description WAN-INTERNET
+[HOSTNAME](config-if)# ip address [WAN-IP] [SUBNET-MASK]
+[HOSTNAME](config-if)# commit</code></pre>
+
+                <h3>Step 4: DNS dan IP Host Configuration</h3>
+                <p>Konfigurasi DNS resolver dan static host entry untuk vBond:</p>
+                <pre><code>[HOSTNAME](config)# ip host [VBOND-FQDN] [VBOND-IP-1] [VBOND-IP-2] [VBOND-IP-3] [VBOND-IP-4]
+[HOSTNAME](config)# ip name-server 8.8.8.8 8.8.4.4
+[HOSTNAME](config)# ip route 0.0.0.0 0.0.0.0 [GATEWAY-IP]
+[HOSTNAME](config)# commit</code></pre>
+
+                <div class="alert warning">
+                    <i data-lucide="alert-triangle"></i>
+                    <div class="alert-content">
+                        <strong>IP Host Entry</strong>
+                        <p>Entry <code>ip host</code> penting jika DNS tidak bisa resolve vBond FQDN. Masukkan semua IP
+                            vBond yang tersedia.</p>
+                    </div>
+                </div>
+
+                <h3>Step 5: Hostname Configuration</h3>
+                <pre><code>[HOSTNAME](config)# hostname [HOSTNAME]</code></pre>
+
+                <h3>Step 6: SDWAN Tunnel Interface Configuration</h3>
+                <p>Konfigurasi tunnel interface untuk SD-WAN overlay:</p>
+                <pre><code>[HOSTNAME](config)# sdwan
+[HOSTNAME](config-sdwan)# interface GigabitEthernet0/0/0
+[HOSTNAME](config-interface-GigabitEthernet0/0/0)# tunnel-interface
+[HOSTNAME](config-tunnel-interface)# encapsulation ipsec weight 1
+[HOSTNAME](config-tunnel-interface)# no border
+[HOSTNAME](config-tunnel-interface)# color public-internet
+[HOSTNAME](config-tunnel-interface)# no last-resort-circuit
+[HOSTNAME](config-tunnel-interface)# no low-bandwidth-link
+[HOSTNAME](config-tunnel-interface)# no vbond-as-stun-server
+[HOSTNAME](config-tunnel-interface)# vmanage-connection-preference 5
+[HOSTNAME](config-tunnel-interface)# port-hop
+[HOSTNAME](config-tunnel-interface)# carrier default
+[HOSTNAME](config-tunnel-interface)# nat-refresh-interval 5
+[HOSTNAME](config-tunnel-interface)# hello-interval 1000
+[HOSTNAME](config-tunnel-interface)# hello-tolerance 12
+[HOSTNAME](config-tunnel-interface)# no allow-service all
+[HOSTNAME](config-tunnel-interface)# no allow-service bgp
+[HOSTNAME](config-tunnel-interface)# allow-service dhcp
+[HOSTNAME](config-tunnel-interface)# allow-service dns
+[HOSTNAME](config-tunnel-interface)# allow-service icmp
+[HOSTNAME](config-tunnel-interface)# no allow-service sshd
+[HOSTNAME](config-tunnel-interface)# no allow-service netconf
+[HOSTNAME](config-tunnel-interface)# no allow-service ntp
+[HOSTNAME](config-tunnel-interface)# no allow-service ospf
+[HOSTNAME](config-tunnel-interface)# no allow-service stun
+[HOSTNAME](config-tunnel-interface)# allow-service https
+[HOSTNAME](config-tunnel-interface)# no allow-service snmp
+[HOSTNAME](config-tunnel-interface)# no allow-service bfd
+[HOSTNAME](config-tunnel-interface)# exit
+[HOSTNAME](config-interface-GigabitEthernet0/0/0)# exit
+[HOSTNAME](config-sdwan)# exit</code></pre>
+
+                <h3>Step 7: Tunnel0 Interface Configuration</h3>
+                <p>Konfigurasi Tunnel0 untuk SD-WAN mode:</p>
+                <pre><code>[HOSTNAME](config)# interface Tunnel0
+[HOSTNAME](config-if)# no shutdown
+[HOSTNAME](config-if)# ip unnumbered GigabitEthernet0/0/0
+[HOSTNAME](config-if)# no ip redirects
+[HOSTNAME](config-if)# ipv6 unnumbered GigabitEthernet0/0/0
+[HOSTNAME](config-if)# no ipv6 redirects
+[HOSTNAME](config-if)# tunnel source GigabitEthernet0/0/0
+[HOSTNAME](config-if)# tunnel mode sdwan
+[HOSTNAME](config-if)# exit</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="check-circle"></i> Contoh Konfigurasi Lengkap (Real Case)</h2>
+            <div class="content-block">
+                <p>Berikut contoh konfigurasi real dari deployment Telkom SD-WAN:</p>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Contoh Deployment</strong>
+                        <p id="deploymentInfo">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="tab-container" style="margin-top: 20px;">
+                    <div class="tab-buttons" style="display: flex; gap: 0; margin-bottom: 0;">
+                        <button onclick="showTab('process')" id="tabProcess" class="tab-btn active"
+                            style="flex: 1; padding: 12px 20px; border: 1px solid var(--border-color); border-bottom: none; background: var(--accent-primary); color: white; font-weight: 600; cursor: pointer; border-radius: 8px 8px 0 0; transition: all 0.2s;">
+                            <i data-lucide="terminal"
+                                style="width: 16px; height: 16px; display: inline; vertical-align: middle;"></i>
+                            Proses Config (dengan Prompt)
+                        </button>
+                        <button onclick="showTab('result')" id="tabResult" class="tab-btn"
+                            style="flex: 1; padding: 12px 20px; border: 1px solid var(--border-color); border-bottom: none; background: var(--bg-tertiary); color: var(--text-secondary); font-weight: 600; cursor: pointer; border-radius: 8px 8px 0 0; transition: all 0.2s;">
+                            <i data-lucide="copy"
+                                style="width: 16px; height: 16px; display: inline; vertical-align: middle;"></i>
+                            Hasil Config (Copy-Paste Ready)
+                        </button>
+                    </div>
+
+                    <!-- Process Tab Content -->
+                    <div id="processTab" class="tab-content"
+                        style="border: 1px solid var(--border-color); border-radius: 0 0 8px 8px; padding: 20px; background: var(--bg-secondary);">
+                        <h4 style="margin-bottom: 15px; color: var(--accent-primary);">📟 CLI Process (Step-by-Step
+                            dengan Hostname Prompt)</h4>
+                        <pre
+                            style="font-size: 0.85rem; overflow-x: auto;"><code id="processCode">Loading configuration...</code></pre>
+                    </div>
+
+                    <!-- Result Tab Content -->
+                    <div id="resultTab" class="tab-content"
+                        style="display: none; border: 1px solid var(--border-color); border-radius: 0 0 8px 8px; padding: 20px; background: var(--bg-secondary);">
+                        <h4 style="margin-bottom: 15px; color: var(--accent-primary);">📋 Copy-Paste Ready Config</h4>
+                        <p style="margin-bottom: 15px; color: var(--text-secondary);">Klik tombol copy untuk menyalin
+                            seluruh konfigurasi:</p>
+
+                        <div class="code-container" style="position: relative;">
+                            <button onclick="copyConfig()" class="copy-btn"
+                                style="position: absolute; top: 10px; right: 10px; padding: 8px 16px; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; z-index: 10;">
+                                <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+                                <span id="copyBtnText">Copy All</span>
+                            </button>
+                            <pre
+                                style="font-size: 0.85rem; overflow-x: auto;"><code id="configCode">Loading configuration...</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    // Encoded configuration data (Base64)
+                    const _0x1a2b = 'U2l0ZTogRGlza29taW5mbyBTdWthYnVtaSDigKIgU3lzdGVtIElQOiAxMC4yNTUuMjI5LjI1NCDigKIgU2l0ZSBJRDogMzAzNDIwMDAx';
+                    const _0x3c4d = 'MDIwMS1EMi1TS0ItRFNTS0ItSE9ESVNLT01JTkZP';
+                    const _0x5e6f = 'MTAuMjU1LjIyOS4yNTQ=';
+                    const _0x7a8b = 'MzAzNDIwMDAx';
+                    const _0x9c0d = 'dGVsa29tLW10MS1kaXNrb21pbmZvLXN1a2FidW1p';
+                    const _0xab1e = 'dGVsa29tLW10MQ==';
+                    const _0xcd2f = 'dmI2LXNkd2FuLnRlbGtvbS5jby5pZA==';
+                    const _0xef3a = 'MzYuOTMuMzMuNg==';
+                    const _0x1b4c = 'MjU1LjI1NS4yNTUuMjQ4';
+                    const _0x5d6e = 'MzYuOTQuMjUyLjI1IDM2Ljk0LjI1Mi4yOCAzNi45NC4yNTIuNTEgMzYuOTQuMjUyLjU0';
+                    const _0x7f8a = 'MzYuOTMuMzMuMQ==';
+
+                    // Decode function
+                    function _d(s) { return atob(s); }
+
+                    // Build process config
+                    function buildProcessConfig() {
+                        const h = _d(_0x3c4d);
+                        const sip = _d(_0x5e6f);
+                        const sid = _d(_0x7a8b);
+                        const org = _d(_0x9c0d);
+                        const sporg = _d(_0xab1e);
+                        const vb = _d(_0xcd2f);
+                        const wip = _d(_0xef3a);
+                        const wmask = _d(_0x1b4c);
+                        const vbips = _d(_0x5d6e);
+                        const gw = _d(_0x7f8a);
+
+                        return `${h}(config)# system
+${h}(config-system)# system-ip ${sip}
+${h}(config-system)# site-id ${sid}
+${h}(config-system)# organization-name ${org}
+${h}(config-system)# sp-organization-name ${sporg}
+${h}(config-system)# vbond ${vb} port 12346
+${h}(config-system)# commit
+
+${h}(config)# interface GigabitEthernet0/0/0
+${h}(config-if)# description WAN-INTERNET
+${h}(config-if)# ip address ${wip} ${wmask}
+${h}(config-if)# commit
+
+${h}(config)# ip host ${vb} ${vbips}
+${h}(config)# ip name-server 8.8.8.8 8.8.4.4
+${h}(config)# ip route 0.0.0.0 0.0.0.0 ${gw}
+${h}(config)# commit
+
+${h}(config)# hostname ${h}
+
+${h}(config)# sdwan
+${h}(config-sdwan)# interface GigabitEthernet0/0/0
+${h}(config-interface-GigabitEthernet0/0/0)# tunnel-interface
+${h}(config-tunnel-interface)# encapsulation ipsec weight 1
+${h}(config-tunnel-interface)# no border
+${h}(config-tunnel-interface)# color public-internet
+${h}(config-tunnel-interface)# no last-resort-circuit
+${h}(config-tunnel-interface)# no low-bandwidth-link
+${h}(config-tunnel-interface)# no vbond-as-stun-server
+${h}(config-tunnel-interface)# vmanage-connection-preference 5
+${h}(config-tunnel-interface)# port-hop
+${h}(config-tunnel-interface)# carrier default
+${h}(config-tunnel-interface)# nat-refresh-interval 5
+${h}(config-tunnel-interface)# hello-interval 1000
+${h}(config-tunnel-interface)# hello-tolerance 12
+${h}(config-tunnel-interface)# no allow-service all
+${h}(config-tunnel-interface)# no allow-service bgp
+${h}(config-tunnel-interface)# allow-service dhcp
+${h}(config-tunnel-interface)# allow-service dns
+${h}(config-tunnel-interface)# allow-service icmp
+${h}(config-tunnel-interface)# no allow-service sshd
+${h}(config-tunnel-interface)# no allow-service netconf
+${h}(config-tunnel-interface)# no allow-service ntp
+${h}(config-tunnel-interface)# no allow-service ospf
+${h}(config-tunnel-interface)# no allow-service stun
+${h}(config-tunnel-interface)# allow-service https
+${h}(config-tunnel-interface)# no allow-service snmp
+${h}(config-tunnel-interface)# no allow-service bfd
+${h}(config-tunnel-interface)# exit
+${h}(config-interface-GigabitEthernet0/0/0)# exit
+${h}(config-sdwan)# exit
+
+${h}(config)# interface Tunnel0
+${h}(config-if)# no shutdown
+${h}(config-if)# ip unnumbered GigabitEthernet0/0/0
+${h}(config-if)# no ip redirects
+${h}(config-if)# ipv6 unnumbered GigabitEthernet0/0/0
+${h}(config-if)# no ipv6 redirects
+${h}(config-if)# tunnel source GigabitEthernet0/0/0
+${h}(config-if)# tunnel mode sdwan
+${h}(config-if)# exit`;
+                    }
+
+                    // Build result config
+                    function buildResultConfig() {
+                        const h = _d(_0x3c4d);
+                        const sip = _d(_0x5e6f);
+                        const sid = _d(_0x7a8b);
+                        const org = _d(_0x9c0d);
+                        const sporg = _d(_0xab1e);
+                        const vb = _d(_0xcd2f);
+                        const wip = _d(_0xef3a);
+                        const wmask = _d(_0x1b4c);
+                        const vbips = _d(_0x5d6e);
+                        const gw = _d(_0x7f8a);
+
+                        return `! ================================================
+! CISCO CATALYST C8300 SD-WAN PRE-CONFIG
+! Site: Diskominfo Sukabumi
+! Hostname: ${h}
+! ================================================
+
+! === STEP 2: SYSTEM CONFIGURATION ===
+system
+system-ip ${sip}
+site-id ${sid}
+organization-name ${org}
+sp-organization-name ${sporg}
+vbond ${vb} port 12346
+commit
+
+! === STEP 3: INTERFACE WAN CONFIGURATION ===
+interface GigabitEthernet0/0/0
+description WAN-INTERNET
+ip address ${wip} ${wmask}
+commit
+
+! === STEP 4: DNS DAN IP HOST CONFIGURATION ===
+ip host ${vb} ${vbips}
+ip name-server 8.8.8.8 8.8.4.4
+ip route 0.0.0.0 0.0.0.0 ${gw}
+commit
+
+! === STEP 5: HOSTNAME CONFIGURATION ===
+hostname ${h}
+
+! === STEP 6: SDWAN TUNNEL INTERFACE CONFIGURATION ===
+sdwan
+interface GigabitEthernet0/0/0
+tunnel-interface
+encapsulation ipsec weight 1
+no border
+color public-internet
+no last-resort-circuit
+no low-bandwidth-link
+no vbond-as-stun-server
+vmanage-connection-preference 5
+port-hop
+carrier default
+nat-refresh-interval 5
+hello-interval 1000
+hello-tolerance 12
+no allow-service all
+no allow-service bgp
+allow-service dhcp
+allow-service dns
+allow-service icmp
+no allow-service sshd
+no allow-service netconf
+no allow-service ntp
+no allow-service ospf
+no allow-service stun
+allow-service https
+no allow-service snmp
+no allow-service bfd
+exit
+exit
+exit
+
+! === STEP 7: TUNNEL0 INTERFACE CONFIGURATION ===
+interface Tunnel0
+no shutdown
+ip unnumbered GigabitEthernet0/0/0
+no ip redirects
+ipv6 unnumbered GigabitEthernet0/0/0
+no ipv6 redirects
+tunnel source GigabitEthernet0/0/0
+tunnel mode sdwan
+exit
+
+! === CONFIGURATION COMPLETE ===`;
+                    }
+
+                    // Initialize on page load
+                    document.addEventListener('DOMContentLoaded', function () {
+                        document.getElementById('deploymentInfo').textContent = _d(_0x1a2b);
+                        document.getElementById('processCode').textContent = buildProcessConfig();
+                        document.getElementById('configCode').textContent = buildResultConfig();
+                        lucide.createIcons();
+                    });
+
+                    function showTab(tab) {
+                        const processTab = document.getElementById('processTab');
+                        const resultTab = document.getElementById('resultTab');
+                        const tabProcess = document.getElementById('tabProcess');
+                        const tabResult = document.getElementById('tabResult');
+
+                        if (tab === 'process') {
+                            processTab.style.display = 'block';
+                            resultTab.style.display = 'none';
+                            tabProcess.style.background = 'var(--accent-primary)';
+                            tabProcess.style.color = 'white';
+                            tabResult.style.background = 'var(--bg-tertiary)';
+                            tabResult.style.color = 'var(--text-secondary)';
+                        } else {
+                            processTab.style.display = 'none';
+                            resultTab.style.display = 'block';
+                            tabResult.style.background = 'var(--accent-primary)';
+                            tabResult.style.color = 'white';
+                            tabProcess.style.background = 'var(--bg-tertiary)';
+                            tabProcess.style.color = 'var(--text-secondary)';
+                        }
+                        lucide.createIcons();
+                    }
+
+                    function copyConfig() {
+                        const configText = document.getElementById('configCode').innerText;
+                        navigator.clipboard.writeText(configText).then(() => {
+                            const btnText = document.getElementById('copyBtnText');
+                            btnText.textContent = 'Copied!';
+                            setTimeout(() => {
+                                btnText.textContent = 'Copy All';
+                            }, 2000);
+                        });
+                    }
+                </script>
+
+                <div class="alert warning" style="margin-top: 20px;">
+                    <i data-lucide="alert-triangle"></i>
+                    <div class="alert-content">
+                        <strong>Sesuaikan Nilai Berikut</strong>
+                        <p>Ganti parameter berikut sesuai dengan site Anda: <code>system-ip</code>,
+                            <code>site-id</code>, <code>organization-name</code>, <code>sp-organization-name</code>,
+                            <code>hostname</code>, <code>ip address</code>, dan <code>ip route</code>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="search"></i> Verifikasi Konfigurasi</h2>
+            <div class="content-block">
+                <h3>Perintah Verifikasi yang Penting:</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Command</th>
+                        <th>Keterangan</th>
+                    </tr>
+                    <tr>
+                        <td><code>show sdwan control connections</code></td>
+                        <td>Cek status koneksi ke vManage, vSmart, vBond</td>
+                    </tr>
+                    <tr>
+                        <td><code>show sdwan control local-properties</code></td>
+                        <td>Lihat system-ip, site-id, org-name</td>
+                    </tr>
+                    <tr>
+                        <td><code>show sdwan certificate installed</code></td>
+                        <td>Verifikasi certificate telah terinstall</td>
+                    </tr>
+                    <tr>
+                        <td><code>show sdwan bfd sessions</code></td>
+                        <td>Cek BFD sessions dengan device lain</td>
+                    </tr>
+                    <tr>
+                        <td><code>show ip interface brief</code></td>
+                        <td>Cek status interface</td>
+                    </tr>
+                    <tr>
+                        <td><code>ping vrf 0 [VBOND-IP]</code></td>
+                        <td>Test konektivitas ke vBond</td>
+                    </tr>
+                </table>
+
+                <h3>Contoh Output yang Diharapkan:</h3>
+                <pre><code>C8300-SITE-JKT-01# show sdwan control connections
+                                                                                       PEER                                          PEER                                          
+PEER    PEER PEER            SITE       DOMAIN PEER                                    PRIV  PEER                                    PUB                                           
+TYPE    PROT SYSTEM IP       ID         ID     PRIVATE IP                              PORT  PUBLIC IP                               PORT  LOCAL COLOR     PROXY STATE UPTIME      
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+vsmart  dtls 10.255.0.1      1          1      203.0.113.11                            12346 203.0.113.11                            12346 biz-internet    No    up     0:05:32:15
+vbond   dtls 0.0.0.0         0          0      203.0.113.10                            12346 203.0.113.10                            12346 biz-internet    -     up     0:05:32:45
+vmanage dtls 10.255.0.2      1          0      203.0.113.12                            12346 203.0.113.12                            12346 biz-internet    No    up     0:05:32:10</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="alert-circle"></i> Troubleshooting</h2>
+            <div class="content-block">
+                <div class="alert error">
+                    <i data-lucide="x-circle"></i>
+                    <div class="alert-content">
+                        <strong>Control Connection Tidak Up?</strong>
+                        <p>Cek point-point berikut:</p>
+                    </div>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>1. Verifikasi Konektivitas Dasar</h4>
+                    <ul>
+                        <li>Pastikan interface WAN sudah UP</li>
+                        <li>Cek routing table - pastikan ada route ke vBond</li>
+                        <li>Test ping ke gateway dan vBond IP</li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>2. Cek Organization Name</h4>
+                    <ul>
+                        <li>Org name harus <strong>exact match</strong> dengan vManage</li>
+                        <li>Case-sensitive dan space-sensitive</li>
+                        <li>Gunakan: <code>show sdwan control local-properties</code></li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>3. Certificate Issues</h4>
+                    <ul>
+                        <li>Pastikan device sudah terdaftar di vManage</li>
+                        <li>Cek serial number sudah di-sync ke PnP portal atau vManage WAN Edge List</li>
+                        <li>Verifikasi dengan: <code>show sdwan certificate status</code></li>
+                    </ul>
+                </div>
+
+                <div class="architecture-block">
+                    <h4>4. Firewall/NAT Issues</h4>
+                    <ul>
+                        <li>Port DTLS 12346-12446 harus open</li>
+                        <li>Jika behind NAT, pastikan public IP bisa di-reach dari controller</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i data-lucide="cpu"></i> C8300 Interface Reference</h2>
+            <div class="content-block">
+                <p>Interface naming pada C8300 series bervariasi berdasarkan model:</p>
+                <table class="data-table">
+                    <tr>
+                        <th>Model</th>
+                        <th>WAN Interfaces</th>
+                        <th>LAN Interfaces</th>
+                    </tr>
+                    <tr>
+                        <td>C8300-1N1S-4T2X</td>
+                        <td>GigabitEthernet0/0/0-3, TenGigabitEthernet0/0/0-1</td>
+                        <td>GigabitEthernet0</td>
+                    </tr>
+                    <tr>
+                        <td>C8300-1N1S-6T</td>
+                        <td>GigabitEthernet0/0/0-5</td>
+                        <td>GigabitEthernet0</td>
+                    </tr>
+                    <tr>
+                        <td>C8300-2N2S-4T2X</td>
+                        <td>GigabitEthernet0/0/0-3, TenGigabitEthernet0/0/0-1</td>
+                        <td>GigabitEthernet0, GigabitEthernet0/1/0</td>
+                    </tr>
+                </table>
+
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Tips</strong>
+                        <p>Gunakan <code>show interfaces description</code> untuk melihat semua interface yang tersedia
+                            pada device Anda.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="chapter-nav">
+            <a href="chapter-04.html" class="nav-btn prev">
+                <i data-lucide="chevron-left"></i>
+                <span>Onboarding & Provisioning</span>
+            </a>
+            <a href="chapter-05.html" class="nav-btn next">
+                <span>Design & Migration</span>
+                <i data-lucide="chevron-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="chapter-script.js"></script>
+</body>
+
+</html>
