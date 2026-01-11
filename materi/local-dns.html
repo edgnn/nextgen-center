@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Local DNS - Windows & macOS - Nextgen Center</title>
+
+    <meta name="description"
+        content="Tutorial setup Local DNS di Windows dan macOS dengan mengedit file hosts untuk mapping IP ke domain.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-primary: #3b82f6;
+            --accent-secondary: #1d4ed8;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --glow-1: rgba(59, 130, 246, 0.4);
+            --macos-accent: #a855f7;
+            --macos-gradient: linear-gradient(135deg, #a855f7 0%, #7c3aed 50%, #6d28d9 100%);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --bg-card: rgba(0, 0, 0, 0.02);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+
+        [data-theme="light"] .header {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .theme-toggle:hover svg {
+            color: white;
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .sun-icon {
+            display: block;
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px 60px;
+        }
+
+        /* Title Section */
+        .title-section {
+            text-align: center;
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .title-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--accent-primary);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .title-badge svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .title-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* OS Tabs */
+        .os-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .os-tab {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .os-tab:hover {
+            border-color: var(--text-muted);
+            transform: translateY(-2px);
+        }
+
+        .os-tab.active-windows {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .os-tab.active-macos {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(168, 85, 247, 0.05));
+            border-color: var(--macos-accent);
+            color: var(--macos-accent);
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.2);
+        }
+
+        .os-tab svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .os-tab .os-icon {
+            font-size: 1.5rem;
+        }
+
+        /* Side by Side Layout */
+        .side-by-side {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .os-column {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+        }
+
+        .os-column.windows {
+            border-top: 3px solid var(--accent-primary);
+        }
+
+        .os-column.macos {
+            border-top: 3px solid var(--macos-accent);
+        }
+
+        .os-column-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .os-column-header .os-icon {
+            font-size: 2rem;
+        }
+
+        .os-column-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .windows .os-column-header h3 {
+            color: var(--accent-primary);
+        }
+
+        .macos .os-column-header h3 {
+            color: var(--macos-accent);
+        }
+
+        /* Single OS View (Mobile) */
+        .single-os-view {
+            display: none;
+        }
+
+        /* Step Section */
+        .step {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .step:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .macos .step-number {
+            background: var(--macos-gradient);
+        }
+
+        .step-title {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        .step-content ul,
+        .step-content ol {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        .step-content li {
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .step-content li strong {
+            color: var(--text-primary);
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #1e1e2e;
+            border-radius: 10px;
+            margin: 12px 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px;
+            background: #2d2d3a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-lang {
+            font-size: 0.7rem;
+            color: #a0a0b0;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .code-copy {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 5px;
+            color: #a0a0b0;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .code-copy:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .code-copy svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 14px;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            font-family: 'JetBrains Mono', Consolas, monospace;
+            font-size: 0.8rem;
+            color: #e0e0e0;
+            line-height: 1.5;
+        }
+
+        .code-block .comment {
+            color: #6a9955;
+        }
+
+        .code-block .path {
+            color: #ce9178;
+        }
+
+        .code-block .ip {
+            color: #4ec9b0;
+        }
+
+        .code-block .domain {
+            color: #9cdcfe;
+        }
+
+        /* Alert */
+        .alert {
+            display: flex;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin: 12px 0;
+            border-left: 3px solid;
+            font-size: 0.85rem;
+        }
+
+        .alert svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-content strong {
+            display: block;
+            margin-bottom: 3px;
+            font-size: 0.85rem;
+        }
+
+        .alert-content p {
+            margin: 0 !important;
+            font-size: 0.8rem;
+        }
+
+        .alert.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: var(--warning);
+        }
+
+        .alert.warning svg {
+            color: var(--warning);
+        }
+
+        .alert.info {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--info);
+        }
+
+        .alert.info svg {
+            color: var(--info);
+        }
+
+        .alert.success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+        }
+
+        .alert.success svg {
+            color: var(--success);
+        }
+
+        /* Overview Section */
+        .overview-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+
+        .overview-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .overview-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--accent-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .overview-header h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .overview-content p {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        /* Navigation */
+        .nav-bottom {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .nav-bottom a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-bottom a:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .nav-bottom a svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Troubleshooting Section */
+        .troubleshooting-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 40px;
+        }
+
+        .troubleshooting-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .troubleshooting-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .troubleshooting-header h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .troubleshooting-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .troubleshooting-column h4 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        .troubleshooting-column h4 .os-icon {
+            font-size: 1.2rem;
+        }
+
+        .troubleshooting-column ul {
+            padding-left: 18px;
+            margin-bottom: 16px;
+        }
+
+        .troubleshooting-column li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .side-by-side {
+                grid-template-columns: 1fr;
+            }
+
+            .os-tabs {
+                display: flex;
+            }
+
+            .single-os-view {
+                display: block;
+            }
+
+            .side-by-side {
+                display: none;
+            }
+
+            .troubleshooting-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .os-tab {
+                padding: 12px 20px;
+                font-size: 0.85rem;
+            }
+
+            .os-tab svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .step-title {
+                font-size: 0.95rem;
+            }
+
+            .code-block code {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="../index.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Title -->
+        <div class="title-section">
+            <div class="title-badge">
+                <i data-lucide="server"></i>
+                Tutorial
+            </div>
+            <h1>Setup Local DNS</h1>
+            <p class="title-desc">Cara mapping IP address ke domain menggunakan file hosts di Windows & macOS</p>
+        </div>
+
+        <!-- Overview -->
+        <div class="overview-section">
+            <div class="overview-header">
+                <div class="overview-icon">📋</div>
+                <h2>Apa itu Local DNS?</h2>
+            </div>
+            <div class="overview-content">
+                <p>Local DNS adalah cara untuk memetakan (mapping) IP address ke nama domain secara lokal di komputer,
+                    tanpa perlu mengubah DNS publik. Ini dilakukan dengan mengedit file <strong>hosts</strong> di
+                    sistem operasi.</p>
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Kegunaan</strong>
+                        <p>Berguna untuk mengakses server internal, testing, atau bypass DNS publik untuk domain
+                            tertentu.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OS Tabs for Mobile -->
+        <div class="os-tabs">
+            <button class="os-tab active-windows" onclick="switchOS('windows')" id="tab-windows">
+                <span class="os-icon">🪟</span>
+                Windows
+            </button>
+            <button class="os-tab" onclick="switchOS('macos')" id="tab-macos">
+                <span class="os-icon">🍎</span>
+                macOS
+            </button>
+        </div>
+
+        <!-- Side by Side View (Desktop) -->
+        <div class="side-by-side">
+            <!-- Windows Column -->
+            <div class="os-column windows">
+                <div class="os-column-header">
+                    <span class="os-icon">🪟</span>
+                    <h3>Windows</h3>
+                </div>
+
+                <!-- Step 1 -->
+                <section class="step">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <h4 class="step-title">Buka File Hosts sebagai Administrator</h4>
+                    </div>
+                    <div class="step-content">
+                        <p><strong>Lokasi file hosts:</strong></p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">Path</span>
+                                <button class="code-copy" onclick="copyCode(this)">
+                                    <i data-lucide="copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre><code><span class="path">C:\Windows\System32\drivers\etc\hosts</span></code></pre>
+                        </div>
+                        <p><strong>Cara membuka:</strong></p>
+                        <ol>
+                            <li>Tekan <strong>Win + S</strong>, ketik <strong>Notepad</strong></li>
+                            <li>Klik kanan → <strong>Run as administrator</strong></li>
+                            <li>Klik <strong>File → Open</strong></li>
+                            <li>Navigate ke path di atas</li>
+                            <li>Ubah filter ke <strong>All Files (*.*)</strong></li>
+                            <li>Pilih file <strong>hosts</strong></li>
+                        </ol>
+                        <div class="alert warning">
+                            <i data-lucide="alert-triangle"></i>
+                            <div class="alert-content">
+                                <strong>Penting!</strong>
+                                <p>Harus Run as Administrator, jika tidak perubahan tidak bisa disimpan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 2 -->
+                <section class="step">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <h4 class="step-title">Tambahkan Entry DNS</h4>
+                    </div>
+                    <div class="step-content">
+                        <p>Tambahkan baris baru di bagian bawah file:</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">hosts</span>
+                                <button class="code-copy" onclick="copyCode(this)">
+                                    <i data-lucide="copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre><code><span class="ip">36.94.252.50</span>	<span class="domain">pemkotmks.sdwanmt1-1.telkom.co.id</span></code></pre>
+                        </div>
+                        <div class="alert info">
+                            <i data-lucide="info"></i>
+                            <div class="alert-content">
+                                <strong>Tips</strong>
+                                <p>Gunakan TAB untuk memisahkan IP dan domain.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 3 -->
+                <section class="step">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <h4 class="step-title">Simpan File</h4>
+                    </div>
+                    <div class="step-content">
+                        <ol>
+                            <li>Tekan <strong>Ctrl + S</strong></li>
+                            <li>Pastikan tidak ada error</li>
+                        </ol>
+                        <div class="alert success">
+                            <i data-lucide="check-circle"></i>
+                            <div class="alert-content">
+                                <strong>Berhasil!</strong>
+                                <p>Konfigurasi DNS lokal sudah aktif.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 4 -->
+                <section class="step">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <h4 class="step-title">Flush DNS (Opsional)</h4>
+                    </div>
+                    <div class="step-content">
+                        <p>Jika perubahan tidak langsung berlaku:</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">CMD</span>
+                                <button class="code-copy" onclick="copyCode(this)">
+                                    <i data-lucide="copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre><code>ipconfig /flushdns</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 5 -->
+                <section class="step">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <h4 class="step-title">Akses Domain</h4>
+                    </div>
+                    <div class="step-content">
+                        <p>Buka browser dan akses:</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">URL</span>
+                                <button class="code-copy" onclick="copyCode(this)">
+                                    <i data-lucide="copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre><code>https://pemkotmks.sdwanmt1-1.telkom.co.id</code></pre>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- macOS Column -->
+            <div class="os-column macos">
+                <div class="os-column-header">
+                    <span class="os-icon">🍎</span>
+                    <h3>macOS</h3>
+                </div>
+
+                <!-- Step 1 -->
+                <section class="step">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <h4 class="step-title">Buka Terminal</h4>
+                    </div>
+                    <div class="step-content">
+                        <p><strong>Lokasi file hosts:</strong></p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">Path</span>
+                                <button class="code-copy" onclick="copyCode(this)">
+                                    <i data-lucide="copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre><code><span class="path">/etc/hosts</span></code></pre>
+                        </div>
+                        <p><strong>Cara membuka:</strong></p>
+                        <ol>
+                            <li>Tekan <strong>Cmd + Space</strong>, ketik <strong>Terminal</strong></li>
+                            <li>Atau buka via <strong>Applications → Utilities → Terminal</strong></li>
+                        </ol>
+                        <div class="alert info">
+                            <i data-lucide="info"></i>
+                            <div class="alert-content">
+                                <strong>Alternatif</strong>
+                                <p>Bisa juga menggunakan iTerm2 jika sudah terinstall.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 2 -->
+                <section class="step">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <h4 class="step-title">Edit File dengan Sudo</h4>
+                    </div>
+                    <div class="step-content">
+                        <p>Jalankan perintah berikut di Terminal:</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">Terminal</span>
+                                <button class="code-copy" onclick="copyCode(this)">
+                                    <i data-lucide="copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre><code>sudo nano /etc/hosts</code></pre>
+                        </div>
+                        <p>Masukkan password admin saat diminta.</p>
+                        <div class="alert warning">
+                            <i data-lucide="alert-triangle"></i>
+                            <div class="alert-content">
+                                <strong>Penting!</strong>
+                                <p>Harus menggunakan <code>sudo</code> untuk akses admin.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 3 -->
+                <section class="step">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <h4 class="step-title">Tambahkan Entry DNS</h4>
+                    </div>
+                    <div class="step-content">
+                        <p>Tambahkan baris baru di bagian bawah:</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">hosts</span>
+                                <button class="code-copy" onclick="copyCode(this)">
+                                    <i data-lucide="copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre><code><span class="ip">36.94.252.50</span>	<span class="domain">pemkotmks.sdwanmt1-1.telkom.co.id</span></code></pre>
+                        </div>
+                        <div class="alert info">
+                            <i data-lucide="info"></i>
+                            <div class="alert-content">
+                                <strong>Tips</strong>
+                                <p>Gunakan TAB untuk memisahkan IP dan domain.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 4 -->
+                <section class="step">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <h4 class="step-title">Simpan & Keluar</h4>
+                    </div>
+                    <div class="step-content">
+                        <p>Simpan file di nano:</p>
+                        <ol>
+                            <li>Tekan <strong>Ctrl + O</strong> lalu Enter untuk save</li>
+                            <li>Tekan <strong>Ctrl + X</strong> untuk keluar</li>
+                        </ol>
+                        <div class="alert success">
+                            <i data-lucide="check-circle"></i>
+                            <div class="alert-content">
+                                <strong>Berhasil!</strong>
+                                <p>File hosts sudah tersimpan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 5 -->
+                <section class="step">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <h4 class="step-title">Flush DNS Cache</h4>
+                    </div>
+                    <div class="step-content">
+                        <p>Jalankan perintah untuk clear cache:</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">Terminal</span>
+                                <button class="code-copy" onclick="copyCode(this)">
+                                    <i data-lucide="copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre><code>sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 6 -->
+                <section class="step">
+                    <div class="step-header">
+                        <div class="step-number">6</div>
+                        <h4 class="step-title">Akses Domain</h4>
+                    </div>
+                    <div class="step-content">
+                        <p>Buka browser dan akses:</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">URL</span>
+                                <button class="code-copy" onclick="copyCode(this)">
+                                    <i data-lucide="copy"></i> Copy
+                                </button>
+                            </div>
+                            <pre><code>https://pemkotmks.sdwanmt1-1.telkom.co.id</code></pre>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Single OS View (Mobile) -->
+        <div class="single-os-view" id="single-os-content">
+            <!-- Content will be dynamically inserted -->
+        </div>
+
+        <!-- Troubleshooting -->
+        <div class="troubleshooting-section">
+            <div class="troubleshooting-header">
+                <div class="troubleshooting-icon">🔧</div>
+                <h2>Troubleshooting</h2>
+            </div>
+
+            <div class="troubleshooting-grid">
+                <!-- Windows -->
+                <div class="troubleshooting-column">
+                    <h4><span class="os-icon">🪟</span> Windows</h4>
+                    <ul>
+                        <li>Pastikan file hosts tersimpan (bukan .txt)</li>
+                        <li>Jalankan <code>ipconfig /flushdns</code></li>
+                        <li>Restart browser</li>
+                        <li>Cek koneksi dengan <code>ping [IP]</code></li>
+                    </ul>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">CMD</span>
+                            <button class="code-copy" onclick="copyCode(this)">
+                                <i data-lucide="copy"></i> Copy
+                            </button>
+                        </div>
+                        <pre><code><span class="comment"># Flush DNS cache</span>
+ipconfig /flushdns
+
+<span class="comment"># Test ping</span>
+ping 36.94.252.50
+
+<span class="comment"># Test resolve</span>
+nslookup pemkotmks.sdwanmt1-1.telkom.co.id</code></pre>
+                    </div>
+                </div>
+
+                <!-- macOS -->
+                <div class="troubleshooting-column">
+                    <h4><span class="os-icon">🍎</span> macOS</h4>
+                    <ul>
+                        <li>Pastikan file tersimpan dengan benar</li>
+                        <li>Jalankan flush DNS cache</li>
+                        <li>Restart browser</li>
+                        <li>Cek koneksi dengan <code>ping [IP]</code></li>
+                    </ul>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">Terminal</span>
+                            <button class="code-copy" onclick="copyCode(this)">
+                                <i data-lucide="copy"></i> Copy
+                            </button>
+                        </div>
+                        <pre><code><span class="comment"># Flush DNS cache</span>
+sudo dscacheutil -flushcache
+sudo killall -HUP mDNSResponder
+
+<span class="comment"># Test ping</span>
+ping 36.94.252.50
+
+<span class="comment"># Test resolve</span>
+nslookup pemkotmks.sdwanmt1-1.telkom.co.id</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-bottom">
+            <a href="../index.html">
+                <i data-lucide="home"></i>
+                Kembali ke Beranda
+            </a>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        let currentOS = 'windows';
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.getAttribute('data-theme') === 'light') {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+            lucide.createIcons();
+        }
+
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+
+        function switchOS(os) {
+            currentOS = os;
+            const tabWindows = document.getElementById('tab-windows');
+            const tabMacos = document.getElementById('tab-macos');
+
+            tabWindows.classList.remove('active-windows', 'active-macos');
+            tabMacos.classList.remove('active-windows', 'active-macos');
+
+            if (os === 'windows') {
+                tabWindows.classList.add('active-windows');
+            } else {
+                tabMacos.classList.add('active-macos');
+            }
+
+            updateSingleOSView();
+        }
+
+        function updateSingleOSView() {
+            const container = document.getElementById('single-os-content');
+            const columns = document.querySelectorAll('.os-column');
+
+            columns.forEach(col => {
+                if (currentOS === 'windows' && col.classList.contains('windows')) {
+                    container.innerHTML = col.innerHTML;
+                } else if (currentOS === 'macos' && col.classList.contains('macos')) {
+                    container.innerHTML = col.innerHTML;
+                }
+            });
+
+            lucide.createIcons();
+        }
+
+        // Initialize single OS view on mobile
+        if (window.innerWidth <= 900) {
+            updateSingleOSView();
+        }
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth <= 900) {
+                updateSingleOSView();
+            }
+        });
+
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                button.innerHTML = '<i data-lucide="check"></i> Copied!';
+                lucide.createIcons();
+                setTimeout(() => {
+                    button.innerHTML = '<i data-lucide="copy"></i> Copy';
+                    lucide.createIcons();
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>
