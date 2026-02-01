@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CertExam Dump - Nextgen Center</title>
+    <meta name="description" content="Latihan soal ujian sertifikasi IT. SD-WAN, CCNA, dan lainnya.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-main: #0f0f17;
+            --bg-card: #1a1a27;
+            --bg-card-hover: #22223a;
+            --bg-tertiary: #252535;
+            --accent: #6366f1;
+            --accent-hover: #818cf8;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        [data-theme="light"] {
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f8fafc;
+            --bg-tertiary: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon svg {
+            width: 22px;
+            height: 22px;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .back-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .theme-toggle:hover svg {
+            color: white;
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .sun-icon {
+            display: block;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 24px 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 24px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .hero-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--accent), #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title svg {
+            width: 22px;
+            height: 22px;
+            color: var(--accent);
+        }
+
+        /* Exam Grid */
+        .exam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .exam-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .exam-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px var(--accent-glow);
+        }
+
+        .exam-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .exam-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .exam-icon svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        .exam-category {
+            padding: 4px 12px;
+            background: rgba(99, 102, 241, 0.15);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+
+        .exam-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .exam-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .exam-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .meta-item svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .exam-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .difficulty {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .difficulty.easy {
+            color: var(--success);
+        }
+
+        .difficulty.medium {
+            color: var(--warning);
+        }
+
+        .difficulty.hard {
+            color: var(--error);
+        }
+
+        .start-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .start-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.02);
+        }
+
+        .start-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Coming Soon Card */
+        .exam-card.coming-soon {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .exam-card.coming-soon:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: var(--border-color);
+        }
+
+        .coming-soon-badge {
+            padding: 6px 14px;
+            background: var(--bg-tertiary);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .stats {
+                gap: 24px;
+            }
+
+            .exam-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .modal-subtitle {
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-top: 4px;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--error);
+        }
+
+        .modal-close svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-row:last-child {
+            border-bottom: none;
+        }
+
+        .modal-label {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        .modal-value {
+            font-size: 0.95rem;
+            color: var(--accent);
+            font-weight: 600;
+            padding: 6px 14px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 8px;
+        }
+
+        .modal-input {
+            width: 80px;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .modal-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            padding: 16px 24px 24px;
+            flex-wrap: wrap;
+        }
+
+        .modal-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .modal-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .modal-btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .modal-btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-btn-secondary:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="brain"></i>
+                </div>
+                <span class="logo-text">CertExam Dump</span>
+            </a>
+            <div class="header-actions">
+                <a href="../index.html" class="back-btn">
+                    <i data-lucide="arrow-left"></i>
+                    <span>Beranda</span>
+                </a>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i data-lucide="moon" class="moon-icon"></i>
+                    <i data-lucide="sun" class="sun-icon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-badge">
+            <i data-lucide="trophy"></i>
+            Exam Simulator
+        </div>
+        <h1>Latihan Soal Sertifikasi IT</h1>
+        <p>Persiapkan diri untuk ujian sertifikasi dengan latihan soal yang realistis. Timer, scoring, dan pembahasan
+            lengkap.</p>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value">2</div>
+                <div class="stat-label">Exam Tersedia</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">372</div>
+                <div class="stat-label">Total Soal</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">80%</div>
+                <div class="stat-label">Passing Score</div>
+            </div>
+        </div>
+    </section>
+
+    <main class="main">
+        <h2 class="section-title">
+            <i data-lucide="folder-open"></i>
+            Pilih Ujian
+        </h2>
+
+        <div class="exam-grid">
+            <!-- ENARSI Exam -->
+            <div class="exam-card" onclick="openExamModal()">
+                <div class="exam-header">
+                    <div class="exam-icon">
+                        <i data-lucide="router"></i>
+                    </div>
+                    <span class="exam-category">Cisco Enterprise</span>
+                </div>
+                <h3 class="exam-title">Implementing Cisco Advanced Routing and Services (ENARSI)</h3>
+                <p class="exam-desc">Exam Number: 300-410 | File Version: 5.0</p>
+                <div class="exam-meta">
+                    <div class="meta-item">
+                        <i data-lucide="target"></i>
+                        <span>Passing: 800</span>
+                    </div>
+                    <div class="meta-item">
+                        <i data-lucide="clock"></i>
+                        <span>120 Menit</span>
+                    </div>
+                </div>
+                <div class="exam-footer">
+                    <span class="difficulty hard">
+                        <i data-lucide="signal"></i>
+                        Hard
+                    </span>
+                    <button class="start-btn">
+                        <i data-lucide="play"></i>
+                        Mulai
+                    </button>
+                </div>
+            </div>
+
+            <!-- SD-WAN Exam -->
+            <a href="exam.html?exam=sdwan-basics" class="exam-card">
+                <div class="exam-header">
+                    <div class="exam-icon">
+                        <i data-lucide="network"></i>
+                    </div>
+                    <span class="exam-category">SD-WAN</span>
+                </div>
+                <h3 class="exam-title">SD-WAN Fundamentals</h3>
+                <p class="exam-desc">Latihan soal dasar-dasar Cisco SD-WAN. Mencakup konsep, arsitektur, dan komponen
+                    utama.</p>
+                <div class="exam-meta">
+                    <div class="meta-item">
+                        <i data-lucide="help-circle"></i>
+                        <span>10 Soal</span>
+                    </div>
+                    <div class="meta-item">
+                        <i data-lucide="clock"></i>
+                        <span>15 Menit</span>
+                    </div>
+                    <div class="meta-item">
+                        <i data-lucide="target"></i>
+                        <span>80% Passing</span>
+                    </div>
+                </div>
+                <div class="exam-footer">
+                    <span class="difficulty medium">
+                        <i data-lucide="signal"></i>
+                        Medium
+                    </span>
+                    <button class="start-btn">
+                        <i data-lucide="play"></i>
+                        Mulai
+                    </button>
+                </div>
+            </a>
+
+            <!-- Coming Soon -->
+            <div class="exam-card coming-soon">
+                <div class="exam-header">
+                    <div class="exam-icon">
+                        <i data-lucide="shield-check"></i>
+                    </div>
+                    <span class="exam-category">CCNA</span>
+                </div>
+                <h3 class="exam-title">CCNA Practice Exam</h3>
+                <p class="exam-desc">Latihan soal untuk persiapan ujian CCNA 200-301.</p>
+                <div class="exam-meta">
+                    <div class="meta-item">
+                        <i data-lucide="help-circle"></i>
+                        <span>50 Soal</span>
+                    </div>
+                    <div class="meta-item">
+                        <i data-lucide="clock"></i>
+                        <span>60 Menit</span>
+                    </div>
+                </div>
+                <div class="exam-footer">
+                    <span class="difficulty medium">
+                        <i data-lucide="signal"></i>
+                        Medium
+                    </span>
+                    <span class="coming-soon-badge">Coming Soon</span>
+                </div>
+            </div>
+
+            <!-- Coming Soon 2 -->
+            <div class="exam-card coming-soon">
+                <div class="exam-header">
+                    <div class="exam-icon">
+                        <i data-lucide="cloud"></i>
+                    </div>
+                    <span class="exam-category">Cloud</span>
+                </div>
+                <h3 class="exam-title">AWS Solutions Architect</h3>
+                <p class="exam-desc">Latihan soal untuk AWS Solutions Architect Associate.</p>
+                <div class="exam-meta">
+                    <div class="meta-item">
+                        <i data-lucide="help-circle"></i>
+                        <span>65 Soal</span>
+                    </div>
+                    <div class="meta-item">
+                        <i data-lucide="clock"></i>
+                        <span>90 Menit</span>
+                    </div>
+                </div>
+                <div class="exam-footer">
+                    <span class="difficulty hard">
+                        <i data-lucide="signal"></i>
+                        Hard
+                    </span>
+                    <span class="coming-soon-badge">Coming Soon</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.getAttribute('data-theme') === 'light') {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+            lucide.createIcons();
+        }
+
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
+
+    <!-- Exam Modal -->
+    <div class="modal-overlay" id="examModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title">300-410</div>
+                    <div class="modal-subtitle">Cisco</div>
+                </div>
+                <button class="modal-close" onclick="closeExamModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-row">
+                    <span class="modal-label">Total number of questions available</span>
+                    <span class="modal-value">372</span>
+                </div>
+                <div class="modal-row">
+                    <span class="modal-label">Last updated</span>
+                    <span class="modal-value">01 Feb 2026</span>
+                </div>
+                <div class="modal-row">
+                    <span class="modal-label">Number of questions</span>
+                    <input type="number" class="modal-input" id="numQuestions" value="10" min="1" max="372">
+                </div>
+                <div class="modal-row">
+                    <span class="modal-label">Display correct answer after answering</span>
+                    <input type="checkbox" class="modal-checkbox" id="showAnswer" checked>
+                </div>
+                <div class="modal-row">
+                    <span class="modal-label">Display discussion after answering</span>
+                    <input type="checkbox" class="modal-checkbox" id="showDiscussion" checked>
+                </div>
+                <div class="modal-row">
+                    <span class="modal-label">Use most recent questions</span>
+                    <input type="checkbox" class="modal-checkbox" id="recentQuestions">
+                </div>
+                <div class="modal-row">
+                    <span class="modal-label">Show questions chronologically</span>
+                    <input type="checkbox" class="modal-checkbox" id="chronological" checked>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="enarsi.html" class="modal-btn modal-btn-secondary">
+                    <i data-lucide="list"></i>
+                    View all questions
+                </a>
+                <button class="modal-btn modal-btn-secondary" onclick="downloadPDF()">
+                    <i data-lucide="download"></i>
+                    PDF
+                </button>
+                <button class="modal-btn modal-btn-primary" onclick="generateExam()">
+                    <i data-lucide="play"></i>
+                    Generate exam
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openExamModal() {
+            document.getElementById('examModal').classList.add('active');
+            lucide.createIcons();
+        }
+
+        function closeExamModal() {
+            document.getElementById('examModal').classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('examModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeExamModal();
+            }
+        });
+
+        function generateExam() {
+            const numQuestions = document.getElementById('numQuestions').value;
+            const showAnswer = document.getElementById('showAnswer').checked;
+            const showDiscussion = document.getElementById('showDiscussion').checked;
+            const recentQuestions = document.getElementById('recentQuestions').checked;
+            const chronological = document.getElementById('chronological').checked;
+
+            const params = new URLSearchParams({
+                count: numQuestions,
+                showAnswer: showAnswer,
+                showDiscussion: showDiscussion,
+                recent: recentQuestions,
+                chronological: chronological
+            });
+
+            window.location.href = `enarsi.html?${params.toString()}`;
+        }
+
+        function downloadPDF() {
+            // Placeholder for PDF download functionality
+            alert('PDF download feature coming soon!');
+        }
+    </script>
+</body>
+
+</html>
