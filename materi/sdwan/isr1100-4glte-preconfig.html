@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISR1100-4GLTEGB Pre-Config - Nextgen Center</title>
+    <meta name="description"
+        content="Panduan Pre-Configuration untuk Cisco ISR1100-4GLTEGB SD-WAN. Manual provisioning dan Day 0 configuration.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-primary: #049fd9;
+            --accent-secondary: #0277bd;
+            --accent-gradient: linear-gradient(135deg, #049fd9 0%, #0277bd 50%, #01579b 100%);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --glow-1: rgba(4, 159, 217, 0.4);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --bg-card: rgba(0, 0, 0, 0.02);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+
+        [data-theme="light"] .header {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .theme-toggle:hover svg {
+            color: white;
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .sun-icon {
+            display: block;
+        }
+
+        .main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 20px 60px;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .device-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #049fd9, #0277bd);
+            border-radius: 24px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+        }
+
+        .device-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #049fd9, #0277bd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.3;
+        }
+
+        .title-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .config-section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .section-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #049fd9, #0277bd);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .section-icon svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .config-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .config-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .config-header svg {
+            width: 22px;
+            height: 22px;
+            color: var(--accent-primary);
+        }
+
+        .config-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-box p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .info-box ul {
+            margin-top: 12px;
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+
+        .info-box li {
+            margin-bottom: 6px;
+        }
+
+        .code-block {
+            background: #0d1117;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .code-header {
+            background: #161b22;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .code-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #8b949e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .code-title svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .copy-btn {
+            padding: 6px 12px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #8b949e;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .copy-btn:hover {
+            background: #30363d;
+            color: #c9d1d9;
+        }
+
+        .copy-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .code-content {
+            padding: 16px;
+            overflow-x: auto;
+        }
+
+        .code-content pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #c9d1d9;
+            margin: 0;
+            white-space: pre;
+        }
+
+        .code-content .comment {
+            color: #8b949e;
+        }
+
+        .code-content .keyword {
+            color: #ff7b72;
+        }
+
+        .code-content .value {
+            color: #79c0ff;
+        }
+
+        .code-content .command {
+            color: #7ee787;
+        }
+
+        .code-content .prompt {
+            color: #ffa657;
+        }
+
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .warning-box svg {
+            width: 22px;
+            height: 22px;
+            color: var(--warning);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .warning-box p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .success-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .success-box svg {
+            width: 22px;
+            height: 22px;
+            color: var(--success);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .success-box p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .step-list {
+            counter-reset: step;
+        }
+
+        .step-item {
+            position: relative;
+            padding-left: 50px;
+            margin-bottom: 24px;
+        }
+
+        .step-item::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #049fd9, #0277bd);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+        }
+
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .step-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .param-table th,
+        .param-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .param-table th {
+            background: var(--bg-card);
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .param-table td {
+            font-size: 0.9rem;
+        }
+
+        .param-table td code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-card);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--accent-primary);
+        }
+
+        .nav-bottom {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .nav-bottom a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-bottom a:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .nav-bottom a svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .config-card {
+                padding: 16px;
+            }
+
+            .code-content pre {
+                font-size: 0.75rem;
+            }
+
+            .step-item {
+                padding-left: 44px;
+            }
+
+            .step-item::before {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../preconfig-sdwan.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="title-section">
+            <div class="device-badge">
+                <i data-lucide="router"></i>
+                ISR1100 Series
+            </div>
+            <h1>Cisco ISR1100-4GLTEGB Pre-Configuration</h1>
+            <p class="title-desc">Panduan konfigurasi manual untuk onboarding ISR1100-4GLTEGB ke SD-WAN fabric dengan
+                LTE connectivity</p>
+        </div>
+
+        <!-- Device Info -->
+        <div class="config-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i data-lucide="info"></i>
+                </div>
+                <h2 class="section-title">Informasi Device</h2>
+            </div>
+
+            <div class="config-card">
+                <div class="info-box">
+                    <p>Cisco ISR1100-4GLTEGB adalah router dengan kapabilitas SD-WAN dan konektivitas 4G LTE. Device ini
+                        cocok untuk deployment di lokasi remote atau sebagai backup WAN connection.</p>
+                </div>
+
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Model</td>
+                            <td><code>ISR1100-4GLTEGB</code></td>
+                            <td>Cisco ISR 1100 Series dengan 4G LTE</td>
+                        </tr>
+                        <tr>
+                            <td>System IP</td>
+                            <td><code>10.255.229.228</code></td>
+                            <td>IP address unik untuk identifikasi di SD-WAN overlay</td>
+                        </tr>
+                        <tr>
+                            <td>Site ID</td>
+                            <td><code>203420027</code></td>
+                            <td>Identifier unik untuk site location</td>
+                        </tr>
+                        <tr>
+                            <td>Organization</td>
+                            <td><code>telkom-mt1-diskominfo-sukabumi</code></td>
+                            <td>Nama organisasi device</td>
+                        </tr>
+                        <tr>
+                            <td>SP Organization</td>
+                            <td><code>telkom-mt1</code></td>
+                            <td>Service Provider organization</td>
+                        </tr>
+                        <tr>
+                            <td>Console Baud Rate</td>
+                            <td><code>9600</code></td>
+                            <td>Speed koneksi console</td>
+                        </tr>
+                        <tr>
+                            <td>vBond Address</td>
+                            <td><code>36.94.252.25:12346</code></td>
+                            <td>vBond orchestrator address</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- System Configuration -->
+        <div class="config-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i data-lucide="settings"></i>
+                </div>
+                <h2 class="section-title">System Configuration</h2>
+            </div>
+
+            <div class="config-card">
+                <div class="config-header">
+                    <i data-lucide="terminal"></i>
+                    <h3>Basic System Settings</h3>
+                </div>
+
+                <div class="info-box">
+                    <p>Konfigurasi dasar system yang harus diset pada device sebelum join ke SD-WAN fabric:</p>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">
+                            <i data-lucide="terminal"></i>
+                            system configuration
+                        </span>
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i>
+                            Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="keyword">system</span>
+ <span class="command">system-ip</span>             <span class="value">10.255.229.228</span>
+ <span class="command">site-id</span>               <span class="value">203420027</span>
+ <span class="command">sp-organization-name</span>  <span class="value">telkom-mt1</span>
+ <span class="command">organization-name</span>     <span class="value">telkom-mt1-diskominfo-sukabumi</span>
+ <span class="command">console-baud-rate</span>     <span class="value">9600</span>
+ <span class="command">vbond</span> <span class="value">36.94.252.25</span> <span class="keyword">port</span> <span class="value">12346</span></pre>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <i data-lucide="alert-triangle"></i>
+                    <p><strong>Penting:</strong> Pastikan <code>system-ip</code> dan <code>site-id</code> sudah diassign
+                        oleh vManage administrator sebelum melakukan konfigurasi ini. Nilai harus unik di seluruh SD-WAN
+                        fabric.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tunnel Interface Configuration -->
+        <div class="config-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i data-lucide="network"></i>
+                </div>
+                <h2 class="section-title">Tunnel Interface Configuration</h2>
+            </div>
+
+            <div class="config-card">
+                <div class="config-header">
+                    <i data-lucide="cable"></i>
+                    <h3>WAN Interface (GE0/0)</h3>
+                </div>
+
+                <div class="info-box">
+                    <p>Konfigurasi tunnel interface untuk transport WAN. Interface ini akan digunakan untuk membentuk
+                        overlay tunnel ke SD-WAN controllers.</p>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">
+                            <i data-lucide="terminal"></i>
+                            tunnel interface config
+                        </span>
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i>
+                            Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="prompt">vedge#</span> <span class="keyword">config</span>
+<span class="prompt">vedge(config)#</span> <span class="keyword">interface-ge0/0</span>
+<span class="prompt">vedge(config-interface-ge0/0)#</span> <span class="command">tunnel-interface</span>
+<span class="prompt">vedge(config-tunnel-interface)#</span> <span class="command">color</span> <span class="value">biz-internet</span>
+<span class="prompt">vedge(config-tunnel-interface)#</span> <span class="keyword">commit</span>
+<span class="comment">Commit complete.</span>
+<span class="prompt">vedge(config-tunnel-interface)#</span></pre>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <i data-lucide="check-circle"></i>
+                    <p><strong>Commit Successful:</strong> Konfigurasi tunnel interface berhasil disimpan. Device akan
+                        mulai membentuk control dan data plane connections ke SD-WAN controllers.</p>
+                </div>
+
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Interface</td>
+                            <td><code>GE0/0</code></td>
+                            <td>Gigabit Ethernet port 0/0</td>
+                        </tr>
+                        <tr>
+                            <td>Tunnel Interface</td>
+                            <td><code>enabled</code></td>
+                            <td>Enable tunnel pada interface ini</td>
+                        </tr>
+                        <tr>
+                            <td>Color</td>
+                            <td><code>biz-internet</code></td>
+                            <td>Business Internet transport color</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Step by Step -->
+        <div class="config-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i data-lucide="list-ordered"></i>
+                </div>
+                <h2 class="section-title">Langkah-langkah Konfigurasi</h2>
+            </div>
+
+            <div class="config-card">
+                <div class="step-list">
+                    <div class="step-item">
+                        <div class="step-title">Akses Console Device</div>
+                        <div class="step-desc">Hubungkan ke console port dengan baud rate 9600. Gunakan terminal
+                            emulator seperti PuTTY atau SecureCRT.</div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-title">Masuk ke Configuration Mode</div>
+                        <div class="step-desc">Ketik <code>config</code> untuk masuk ke configuration mode. Prompt akan
+                            berubah menjadi <code>vedge(config)#</code></div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-title">Konfigurasi System Parameters</div>
+                        <div class="step-desc">Set system-ip, site-id, organization-name, dan vbond address sesuai
+                            dengan nilai yang diberikan oleh administrator.</div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-title">Konfigurasi Tunnel Interface</div>
+                        <div class="step-desc">Masuk ke interface GE0/0, enable tunnel-interface, dan set color ke
+                            <code>biz-internet</code>.</div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-title">Commit Configuration</div>
+                        <div class="step-desc">Ketik <code>commit</code> untuk menyimpan konfigurasi. Tunggu sampai
+                            muncul pesan "Commit complete."</div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-title">Verifikasi Koneksi</div>
+                        <div class="step-desc">Cek status control connection dengan perintah
+                            <code>show control connections</code>. Pastikan semua controller dalam state "up".</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Verification Commands -->
+        <div class="config-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i data-lucide="search-check"></i>
+                </div>
+                <h2 class="section-title">Verification Commands</h2>
+            </div>
+
+            <div class="config-card">
+                <div class="config-header">
+                    <i data-lucide="eye"></i>
+                    <h3>Check Control Connections</h3>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">
+                            <i data-lucide="terminal"></i>
+                            show control connections
+                        </span>
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i>
+                            Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="prompt">vedge#</span> <span class="command">show control connections</span></pre>
+                    </div>
+                </div>
+
+                <div class="config-header" style="margin-top: 20px;">
+                    <i data-lucide="eye"></i>
+                    <h3>Check Interface Status</h3>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">
+                            <i data-lucide="terminal"></i>
+                            show interface
+                        </span>
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i>
+                            Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="prompt">vedge#</span> <span class="command">show interface ge0/0</span></pre>
+                    </div>
+                </div>
+
+                <div class="config-header" style="margin-top: 20px;">
+                    <i data-lucide="eye"></i>
+                    <h3>Check System Status</h3>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-title">
+                            <i data-lucide="terminal"></i>
+                            show system status
+                        </span>
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i>
+                            Copy
+                        </button>
+                    </div>
+                    <div class="code-content">
+                        <pre><span class="prompt">vedge#</span> <span class="command">show system status</span></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-bottom">
+            <a href="../preconfig-sdwan.html">
+                <i data-lucide="arrow-left"></i>
+                Pre-Config Guide
+            </a>
+            <a href="../../index.html">
+                <i data-lucide="home"></i>
+                Kembali ke Beranda
+            </a>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.getAttribute('data-theme') === 'light') {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+            lucide.createIcons();
+        }
+
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('pre').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i data-lucide="check"></i> Copied!';
+                lucide.createIcons();
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    lucide.createIcons();
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>
