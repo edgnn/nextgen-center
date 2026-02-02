@@ -6972,7 +6972,7 @@ access-list 101 permit ip any any</pre>` }
         function init() {
             // Read URL parameters
             const urlParams = new URLSearchParams(window.location.search);
-            const questionCount = parseInt(urlParams.get('count')) || 50;
+            const questionCount = parseInt(urlParams.get('count')) || 100;
             const useRecent = urlParams.get('recent') === 'true';
             const showChronological = urlParams.get('chronological') === 'true';
 
