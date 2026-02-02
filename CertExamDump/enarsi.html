@@ -6925,7 +6925,7 @@ access-list 101 permit ip any any</pre>` }
         function init() {
             // Read URL parameters
             const urlParams = new URLSearchParams(window.location.search);
-            const questionCount = parseInt(urlParams.get('count')) || examData.questions.length;
+            const questionCount = parseInt(urlParams.get('count')) || 50;
             const useRecent = urlParams.get('recent') === 'true';
             const showChronological = urlParams.get('chronological') === 'true';
 
