@@ -575,9 +575,15 @@
 
         .question-image img {
             width: 100%;
-            max-height: 300px;
+            max-height: 500px;
             object-fit: contain;
             background: var(--bg-main);
+            display: block;
+        }
+
+        .question-image img#qImage2,
+        .question-image img#qImage3 {
+            margin-top: 15px;
         }
 
         /* Options */
@@ -1381,6 +1387,7 @@
                     <div class="question-image" id="questionImage" style="display: none;">
                         <img id="qImage" src="" alt="Question image">
                         <img id="qImage2" src="" alt="Question image 2" style="display: none; margin-top: 10px;">
+                        <img id="qImage3" src="" alt="Question image 3" style="display: none; margin-top: 10px;">
                     </div>
 
                     <div class="question-text" id="questionText">Loading...</div>
@@ -2306,7 +2313,7 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 51,
                     type: "multiple-choice",
-                    image: "images/page25_img1.jpeg",
+                    image: "images/q51_eigrp_ipv6.jpg",
                     text: "Refer to the exhibit. Users in the branch network of 2001:db8:0:4::/64 report that they cannot access the internet. Which command is issued in IPv6 router EIGRP 100 configuration mode to solve this issue?",
                     options: [
                         { letter: "A", text: "Issue the no eigrp stub command on R2." },
@@ -2321,8 +2328,7 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 52,
                     type: "multiple-choice",
-                    image: "images/page26_img1.jpeg",
-                    text: "Refer to the exhibit. An engineer configured lP SLA to monitor a next hop on a router for reachabillty. When the next hopis unreachable, the router is executing tracking and falling over another route, but packet loss is experienced because the reachabillty is flapping. Which action resolves the issue?",
+                    text: "<pre>ip sla 10\n  icmp-echo 10.1.1.10\n  timeout 2000\n  threshold 2000\n  frequency 40\nip sla schedule 10 life forever start-time now\n!\ntrack 1 ip sla 10 reachability</pre><br>Refer to the exhibit. An engineer configured IP SLA to monitor a next hop on a router for reachability. When the next hop is unreachable, the router is executing tracking and failing over another route, but packet loss is experienced because the reachability is flapping. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Increase the frequency of the sla probe to 60." },
                         { letter: "B", text: "Append delay up 0 down 0 to the track command." },
@@ -2336,11 +2342,13 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 53,
                     type: "multiple-choice",
-                    image: "images/page26_img1.jpeg",
-                    text: "Refer to the exhibit. An administrator must upload the packages.conf file to an FTP server. However, the FTP server rejected anonymous service and required users to authenticate. What are the two ways to resolve the issue? (Choose two.)",
+                    text: "<pre>CPE# copy flash:packages.conf ftp://192.0.2.40/\nAddress or name of remote host [192.0.2.40]\nDestination filename [packages.conf]?\nWriting packages.conf\nError opening ftp://192.0.2.40/packages.conf (Incorrect Login/Password)\nCPE#</pre><br>Refer to the exhibit. An administrator must upload the packages.conf file to an FTP server. However, the FTP server rejected anonymous service and required users to authenticate. What are the two ways to resolve the issue? (Choose two.)",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "Create a user on the router matching the username and password on the FTP server and log in before attempting the copy." },
+                        { letter: "B", text: "Use the copy flash:packages.conf ftp: command instead, and enter the FTP server credentials when prompted." },
+                        { letter: "C", text: "Enter the FTP server credentials directly in the FTP URL using the ftp://username:password@192.0.2.40/ syntax." },
+                        { letter: "D", text: "Use ip ftp username and ip ftp password configuration commands to specify valid FTP server credentials." },
+                        { letter: "E", text: "Use the copy flash:packages.conf scp: command instead, and enter the FTP server credentials when prompted." },
                     ],
                     correct: ["C", "D"],
                     isMultiple: true,
@@ -2349,11 +2357,14 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 54,
                     type: "multiple-choice",
-                    image: "images/page27_img1.jpeg",
-                    text: "\ Refer to the exhibit. An engineer is troubleshooting a routing loop on the network to reach the 172.16.3.0/16 from the OSPF domain. Which configuration on router R1 resolves the issue?",
+                    image: "images/q54_routing_loop_1.png",
+                    image2: "images/q54_routing_loop_2.png",
+                    text: "Refer to the exhibit. An engineer is troubleshooting a routing loop on the network to reach the 172.16.3.0/16 from the OSPF domain. Which configuration on router R1 resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>router ospf 1\n redistribute eigrp 100 subnets route-map LOOPFILT\n!\nroute-map LOOPFILT deny 10\n match ip address 15\n!\nroute-map LOOPFILT permit 20\n!\naccess-list 15 permit 172.16.0.0 0.0.255.255</pre>" },
+                        { letter: "B", text: "<pre>router eigrp 100\n redistribute ospf 1 metric 1 1 1 1 1 route-map LOOPFILT\n!\nroute-map LOOPFILT deny 10\n match ip address 15\n!\nroute-map LOOPFILT permit 20\n!\naccess-list 15 permit 172.16.0.0 0.0.255.255</pre>" },
+                        { letter: "C", text: "<pre>router eigrp 100\n redistribute ospf 1 metric 1 1 1 1 1 route-map LOOPFILT\n!\nroute-map LOOPFILT deny 10\n match ip address 15\n!\naccess-list 15 permit 172.16.0.0 0.0.255.255</pre>" },
+                        { letter: "D", text: "<pre>router ospf 1\n redistribute eigrp 100 route-map LOOPFILT\n!\nroute-map LOOPFILT deny 10\n match ip address 15\n!\naccess-list 15 permit 172.16.0.0 0.0.255.255</pre>" },
                     ],
                     correct: ["A"],
                     isMultiple: false,
@@ -2378,7 +2389,7 @@ access-list 101 permit ip any any</pre>` }
                     type: "multiple-choice",
                     text: "An engineer failed to run diagnostic commands on devices using Cisco DNA Center. Which action in Cisco DNA Center resolves the issue?",
                     options: [
-                        { letter: "A", text: "Enable APls." },
+                        { letter: "A", text: "Enable APIs." },
                         { letter: "B", text: "Enable CDP." },
                         { letter: "C", text: "Enable Command Runner." },
                         { letter: "D", text: "Enable Secure Shell." },
@@ -2390,13 +2401,15 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 57,
                     type: "multiple-choice",
-                    image: "images/page28_img1.jpeg",
+                    image: "images/q57_eigrp_variance_1.png",
+                    image2: "images/q57_eigrp_variance_2.png",
+                    image3: "images/q57_eigrp_variance_3.png",
                     text: "Refer to the exhibit. Site 1 must perform unequal cost load balancing toward the segments behind Site2 and Site3. Some of the routes are getting load balanced but others are not. Which configuration allows Site 1 to load balance toward all the LAN segments of the remote routers?",
                     options: [
-                        { letter: "A", text: "Site2 router eigrp 100 variance 3" },
-                        { letter: "B", text: "Site1 router eigrp 100 variance 3" },
-                        { letter: "C", text: "Site2 router eigrp 100 variance 2" },
-                        { letter: "D", text: "Site3 router eigrp 100 variance 2" },
+                        { letter: "A", text: "<pre>Site2\n router eigrp 100\n  variance 3</pre>" },
+                        { letter: "B", text: "<pre>Site1\n router eigrp 100\n  variance 3</pre>" },
+                        { letter: "C", text: "<pre>Site2\n router eigrp 100\n  variance 2</pre>" },
+                        { letter: "D", text: "<pre>Site3\n router eigrp 100\n  variance 2</pre>" },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -2405,11 +2418,14 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 58,
                     type: "multiple-choice",
-                    image: "images/page29_img1.jpeg",
-                    text: "Refer to the exhibit. Routers R1 and R2 exchange routes to each other’s loopback through oSPF. Telnet traffic must be blocked from R2 Lo0 to R1 Lo2 Which configuration resolves the issue?",
+                    image: "images/q58_ipv6_acl_1.png",
+                    image2: "images/q58_ipv6_acl_2.png",
+                    text: "Refer to the exhibit. Routers R1 and R2 exchange routes to each other's loopback through OSPF. Telnet traffic must be blocked from R2 Lo0 to R1 Lo2. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>R1\n Interface loopback1\n  no ip address\n  ipv6 address 100A:0:100C::1/64\n  ipv6 enable\n  ipv6 ospf 1 area 0\n !\n interface Loopback2\n  no ip address\n  ipv6 address 200A:0:200C::1/64\n  ipv6 enable\n  ipv6 ospf 1 area 0\n  ipv6 access-class DENY_TELNET_Lo2 in\n !\n interface GigabitEthernet0/0\n  no ip address\n  ipv6 address AB01:2011:8:100::/64 eui-64\n  ipv6 enable\n  ipv6 ospf network point-to-point\n  ipv6 ospf 1 area 0\n !\n ipv6 access-list DENY_TELNET_Lo2\n  sequence 20 deny tcp host 100B:1:310B::1 host 200A:0:210C::1 eq telnet\n  permit ipv6 any any</pre>" },
+                        { letter: "B", text: "<pre>R1\n Interface loopback1\n  no ip address\n  ipv6 address 100A:0:100C::1/64\n  ipv6 enable\n  ipv6 ospf 1 area 0\n !\n interface Loopback2\n  no ip address\n  ipv6 address 200A:0:200C::1/64\n  ipv6 enable\n  ipv6 ospf 1 area 0\n !\n interface GigabitEthernet0/0\n  no ip address\n  ipv6 address AB01:2011:8:100::/64 eui-64\n  ipv6 enable\n  ipv6 ospf network point-to-point\n  ipv6 ospf 1 area 0\n  ipv6 traffic-filter DENY_TELNET_Lo2 in\n !\n ipv6 access-list DENY_TELNET_Lo2\n  sequence 20 deny tcp host 100B:1:310B::1 host 200A:0:210C::1 eq telnet\n  permit ipv6 any any</pre>" },
+                        { letter: "C", text: "<pre>R1\n Interface loopback1\n  no ip address\n  ipv6 address 100A:0:100C::1/64\n  ipv6 enable\n  ipv6 ospf 1 area 0\n !\n interface Loopback2\n  no ip address\n  ipv6 address 200A:0:200C::1/64\n  ipv6 enable\n  ipv6 ospf 1 area 0\n !\n interface GigabitEthernet0/0\n  no ip address\n  ipv6 address AB01:2011:8:100::/64 eui-64\n  ipv6 enable\n  ipv6 ospf network point-to-point\n  ipv6 ospf 1 area 0\n  ipv6 access-class DENY_TELNET_Lo2 in\n !\n ipv6 access-list DENY_TELNET_Lo2\n  sequence 20 deny tcp host 100B:1:310B::1 host 200A:0:210C::1 eq telnet\n  permit ipv6 any any</pre>" },
+                        { letter: "D", text: "<pre>R1\n Interface loopback1\n  no ip address\n  ipv6 address 100A:0:100C::1/64\n  ipv6 enable\n  ipv6 ospf 1 area 0\n !\n interface Loopback2\n  no ip address\n  ipv6 address 200A:0:200C::1/64\n  ipv6 enable\n  ipv6 ospf 1 area 0\n !\n interface GigabitEthernet0/0\n  no ip address\n  ipv6 address AB01:2011:8:100::/64 eui-64\n  ipv6 enable\n  ipv6 ospf network point-to-point\n  ipv6 ospf 1 area 0\n !\n ipv6 access-list DENY_TELNET_Lo2\n  sequence 20 deny tcp host 100B:1:310B::1 host 200A:0:210C::1 eq telnet\n  permit ipv6 any any</pre>" },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -2418,11 +2434,13 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 59,
                     type: "multiple-choice",
-                    image: "images/page31_img1.jpeg",
+                    image: "images/q59_floating_static.png",
                     text: "Refer to the exhibit. An engineer has successfully set up a floating static route from the BRANCH router to the HQ network using HQ_R1 as the primary default gateway. When the g0/0 goes down on HQ_R1, the branch network cannot reach the HQ network 192.168.20.0/24. Which set of configurations resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>BRANCH(config)# ip sla1\nBRANCH(config-ip-sla)# icmp-echo 192.168.100.2</pre>" },
+                        { letter: "B", text: "<pre>BRANCH(config)# ip sla 1\nBRANCH(config-ip-sla)# icmp-echo 192.168.100.1</pre>" },
+                        { letter: "C", text: "<pre>HQ_R3(config)# ip sla responder\nHQ_R3(config)# ip sla responder icmp-echo 172.16.35.1</pre>" },
+                        { letter: "D", text: "<pre>HQ_R3(config)# ip sla responder\nHQ_R3(config)# ip sla responder icmp-echo 172.16.35.5</pre>" },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -2440,12 +2458,12 @@ access-list 101 permit ip any any</pre>` }
                     ],
                     correct: ["D"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "Route Distinguisher (RD) is used to extend the IP address to create a unique VPNv4 address. This allows the same IP prefixes to be used in different VPNs while keeping them distinguishable. Reference: https://www.cisco.com/c/en/us/support/docs/multiprotocol-label-switching-mpls/mpls/13733-mpls-vpn-basic.html"
                 },
                 {
                     id: 61,
                     type: "multiple-choice",
-                    image: "images/page32_img1.jpeg",
+                    image: "images/q61_control_plane.png",
                     text: "Refer to the exhibit. A company is evaluating multiple network management system tools. Trending graphs generated by SNMP data are returned by the NMS and appear to have multiple gaps. While troubleshooting the issue, an engineer noticed the relevant output What solves the gaps in the graphs?",
                     options: [
                         { letter: "A", text: "Separate the NMS class map in multiple class maps based on the specific protocols with appropriate CoPP actions." },
@@ -2474,11 +2492,13 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 63,
                     type: "multiple-choice",
-                    image: "images/page33_img1.jpeg",
-                    text: "Refer to the exhibit. An engineer receives this error message when trying to access another router in-band from the serial interface connected to the console of R1.Which configuration is needed on R1 to resolve this issue?",
+                    image: "images/q63_ssh_transport.png",
+                    text: "Refer to the exhibit. An engineer receives this error message when trying to access another router in-band from the serial interface connected to the console of R1. Which configuration is needed on R1 to resolve this issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>R1(config)#line vty 0\nR1(config-line)# transport output ssh\nR1(config-line)# transport preferred ssh</pre>" },
+                        { letter: "B", text: "<pre>R1(config)#line vty 0\nR1(config-line)# transport output ssh</pre>" },
+                        { letter: "C", text: "<pre>R1(config)#line console 0\nR1(config-line)# transport output ssh</pre>" },
+                        { letter: "D", text: "<pre>R1(config)#line console 0\nR1(config-line)# transport preferred ssh</pre>" },
                     ],
                     correct: ["C"],
                     isMultiple: false,
@@ -2487,11 +2507,14 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 64,
                     type: "multiple-choice",
-                    image: "images/page34_img1.jpeg",
+                    image: "images/q64_redistribution_1.png",
+                    image2: "images/q64_redistribution_2.png",
                     text: "Refer to the exhibit. The engineer configured route redistribution in the network but soon received reports that R2 cannot access 192.168.7.0/24 and 192.168.15.0/24 subnets. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>R1(config)# ip access-list standard 10\nR1(config-std-nacl)# no 10 permit\nR1(config-std-nacl)# no 11 permit\nR1(config-std-nacl)# 10 permit 192.168.4.0 0.0.3.255\nR1(config-std-nacl)# 11 permit 192.168.12.0 0.0.3.255</pre>" },
+                        { letter: "B", text: "<pre>R1(config)# ip access-list standard 10\nR1(config-std-nacl)# no 10 permit\nR1(config-std-nacl)# no 11 permit\nR1(config-std-nacl)# 10 permit 192.168.0.0 0.0.7.255\nR1(config-std-nacl)# 11 permit 192.168.8.0 0.0.3.255</pre>" },
+                        { letter: "C", text: "<pre>R1(config)# ip access-list standard 10\nR1(config-std-nacl)# no 10 permit\nR1(config-std-nacl)# no 11 permit\nR1(config-std-nacl)# 10 permit 192.168.0.0 0.0.3.255\nR1(config-std-nacl)# 11 permit 192.168.8.0 0.0.3.255</pre>" },
+                        { letter: "D", text: "<pre>R1(config)# ip access-list standard 10\nR1(config-std-nacl)# no 10 permit\nR1(config-std-nacl)# no 11 permit\nR1(config-std-nacl)# 10 permit 192.168.0.0 0.0.3.255\nR1(config-std-nacl)# 11 permit 192.168.8.0 0.0.7.255</pre>" },
                     ],
                     correct: ["A"],
                     isMultiple: false,
@@ -2500,10 +2523,12 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 65,
                     type: "multiple-choice",
-                    text: "No traffic is filtering through CoPP, which is resulting in high CPU utilization. Which configuration resolves the issue?",
+                    text: "The network administrator configured CoPP so that all routing protocol traffic toward the router CPU is limited to 1 mbps. All traffic that exceeds this limit must be dropped. The router is running BGP and OSPF. Management traffic for Telnet and SSH must be limited to 500 kbps.<pre>access-list 100 permit tcp any any eq 179\naccess-list 100 permit tcp any any range 22 23\naccess-list 100 permit ospf any any\n!\nclass-map CM-ROUTING\n match access-group 100\nclass-map CM-MGMT\n match access-group 100\n!\npolicy-map PM-COPP\n class CM-ROUTING\n  police 1000000 conform-action transmit\n class CM-MGMT\n  police 500000 conform-action transmit\n!\ncontrol-plane\n service-policy output PM-COPP</pre>No traffic is filtering through CoPP, which is resulting in high CPU utilization. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>no access-list 100\naccess-list 100 permit tcp any any eq 179\naccess-list 100 permit ospf any any\naccess-list 101 permit tcp any any range 22 23\n!\nclass-map CM-MGMT\n no match access-group 100\n match access-group 101</pre>" },
+                        { letter: "B", text: "<pre>control-plane\n no service-policy output PM-COPP\n service-policy input PM-COPP</pre>" },
+                        { letter: "C", text: "<pre>no access-list 100\naccess-list 100 permit tcp any any eq 179\naccess-list 100 permit ospf any any\naccess-list 101 permit tcp any any range 22 23\n!\nclass-map CM-MGMT\n no match access-group 100\n match access-group 101\n!\ncontrol-plane\n no service-policy output PM-COPP\n service-policy input PM-COPP</pre>" },
+                        { letter: "D", text: "<pre>no access-list 100\naccess-list 100 permit tcp any any eq 179\naccess-list 100 permit tcp any any eq 22\naccess-list 100 permit tcp any any eq 23\naccess-list 100 permit ospf any any</pre>" },
                     ],
                     correct: ["C"],
                     isMultiple: false,
@@ -2512,7 +2537,7 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 66,
                     type: "multiple-choice",
-                    image: "images/page35_img1.jpeg",
+                    image: "images/q66_copp_class.png",
                     text: "Refer to the exhibit. A CoPP policy is implemented to allow specific control traffic, but the traffic is not matching as expected and is getting unexpected behavior of control traffic. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Use default-class to match ICMP traffic." },
@@ -2556,11 +2581,13 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 69,
                     type: "multiple-choice",
-                    image: "images/page36_img1.jpeg",
+                    image: "images/q69_flow_monitor.png",
                     text: "Refer to the exhibit. An engineer configured NetFlow on R1, but the flows do not reach the NMS server from R1. Which configuration resolves this issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>R1(config)# flow monitor FlowMonitor1\nR1(config-flow-monitor)# destination 10.66.66.66</pre>" },
+                        { letter: "B", text: "<pre>R1(config)# flow exporter FlowExporter1\nR1(config-flow-exporter)# destination 10.66.66.66</pre>" },
+                        { letter: "C", text: "<pre>R1(config)# interface Ethernet0/1\nR1(config-if)# ip flow monitor FlowMonitor1 input\nR1(config-if)# ip flow monitor FlowMonitor1 output</pre>" },
+                        { letter: "D", text: "<pre>R1(config)# interface Ethernet0/0\nR1(config-if)# ip flow monitor FlowMonitor1 input\nR1(config-if)# ip flow monitor FlowMonitor1 output</pre>" },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -2612,7 +2639,7 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 73,
                     type: "multiple-choice",
-                    image: "images/page37_img1.jpeg",
+                    image: "images/q73_ssh_telnet.png",
                     text: "Refer to the exhibit. An administrator canlog in to the device using Telnet, butthe attempts to log in to the same device using SSH with the same credentials fail. Which action resolves this issue?",
                     options: [
                         { letter: "A", text: "Configure to use the Telnet user database for SSH as well." },
@@ -2627,7 +2654,7 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 74,
                     type: "multiple-choice",
-                    image: "images/page38_img1.jpeg",
+                    image: "images/q74_prefix_list.png",
                     text: "Refer to the exhibit. An engineer wanted to set a tag of 30 to route 10.1.80.65/32 but it failed. How is the issue fixed?",
                     options: [
                         { letter: "A", text: "Modify prefix-list ccnp3 to add 10.1.64.0/20 ge 32." },
@@ -2656,7 +2683,7 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 76,
                     type: "multiple-choice",
-                    image: "images/page39_img1.jpeg",
+                    image: "images/q76_tacacs.png",
                     text: "Refer to the exhibit. A network administrator is trying to switch to the privileged EXEC level on R1 but failed. Which configuration resolves the issue?",
                     options: [
                         { letter: "A", text: "enable-password Cisco@123" },
@@ -2671,7 +2698,7 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 77,
                     type: "multiple-choice",
-                    text: "Which action resolves the issue?",
+                    text: "A customer reports that traffic is not passing on an EIGRP enabled multipoint interface on a router configured as below:<pre>interface Serial0/0/0\n no ip address\n!\ninterface Serial0/0/0.9 multipoint\n ip address 10.1.1.1 255.255.255.248\n ip split-horizon eigrp 1</pre>Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Enable poison reverse." },
                         { letter: "B", text: "Disable poison reverse." },
@@ -2699,7 +2726,7 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 79,
                     type: "multiple-choice",
-                    image: "images/page39_img1.jpeg",
+                    image: "images/q79_cef_urpf.png",
                     text: "Refer to the exhibit. An engineer implements uRPF to increase security and stop incoming spoofed IP packets. Some asymmetrically routed packets are also blocked after the configuration. Which command resolves the issue?",
                     options: [
                         { letter: "A", text: "ip verify unicast reverse-path" },
@@ -2714,7 +2741,8 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 80,
                     type: "multiple-choice",
-                    image: "images/page40_img1.jpeg",
+                    image: "images/q80_input_error_1.png",
+                    image2: "images/q80_input_error_2.png",
                     text: "Refer to the exhibit. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Replace the faulty cable." },
@@ -2729,11 +2757,13 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 81,
                     type: "multiple-choice",
-                    image: "images/page41_img1.jpeg",
+                    image: "images/q81_distribute_list.png",
                     text: "Refer to the exhibit. An engineer must filter incoming EIGRP updates to allow only a set of specific prefixes. The distribute list is tested, and it filters out all routes except network 10.10.10.0/24. How should the engineer temporarily allow all prefixes to be learned by the router again without adjusting the existing access list?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "An extended access list must be used instead of a standard access list to accomplish the task." },
+                        { letter: "B", text: "A permit any statement should be added before completing the ACL with the required prefixes, and then the permit any statement can be removed." },
+                        { letter: "C", text: "A permit 20 statement should be added before completing the ACL with the required prefixes, and then the permit 20 statement can be removed." },
+                        { letter: "D", text: "A continue statement should be added within the permit 10 statement before completing the ACL with the required prefixes, and then the continue statement can be removed." },
                     ],
                     correct: ["C"],
                     isMultiple: false,
@@ -2742,7 +2772,7 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 82,
                     type: "multiple-choice",
-                    image: "images/page41_img1.jpeg",
+                    image: "images/q82_ip_sla.png",
                     text: "Refer to the exhibit. An IP SLA is configured to use the backup default route when he primary is down, but it is not working as desired. Which command fixes the issue?",
                     options: [
                         { letter: "A", text: "R1(config)#ip route 0.0.0.0 0.0.0.0 2.2.2.2 10 track 1" },
@@ -2757,10 +2787,12 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 83,
                     type: "multiple-choice",
-                    text: "A network engineer must configure an ElGRP stub router at a site that advertises only connected and summary routes. Which configuration performs this task?",
+                    text: "A network engineer must configure an EIGRP stub router at a site that advertises only connected and summary routes. Which configuration performs this task?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>router eigrp 100\n eigrp stub</pre>" },
+                        { letter: "B", text: "<pre>router eigrp 100\n eigrp stub redistribute</pre>" },
+                        { letter: "C", text: "<pre>router eigrp 100\n eigrp stub summary</pre>" },
+                        { letter: "D", text: "<pre>router eigrp 100\n eigrp stub connected</pre>" },
                     ],
                     correct: ["A"],
                     isMultiple: false,
@@ -2783,11 +2815,13 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 85,
                     type: "multiple-choice",
-                    image: "images/page42_img1.jpeg",
+                    image: "images/q85_ospf_loopback.png",
                     text: "Refer to the exhibit. Which set of commands restore reachability to loopback0?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>interface loopback0\n ip address 4.4.4.4 255.255.255.0\n ip ospf interface type network</pre>" },
+                        { letter: "B", text: "<pre>interface loopback0\n ip address 4.4.4.4 255.255.255.0\n ip ospf network broadcast</pre>" },
+                        { letter: "C", text: "<pre>interface loopback0\n ip address 4.4.4.4 255.255.255.0\n ip ospf network point-to-point</pre>" },
+                        { letter: "D", text: "<pre>interface loopback0\n ip address 4.4.4.4 255.255.255.0\n ip ospf interface area 10</pre>" },
                     ],
                     correct: ["C"],
                     isMultiple: false,
@@ -2798,6 +2832,7 @@ access-list 101 permit ip any any</pre>` }
                     type: "multiple-choice",
                     text: "Which router translates the customer routing information into VPNv4 routes to exchange VPNv4 routes with other devices through MP-BGP?",
                     options: [
+                        { letter: "A", text: "P" },
                         { letter: "B", text: "VPNV4 RR" },
                         { letter: "C", text: "CE" },
                         { letter: "D", text: "PE" },
@@ -2809,11 +2844,13 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 87,
                     type: "multiple-choice",
-                    image: "images/page43_img1.jpeg",
+                    image: "images/q87_aaa_auth.png",
                     text: "Refer to the exhibit. The authentication is not working as desired and the user drops into user-exec mode. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>aaa new-model\naaa authentication login default local\naaa authorization priv default 15\n!\nline vty 0 4\n login authentication default\n authorization exec priv15</pre>" },
+                        { letter: "B", text: "<pre>aaa new-model\naaa authentication login default local\naaa authorization exec default local\n!\nline vty 0 4\n login authentication default\n authorization exec default</pre>" },
+                        { letter: "C", text: "<pre>aaa new-model\naaa authentication common-id default local\naaa authorization exec default local\n!\nline vty 0 4\n login authentication default\n authorization exec default</pre>" },
+                        { letter: "D", text: "<pre>aaa new-model\naaa authentication login local\naaa authorization exec local\n!\nline vty 0 4\n login authentication local\n authorization exec default</pre>" },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -2822,13 +2859,13 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 88,
                     type: "multiple-choice",
-                    image: "images/page43_img1.jpeg",
+                    image: "images/q88_bgp_allowas.png",
                     text: "Refer to the exhibit. AS111 is receiving its own routes from AS200 causing a loop in the network. Which configuration provides loop prevention?",
                     options: [
-                        { letter: "A", text: "router bgp 1 11 neighbor 195.1.1.1 as-override no neighbor 195.1.2.2 allowas-in" },
-                        { letter: "B", text: "router bgp 111 no neighbor 195.1.1.1 allowas-in no neighbor 195.1.2.2 allowas-in" },
-                        { letter: "C", text: "router bgp 111 neighbor 195.1.1.1 as-override neighbor 195.1.2.2 as-override" },
-                        { letter: "D", text: "router bgp111 neighbor 195.1.2.2 as-override no neighbor 195.1.1.1 allowas-in" },
+                        { letter: "A", text: "<pre>router bgp 111\n neighbor 195.1.1.1 as-override\n no neighbor 195.1.2.2 allowas-in</pre>" },
+                        { letter: "B", text: "<pre>router bgp 111\n no neighbor 195.1.1.1 allowas-in\n no neighbor 195.1.2.2 allowas-in</pre>" },
+                        { letter: "C", text: "<pre>router bgp 111\n neighbor 195.1.1.1 as-override\n neighbor 195.1.2.2 as-override</pre>" },
+                        { letter: "D", text: "<pre>router bgp 111\n neighbor 195.1.2.2 as-override\n no neighbor 195.1.1.1 allowas-in</pre>" },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -2837,11 +2874,13 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 89,
                     type: "multiple-choice",
-                    image: "images/page44_img1.jpeg",
+                    image: "images/q89_ipv6_acl.png",
                     text: "Refer to the exhibit. Which configuration denies Telnet traffic to router 2 from 198A:0:205C::1/64?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>ipv6 access-list Deny_Telnet\n sequence 10 deny tcp host 198A:0:205C::1/64\n!\ninterface Gi0/0\n ipv6 traffic-filter Deny_Telnet in</pre>" },
+                        { letter: "B", text: "<pre>ipv6 access-list Deny_Telnet\n sequence 10 deny tcp host 198A:0:205C::1/64 eq telnet\n!\ninterface Gi0/0\n ipv6 traffic-filter Deny_Telnet in</pre>" },
+                        { letter: "C", text: "<pre>ipv6 access-list Deny_Telnet\n sequence 10 deny tcp host 198A:0:205C::1/64 eq telnet\n!\ninterface Gi0/0\n ipv6 access-map Deny_Telnet in</pre>" },
+                        { letter: "D", text: "<pre>ipv6 access-list Deny_Telnet\n sequence 10 deny tcp host 198A:0:205C::1/64\n!\ninterface Gi0/0\n ipv6 access-map Deny_Telnet in</pre>" },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -2865,7 +2904,7 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 91,
                     type: "multiple-choice",
-                    image: "images/page45_img1.jpeg",
+                    image: "images/q91_ftp_ipv6.jpg",
                     text: "Refer to the exhibit. When an FTP client attempts to use passive FTP to connect to the FTP server, the file transfers fail. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Modify traffic filter FTP-SERVER in to the outbound direction." },
@@ -2894,11 +2933,14 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 93,
                     type: "multiple-choice",
-                    image: "images/page46_img1.jpeg",
+                    image: "images/q93_bgp_dampening_1.png",
+                    image2: "images/q93_bgp_dampening_2.png",
                     text: "Refer to the exhibit. In Cisco DNA Center, a network engineer identifies that BGP-learned networks are repeatedly withdrawn from peers. Which configuration must the engineer apply to resolve the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>router bgp 100\n bgp dampening</pre>" },
+                        { letter: "B", text: "<pre>route-map Dampening permit 10\n set dampening 15 750 2000 60\nrouter bgp 100\n neighbor 10.140.212.5 route-map Dampening out</pre>" },
+                        { letter: "C", text: "<pre>route-map Dampening permit 10\n set dampening 15 750 2000 60\nrouter bgp 100\n neighbor 10.140.212.5 route-map Dampening in</pre>" },
+                        { letter: "D", text: "<pre>router bgp 100\n bgp graceful-restart</pre>" },
                     ],
                     correct: ["C"],
                     isMultiple: false,
@@ -2937,12 +2979,11 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 96,
                     type: "multiple-choice",
-                    image: "images/page47_img1.jpeg",
-                    text: "Refer to the exhibit. A junior engineer updated a branch router configuration. Immediately after the change, the engineer receives calls from the help desk that branch personnel cannot reach any network destinations. Which configuration restores service and continues to block 10.1.1.100/32?",
+                    text: "Refer to the exhibit. A junior engineer updated a branch router configuration. Immediately after the change, the engineer receives calls from the help desk that branch personnel cannot reach any network destinations. Which configuration restores service and continues to block 10.1.1.100/32?<pre>BRANCH-RTR#\n\nrouter eigrp 100\n network 10.3.1.0 0.0.0.7\n network 10.100.100.1 0.0.0.0\n distribute-list route-map FILTER-IN in FastEthernet0/0\n eigrp router-id 10.100.100.1\n!\nip prefix-list 102 seq 10 permit 10.1.1.100/32\n!\nroute-map FILTER-IN deny 10\n match ip address prefix-list 102</pre>",
                     options: [
                         { letter: "A", text: "ip prefix-list 102 seq 5 permit 0.0.0.0/32 le 32" },
                         { letter: "B", text: "route-map FILTER-IN permit 20" },
-                        { letter: "C", text: "route-map FlLTER-IN deny 5" },
+                        { letter: "C", text: "route-map FILTER-IN deny 5" },
                         { letter: "D", text: "ip prefix-list 102 seq 15 permit 0.0.0.0/32 le 32" },
                     ],
                     correct: ["B"],
@@ -2952,12 +2993,14 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 97,
                     type: "multiple-choice",
-                    text: "The Control Plane Policing is not applied to SSH traffic and SSH is open to use any bandwidth available. Which configuration resolves this issue?",
+                    text: "The network administrator configured the router for Control Plane Policing so that inbound SSH traffic is policed to 500 kbps. This policy must apply to traffic coming in from 10.10.10.0/24 and 192.168.10.0/24 networks<pre>access-list 100 permit ip 10.10.10.0 0.0.0.255 any\naccess-list 100 permit tcp 192.168.10.0 0.0.0.255 any eq 23\n!\nclass-map CLASS-SSH\n match access-group 100\n!\npolicy-map PM-COPP\n class CLASS-SSH\n  police 500000 conform-action transmit\n!\ninterface E0/0\n service-policy input PM-COPP\n!\ninterface E0/1\n service-policy input PM-COPP</pre>The Control Plane Policing is not applied to SSH traffic and SSH is open to use any bandwidth available. Which configuration resolves this issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>no access-list 100\naccess-list 100 permit tcp 10.10.10.0 0.0.0.255 any eq 22\naccess-list 100 permit tcp 192.168.10.0 0.0.0.255 any eq 22</pre>" },
+                        { letter: "B", text: "<pre>interface E0/0\n no service-policy input PM-COPP\n!\ninterface E0/1\n no service-policy input PM-COPP\n!\ncontrol-plane\n service-policy input PM-COPP</pre>" },
+                        { letter: "C", text: "<pre>no access-list 100\naccess-list 100 permit tcp 10.10.10.0 0.0.0.255 any eq 22\naccess-list 100 permit tcp 192.168.10.0 0.0.0.255 any eq 22\n!\ninterface E0/0\n no service-policy input PM-COPP\n!\ninterface E0/1\n no service-policy input PM-COPP\n!\ncontrol-plane\n service-policy input PM-COPP</pre>" },
+                        { letter: "D", text: "<pre>no access-list 100\naccess-list 100 permit tcp 10.10.10.0 0.0.0.255 any eq 22\naccess-list 100 permit tcp 192.168.10.0 0.0.0.255 any eq 22\n!\npolicy-map PM-COPP\n class CLASS-SSH\n  no police 500000 conform-action transmit\n  police 500000 conform-action transmit exceed-action drop</pre>" },
                     ],
-                    correct: ["D"],
+                    correct: ["C"],
                     isMultiple: false,
                     explanation: ""
                 },
@@ -2980,8 +3023,10 @@ access-list 101 permit ip any any</pre>` }
                     type: "multiple-choice",
                     text: "When configuring Control Plane Policing on a router to protect it from malicious traffic, an engineer observes that the configured routing protocols start flapping on that device. Which action in the Control Plane Policy prevents this problem in a production environment while achieving the security objective?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "Set the conform-action to transmit and exceed-action to drop to test the ACLs and transmit rates and apply the Control Plane Policy in the input direction." },
+                        { letter: "B", text: "Set the conform-action and exceed-action to transmit initially to test the ACLs and transmit rates and apply the Control Plane Policy in the output direction." },
+                        { letter: "C", text: "Set the conform-action and exceed-action to transmit initially to test the ACLs and transmit rates and apply the Control Plane Policy in the input direction." },
+                        { letter: "D", text: "Set the conform-action to transmit and exceed-action to drop to test the ACLs and transmit rates and apply the Control Plane Policy in the output direction." },
                     ],
                     correct: ["C"],
                     isMultiple: false,
@@ -2990,11 +3035,13 @@ access-list 101 permit ip any any</pre>` }
                 {
                     id: 100,
                     type: "multiple-choice",
-                    image: "images/page49_img1.jpeg",
+                    image: "images/q100_eigrp_auth.png",
                     text: "Refer to the exhibit. R1 lost its directly connected EIGRP peer 172.16.33.2 (SW1). Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>key chain EIGRP\n key 1\n  key-string Cisco\n!\ninterface GigabitEthernet 2.10\n ip authentication mode eigrp 88 md5\n ip authentication key-chain eigrp 88 Cisco</pre>" },
+                        { letter: "B", text: "<pre>key chain EIGRP\n key 1\n  key-string Cisco\n!\ninterface GigabitEthernet 2\n ip authentication mode eigrp 88 md5\n ip authentication key-chain eigrp 88 Cisco</pre>" },
+                        { letter: "C", text: "<pre>key chain EIGRP\n key 1\n  key-string Cisco\n!\ninterface GigabitEthernet 2\n ip authentication mode eigrp 88 md5\n ip authentication key-chain eigrp 88 EIGRP</pre>" },
+                        { letter: "D", text: "<pre>key chain EIGRP\n key 1\n  key-string Cisco\n!\ninterface GigabitEthernet 2.10\n ip authentication mode eigrp 88 md5\n ip authentication key-chain eigrp 88 EIGRP</pre>" },
                     ],
                     correct: ["C"],
                     isMultiple: false,
@@ -7075,6 +7122,7 @@ access-list 101 permit ip any any</pre>` }
             // Image
             const imageContainer = document.getElementById('questionImage');
             const qImage2 = document.getElementById('qImage2');
+            const qImage3 = document.getElementById('qImage3');
             if (question.image) {
                 document.getElementById('qImage').src = question.image;
                 imageContainer.style.display = 'block';
@@ -7085,9 +7133,17 @@ access-list 101 permit ip any any</pre>` }
                 } else {
                     qImage2.style.display = 'none';
                 }
+                // Handle third image
+                if (question.image3) {
+                    qImage3.src = question.image3;
+                    qImage3.style.display = 'block';
+                } else {
+                    qImage3.style.display = 'none';
+                }
             } else {
                 imageContainer.style.display = 'none';
                 qImage2.style.display = 'none';
+                qImage3.style.display = 'none';
             }
 
             // Flag button
