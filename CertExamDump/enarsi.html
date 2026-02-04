@@ -6774,7 +6774,7 @@ server name DC_TACACS</pre>` },
                 {
                     id: 277,
                     type: "multiple-choice",
-                    image: "images/page136_img1.jpeg",
+                    image: "images/q277.png",
                     text: "Refer to the exhibit. A network administrator logs into the router using TACACS+ username and password credentials, but the administrator cannot run any privileged commands. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Configure an authorized IP address for this user to access this router" },
@@ -6789,11 +6789,13 @@ server name DC_TACACS</pre>` },
                 {
                     id: 278,
                     type: "multiple-choice",
-                    image: "images/page136_img1.jpeg",
+                    image: "images/q278.png",
                     text: "Refer to the exhibit. An administrator must configure the router with OSPF for IPv4 and IPv6 networks under a single process. The OSPF adjacencies are not established and did not meet the requirement. Which action resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "Replace OSPF process 10 on the interfaces with OSPF process 1, and remove process 10 from the global configuration." },
+                        { letter: "B", text: "Replace OSPF process 10 on the interfaces with OSPF process 1, and configure an additional router ID with IPv6 address." },
+                        { letter: "C", text: "Replace OSPF process 10 on the interfaces with OSPF process 1 for the IPv6 address, and remove process 10 from the global configuration." },
+                        { letter: "D", text: "Replace OSPF process 10 on the interfaces with OSPF process 1 for the IPv4 address, and remove process 10 from the global configuration" },
                     ],
                     correct: ["A"],
                     isMultiple: false,
@@ -6816,11 +6818,21 @@ server name DC_TACACS</pre>` },
                 {
                     id: 280,
                     type: "multiple-choice",
-                    image: "images/page137_img1.jpeg",
+                    image: "images/q280.png",
                     text: "Refer to the exhibit. An engineer configured IP SLA on R1 to avoid the ISP link flapping problem, but it is not working as designed. lP SLA should wait 30 seconds before switching traffic to a secondary connection and then revert to the primary link after waiting 20 seconds, when the primary link is available and stabilized. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>R1(config)#track 700 ip sla 700
+R1(config-track)#delay down 20 up 30</pre>` },
+                        {
+                            letter: "B", text: `<pre>R1(config)#fip sla 700
+R1(config-ip-sla)#delay down 20 up 30</pre>` },
+                        {
+                            letter: "C", text: `<pre>R1(config)#track 700 ip sla 700
+R1(config-track)#delay down 30 up 20</pre>` },
+                        {
+                            letter: "D", text: `<pre>R1(config)#fip sla 700
+R1(config-ip-sla)#delay down 30 up 20</pre>` },
                     ],
                     correct: ["C"],
                     isMultiple: false,
