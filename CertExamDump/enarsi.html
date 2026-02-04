@@ -5458,10 +5458,92 @@ login authentication RAD-LOCAL</pre>` },
                 {
                     id: 227,
                     type: "multiple-choice",
-                    text: "Which configurations must the engineer apply to ROUTER_1 to restore connectivity for the affected devices?",
+                    image: "images/q227.png",
+                    text: "Refer to the exhibit. After an engineer configured a new Cisco router as a DHCP server, users reported two primary issues: 1. Devices in the HR subnet have intermittent connectivity problems. 2. Workstations in the LEGAL subnet cannot obtain IP addresses. Which configurations must the engineer apply to ROUTER_1 to restore connectivity for the affected devices?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>interface GigabitEthernet0/0.5
+encapsulation dot1Q 5
+ip address 192.168.5.10 255.255.255.0
+ip helper-address 192.168.39.100
+!
+interface GigabitEthernet0/0.80
+encapsulation dot1Q 80
+ip address 192.168.80.10 255.255.255.128
+ip helper-address 192.168.39.100
+!
+ip dhcp excluded-address 192.168.5.1 192.168.5.5
+ip dhcp excluded-address 192.168.80.1 192.168.80.110
+!
+ip dhcp pool LEGAL
+network 192.168 80.0 255.255.255.128
+default-router 192.168.80.10
+!
+ip dhcp pool HR
+network 192.168.5.0 255.255.255.0
+default-router 192.168.5.10</pre>` },
+                        {
+                            letter: "B", text: `<pre>interface GigabitEthernet0/0.5
+encapsulation dot1Q 5
+ip address 192.168.5.10 255.255.255.0
+ip helper-address 192.168.93.100
+!
+interface GigabitEthernet0/0.80
+encapsulation dot1Q 80
+ip address 192.168.80.10 255.255.255.128
+ip helper-address 192.168.39.100
+!
+ip dhcp excluded-address 192.168.5.1 192.168.5.1
+ip dhcp excluded-address 192.168.80.1 192.168.80.10
+!
+ip dhcp pool LEGAL
+network 192.168.80.0 255.255.255.128
+default-router 192.168.80.10
+!
+ip dhcp pool HR
+network 192 168.5.0 255.255.255.0
+default-router 192.168.5.10</pre>` },
+                        {
+                            letter: "C", text: `<pre>interface GigabitEthernet0/0.5
+encapsulation dot1Q 5
+ip address 192.168.5.10 255.255.255.0
+ip helper-address 192.168.39.100
+!
+interface GigabitEthernet0/0.80
+encapsulation dot1Q 80
+ip address 192 168.80.10 255.255.255.128
+ip helper-address 192.168.39.100
+!
+ip dhcp excluded-address 192.168.5.1 192.168.5.10
+ip dhcp excluded-address 192.168.80.1 192.168.80.10
+!
+ip dhcp pool LEGAL
+network 192.168.80.0 255.255.255:128
+default-router 192.168.80.10
+!
+ip dhcp pool HR
+network 192.168.5.0 255.255.255.0
+default-router 192.168.5.10</pre>` },
+                        {
+                            letter: "D", text: `<pre>interface GigabitEthernet0/0,5
+encapsulation dot1Q 5
+ip address 192.168.5.10 255.255.255.0
+ip helper-address 192.168.39.100
+!
+interface GigabitEthernet0/0.80
+encapsulation dot1Q 80
+ip address 192.168.80.10 255.255.255.128
+ip helper-address 192.168.39.100
+!
+ip dhcp excluded-address 192.168.80.1 192.168.80.10
+!
+ip dhcp pool LEGAL
+network 192.168.80.0 255.255.255.128
+default-router 192.168.80.10
+!
+ip dhcp pool HR
+network 192.168.5.0 255.255.255.0
+default-router 192.168.5.10</pre>` },
                     ],
                     correct: ["C"],
                     isMultiple: false,
@@ -5513,11 +5595,22 @@ login authentication RAD-LOCAL</pre>` },
                 {
                     id: 231,
                     type: "multiple-choice",
-                    image: "images/page112_img1.jpeg",
+                    image: "images/q231.png",
+                    image2: "images/q231_2.png",
                     text: "Refer to the exhibit. An engineer implemented an access list on R1 to allow anyone to Telnet except R2 Loopback0 to R1 Loopbackd. How must sequence 20 be replaced on the R1 access list to resolve the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>sequence 20 permit tcp host 1001:ABC 2011:7 :: 1 host 400A:0:400C1 eq telnet</pre>`
+                        },
+                        {
+                            letter: "B", text: `<pre>sequence 20 permit tep host 400A 0:400C :: 1 host 1001:ABC:2011 7 1 eq telnet</pre>`
+                        },
+                        {
+                            letter: "C", text: `<pre>sequence 20 deny tcp host 400A:0:400C :: 1 host 1001:ABC:2011:7 :: 1 eq telnet</pre>`
+                        },
+                        {
+                            letter: "D", text: `<pre>sequence 20 deny tcp host 1001:ABC:2011:7 :: 1 host 400A:0:400C :: 1 eq telnet</pre>`
+                        },
                     ],
                     correct: ["D"],
                     isMultiple: false,
