@@ -6040,11 +6040,30 @@ R3(config)#ip http accounting commands 3 default</pre>` },
                 {
                     id: 253,
                     type: "multiple-choice",
-                    image: "images/page121_img1.jpeg",
+                    image: "images/q253.png",
+                    image2: "images/q253_2.png",
                     text: "Refer to the exhibit. An engineer must establish a point-to-point GRE VPN between R1 and the remote site. Which configuration accomplishes the task fort he remote site?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>Interface Tunnel1
+tunnel source 199.1.1.1
+tunnel destination 200.1.1.3
+ip address 192.168.1.1 255.255.255.0</pre>` },
+                        {
+                            letter: "B", text: `<pre>Interface Tunnel1
+tunnel source 199.1.1.1
+tunnel destination 200.1.1.3
+ip address 192.168.1.3 255.255.255.0</pre>` },
+                        {
+                            letter: "C", text: `<pre>Interface Tunnel1
+tunnel source 200.1.1.3
+tunnel destination 199.1.1.1
+ip address 192.168.1.1 255.255.255.0</pre>` },
+                        {
+                            letter: "D", text: `<pre>Interface Tunnel1
+tunnel source 200.1.1.3
+tunnel destination 199.1.1.1
+ip address 192.168.1.3 255.255.255.0</pre>` },
                     ],
                     correct: ["D"],
                     isMultiple: false,
