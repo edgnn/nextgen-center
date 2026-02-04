@@ -7488,7 +7488,7 @@ RouterA(config)#end</pre>` },
         function init() {
             // Read URL parameters
             const urlParams = new URLSearchParams(window.location.search);
-            const questionCount = parseInt(urlParams.get('count')) || 160;
+            const questionCount = parseInt(urlParams.get('count')) || 200;
             const useRecent = urlParams.get('recent') === 'true';
             const showChronological = urlParams.get('chronological') === 'true';
 
