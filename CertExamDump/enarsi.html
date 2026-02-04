@@ -5116,7 +5116,8 @@ R1(config-it)#ospfv3 network broadcast</pre>` },
                 {
                     id: 209,
                     type: "multiple-choice",
-                    image: "images/page101_img1.jpeg",
+                    image: "images/q209.png",
+                    image2: "images/q209_2.png",
                     text: "Refer to the exhibits. All the serial inks between R1, R2, and R3 have the same bandwidth. Users on the 192.168.1.0/24 network report slow response times while they access resources on network 192.168.3.0/24. When a traceroute is run on the path, it shows that the packet is getting forwarded via R2 to R3 although the link between R1 and R3 is still up. What must the network administrator do to fix the slowness?",
                     options: [
                         { letter: "A", text: "Redistribute the R1 static route to EIGRP." },
@@ -5131,11 +5132,13 @@ R1(config-it)#ospfv3 network broadcast</pre>` },
                 {
                     id: 210,
                     type: "multiple-choice",
-                    image: "images/page102_img1.jpeg",
+                    image: "images/q210.png",
                     text: "Refer to the exhibit. R1 has a route map configured, which results in a loss of partial IPv6 prefixes for the BGP neighbor, resulting in service degradation. How can the full service be restored?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "The route map requires a permit 20 statement without set conditions, and this will allow additional prefixes to be advertised." },
+                        { letter: "B", text: "The prefix list requires all prefixes that R1 is advertising to be added to it, and this will allow additional prefixes to be advertised" },
+                        { letter: "C", text: "The route map requires a deny 20 statement without set conditions, and this will allow additional prefixes to be advertised" },
+                        { letter: "D", text: "The neighbor requires a soft reconfiguration, and this will clear the policy without resetting the BGP TCP connection." },
                     ],
                     correct: ["A"],
                     isMultiple: false,
@@ -5144,11 +5147,26 @@ R1(config-it)#ospfv3 network broadcast</pre>` },
                 {
                     id: 211,
                     type: "multiple-choice",
-                    image: "images/page102_img1.jpeg",
+                    image: "images/q211.png",
+                    image2: "images/q211_2.png",
                     text: "Refer to the exhibit. Ah engineer is troubleshootiitg suboptimal communication from the 192.168.5.32/28 subnet to the 172.16.3.16/28 segment using the slowest links. Which configuration resolves the suboptimal routing issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>R1(config-router)#router eigrp 100
+R1(config-router)#redistribute ospf 1 metric 1000000 1 1 1 1</pre>` },
+                        {
+                            letter: "B", text: `<pre>R2(config-router)#router ospf 1
+R2(config-router)#default-metric 10
+R1(config-router)#router ospf 1
+R1(config-router)#default-metric 1</pre>` },
+                        {
+                            letter: "C", text: `<pre>R2(config-router)#router ospf 1
+R2(config-router)#default-metric 1
+R1(config-router)#router ospf 1
+R1(config-router)#default-metric 10</pre>` },
+                        {
+                            letter: "D", text: `<pre>R2(config-router)#router eigrp 100
+R2(config-router)#redistribute ospf 1 metric 1000000 1 1 1 1</pre>` },
                     ],
                     correct: ["C"],
                     isMultiple: false,
