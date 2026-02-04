@@ -5619,7 +5619,7 @@ default-router 192.168.5.10</pre>` },
                 {
                     id: 232,
                     type: "multiple-choice",
-                    image: "images/page112_img1.jpeg",
+                    image: "images/q232.png",
                     text: "Refer to the exhibit. The 130.130.130.0/24 route shows in the R2 routing table but is getting filtering toward R3. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "The outgoing filter list for all interfaces must be set on R2." },
@@ -5636,8 +5636,26 @@ default-router 192.168.5.10</pre>` },
                     type: "multiple-choice",
                     text: "An engineer configured VRF-Lite on a router for VRF blue and VRF red. OSPF must be enabled on each VRF to peer to a directly connected router in each VRF. Which configuration forms OSPF neighbors overthe network 10.10.10.0/28 for VRF blue and 192.168.0.0/30 for VRF red?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>router ospf 1 vrf blue
+network 10.10.10.0 0.0.0 3 area 0
+router ospf 2 vrf red
+network 192.168.0.0 0.0.0.15 area 0</pre>` },
+                        {
+                            letter: "B", text: `<pre>router ospf 1 vrf blue
+network 10.10.10.0 0.0.0.252 area 0
+router ospf 2 vrf red
+network 192.168.0.0 0.0.0.240 area 0</pre>` },
+                        {
+                            letter: "C", text: `<pre>router ospf 1 vrf blue
+network 10.10.10.0 0.0.0.240 area 0
+router ospf 2 vrf red
+network 192.168.0.0 0.0.0.252 area 0</pre>` },
+                        {
+                            letter: "D", text: `<pre>router ospf 1 vrf blue
+network 10.10 10.0 0.0.0.15 area 0
+router ospf 2 vrf red
+network 192.168.0.0 0.0.0.3 area 0</pre>` },
                     ],
                     correct: ["D"],
                     isMultiple: false,
@@ -5660,11 +5678,13 @@ default-router 192.168.5.10</pre>` },
                 {
                     id: 235,
                     type: "multiple-choice",
-                    image: "images/page113_img1.jpeg",
+                    image: "images/q235.png",
                     text: "Refer to the exhibit. Users are experiencing slow response times from critical application servers connected to the network. The engineer determined from the console log that there is a DoS attack on the interface GigaEthernet0/0. Which action must the engineer take to resolve the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "Configure an access group on GigaEthernet0/0 to block traffic from 192.168.1.1" },
+                        { letter: "B", text: "Configure QoS on FastEthernet0/0 to restrict bandwidth usage for 172.17.132.95 and 192.168.1.1" },
+                        { letter: "C", text: "Configure an access group on GigaEthernet0/0 to block traffic from 172.17.132.95." },
+                        { letter: "D", text: "Restrict CoPP traffic on the management interface from 172.17.132.95 and 192.168.1.1" },
                     ],
                     correct: ["C"],
                     isMultiple: false,
@@ -5673,11 +5693,14 @@ default-router 192.168.5.10</pre>` },
                 {
                     id: 236,
                     type: "multiple-choice",
-                    image: "images/page114_img1.jpeg",
+                    image: "images/q236.png",
+                    image2: "images/q236_2.png",
                     text: "Refer to the exhibit. An engineer configured summarization for the R1 loopback addresses and failed. Which action permits the successful advertisement of the R1 loopback addresses?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "Configure EIGRP 100 with a network statement for loopback 0 and redistribute the connected route for loopback 50." },
+                        { letter: "B", text: "Configure EIGRP 100 with a network statement for loopback 0 and configure and redistribute the static route for loopback 50" },
+                        { letter: "C", text: "Configure EIGRP 100 with a network statement for loopback 0 and remove the leak map for loopback 50." },
+                        { letter: "D", text: "Configure 100.1.1.1 permit statement in the prefix list LOPPBACK50 and redistribute the connected route for loopback 50." },
                     ],
                     correct: ["D"],
                     isMultiple: false,
@@ -5686,11 +5709,13 @@ default-router 192.168.5.10</pre>` },
                 {
                     id: 237,
                     type: "multiple-choice",
-                    image: "images/page114_img1.jpeg",
+                    image: "images/q237.png",
                     text: "Refer to the exhibit. An engineer examines the BGP update for the IPv6 prefix 2001:db8::1/128, which should have been summarized into a /64 prefix- Which sequence of actions achieves the summarization?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "R1 is a route reflector client of a RR with a router ID of 1.1 1.1, and the originator of the prefix has a router ID of 3.3.3.3. Both routers belong to different ASs. The prefix is not advertised to any peer and must be advertised using the network statement on R3." },
+                        { letter: "B", text: "R1 is a route reflector with a router ID of 3.3.3.3, and the originator of the prefix is a route reflector client, which has a router ID of 3.3.3.3. Both routers belong to the same AS. Configure an aggregate address on the router with ID 1.1.1.1 for the prefix." },
+                        { letter: "C", text: "R1 is a route reflector client of a RR with a router ID of 1.1.1.1, and the originator of the prefix has a router ID of 3.3.3.3. Both routers belong to the same AS. Configure an aggregate address on the router with ID 3.3.3.3 for the prefix." },
+                        { letter: "D", text: "R1 is a route reflector with a router ID of 1.1.1.1, and the originator of the prefix is a route reflector client, which has a router ID of 3.3.3.3. Both routers belong to the same AS. Configure an aggregate address on the router with ID 1.1.1.1 for the prefix." },
                     ],
                     correct: ["C"],
                     isMultiple: false,
