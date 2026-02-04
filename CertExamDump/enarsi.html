@@ -5827,12 +5827,25 @@ R4(config-router)#no neighbor 10.10.10.6 weight 32769</pre>` },
                 {
                     id: 241,
                     type: "multiple-choice",
-                    text: "The administrator cannot authenticate to R1 based on ISE. Which configuration fixes the issue?",
+                    text: `The network administrator configured R1 to authenticate Telnet connections based on Cisco ISE using TACACS+. ISE has been configured with an IP address of 192.168.1.5 and with a network device pointing toward R1 (192 168.1.1) with a shared secret password of Cisco123.<br><br><pre>aaa new-model
+!
+tacacs server ISE1
+address ipv4 192.168.1.5
+key Cisco123
+!
+aaa group server tacacs+ TAC-SERV
+server name ISE1
+!
+aaa authentication login telnet group TAC.SERV</pre><br>The administrator cannot authenticate to R1 based on ISE. Which configuration fixes the issue?`,
                     options: [
-                        { letter: "A", text: "ip tacacs-sewer host 192.168.1.5 key Cisco123" },
-                        { letter: "B", text: "line vty 0 4 login authentication telnet" },
-                        { letter: "C", text: "line vty0 4 login authentication TAC-SERV" },
-                        { letter: "D", text: "tacacs-server host 192.168.1.5 key Cisco123" },
+                        { letter: "A", text: `<pre>ip tacacs-sewer host 192.168.1.5 key Cisco123</pre>` },
+                        {
+                            letter: "B", text: `<pre>line vty 0 4
+login authentication telnet</pre>` },
+                        {
+                            letter: "C", text: `<pre>line vty0 4
+login authentication TAC-SERV</pre>` },
+                        { letter: "D", text: `<pre>tacacs-server host 192.168.1.5 key Cisco123</pre>` },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -5841,7 +5854,7 @@ R4(config-router)#no neighbor 10.10.10.6 weight 32769</pre>` },
                 {
                     id: 242,
                     type: "multiple-choice",
-                    image: "images/page117_img1.jpeg",
+                    image: "images/q242.png",
                     text: "Refer to the exhibit. AAA server 10.1.1.1 is configured with the default authentication and accounting settings, but the switch cannot communicate with the server. Which action resolves this issue?",
                     options: [
                         { letter: "A", text: "Correct the timeout value" },
@@ -5856,7 +5869,7 @@ R4(config-router)#no neighbor 10.10.10.6 weight 32769</pre>` },
                 {
                     id: 243,
                     type: "multiple-choice",
-                    image: "images/page117_img1.jpeg",
+                    image: "images/q243.png",
                     text: "Refer to the exhibit. When monitoring an IPv6 access list, an engineer notices that the ACL does not have any hits and is causing unnecessary traffic to pass through the interface. Which command must be configured to resolve the issue?",
                     options: [
                         { letter: "A", text: "access-class INTERNET in" },
@@ -5871,11 +5884,25 @@ R4(config-router)#no neighbor 10.10.10.6 weight 32769</pre>` },
                 {
                     id: 244,
                     type: "multiple-choice",
-                    image: "images/page118_img1.jpeg",
+                    image: "images/q244.png",
                     text: "Refer to the exhibit. An engineer implemented CoPP to limit Telnet traffic to protect the router CPU. It was noticed that the Telnet traffic did not pass through CoPP Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>policy-map COPP
+class TELNET
+police 8000 conform-action transmit exceed-action transmit</pre>` },
+                        {
+                            letter: "B", text: `<pre>ip access-list extended TELNET
+permit tcp host 10.2.2.4 host 10.2.2.1 eq telnet
+permit tcp host 10.1.1.3 host 10.1.1.1 eq telnet</pre>` },
+                        {
+                            letter: "C", text: `<pre>policy-map COPP
+class TELNET
+police 8000 conform-action transmit exceed-action transmit violate-action drop</pre>` },
+                        {
+                            letter: "D", text: `<pre>ip access-list extended TELNET
+permit tcp host 10.2.2.1 host 10.2.2.4 eq telnet
+permit tcp host 10.1.1.1 host 10.1.1.3 eq telnet</pre>` },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -5884,11 +5911,23 @@ R4(config-router)#no neighbor 10.10.10.6 weight 32769</pre>` },
                 {
                     id: 245,
                     type: "multiple-choice",
-                    image: "images/page118_img1.jpeg",
+                    image: "images/q245.png",
                     text: "Refer to the exhibit. Which configuration allows the operation level 1 team of 10 engineers to log in at least three at a time to router R3 using network credentials over HTTP?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>R3(config)#ip http authentication aaa
+R3(config)#no access-list 20 permit 172.16.10.48 0.0.0.15
+R3(config)#access-list 20 permit 172.16.10.48 0.0.0.7</pre>` },
+                        {
+                            letter: "B", text: `<pre>R3(config)#ip http authentication aaa
+R3(config)#ip http max-connections 3</pre>` },
+                        {
+                            letter: "C", text: `<pre>R3(config)#ip http authentication enable
+R3(config)#no access-list 20 permit 172.16.10.48 0.0.0.15
+R3(config)#access-list 20 permit 172.16.10,48 0.0.0.7</pre>` },
+                        {
+                            letter: "D", text: `<pre>R3(config)#ip http max-connections 3
+R3(config)#ip http accounting commands 3 default</pre>` },
                     ],
                     correct: ["B"],
                     isMultiple: false,
