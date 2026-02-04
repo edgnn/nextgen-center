@@ -6296,11 +6296,68 @@ network 209.165.200.224 0.0.0.7</pre>` },
                 {
                     id: 260,
                     type: "multiple-choice",
-                    image: "images/page126_img1.jpeg",
+                    image: "images/q260.png",
                     text: "Refer to the exhibit. An engineef must establish optimal routing between the app servers connected at the SPOKE routers. Which configurations are required on each router to create a distributed mapping database between SPOKE1 and SPOKE2 to achieve optimal routing so the traffic is forwarded directly from the App1 server to the App2 server?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>RO#
+interface Tunnel0
+tunnel mode gre multipoint
+ip nhrp redirect
+R1#
+interface Tunnel0
+tunnel mode gre multipoint
+ip nhrp shortcut
+
+R2#
+interface Tunnel0
+tunnel mode gre multipoint
+ip nhrp shortcut</pre>` },
+                        {
+                            letter: "B", text: `<pre>RO#
+interface Tunnelo
+tunnel mode dvmrp
+ip nhrp shortcut
+
+R1#
+interface Tunnel0
+tunnel mode dvmrp
+ip nhrp redirect
+
+R2#
+interface Tunnel0
+tunnel mode dvmrp
+ip nhrp redirect</pre>` },
+                        {
+                            letter: "C", text: `<pre>RO#
+interface Tunnel0
+tunnel mode gre multipoint
+ip nhrp shortcut
+
+R1#
+interface Tunnel0
+tunnel mode gre multipoint
+ip nhrp redirect
+
+R2#
+interface Tunnelo
+tunnel mode gre multipoint
+ip nhrp redirect</pre>` },
+                        {
+                            letter: "D", text: `<pre>RO#
+interface Tunnel0
+tunnel mode dvmrp
+ip nhrp redirect
+
+R1#
+interface Tunnel0
+tunnel mode dvmrp
+ip nhrp shortcut
+
+R2#
+interface Tunnel0
+tunnel mode dvmrp
+ip nhrp shortcut</pre>` },
                     ],
                     correct: ["A"],
                     isMultiple: false,
@@ -6311,8 +6368,30 @@ network 209.165.200.224 0.0.0.7</pre>` },
                     type: "multiple-choice",
                     text: "Users report web connectivity problems on the server (10.1.1.10). Which IP SLA configuration captures the failure details through the network to resolve the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>ip sla 5
+icmp-echo 10.1.1.10
+frequency 1
+timeout 3
+ip sla schedule 5 life forever start-time now</pre>` },
+                        {
+                            letter: "B", text: `<pre>ip sla 5
+http get url http://10.1.1.10
+frequency 60
+timeout 3000
+ip sla schedule 5 life forever start-time now</pre>` },
+                        {
+                            letter: "C", text: `<pre>ip sla 5
+http get urt http://10.1.1.10
+frequency 1
+timeout 3
+ip sla schedule 5 life forever start-time now</pre>` },
+                        {
+                            letter: "D", text: `<pre>ip sla 5
+icmp-echo 10.1.1.10
+frequency 60
+timeout 3000
+ip sla schedule 5 life forever start-time now</pre>` },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -6321,7 +6400,7 @@ network 209.165.200.224 0.0.0.7</pre>` },
                 {
                     id: 262,
                     type: "multiple-choice",
-                    image: "images/page128_img1.jpeg",
+                    image: "images/q262.png",
                     text: "Refer to the exhibit. An engineer is trying to add an encrypted user password that should not be visible in the router configuration. Which two configuration commands resolve the issue? (Choose two.)",
                     options: [
                         { letter: "A", text: "username Admin secret Cisco@123" },
@@ -6337,11 +6416,60 @@ network 209.165.200.224 0.0.0.7</pre>` },
                 {
                     id: 263,
                     type: "multiple-choice",
-                    image: "images/page128_img1.jpeg",
+                    image: "images/q263.png",
+                    image2: "images/q263_2.png",
                     text: "Refer to the exhibit. The default route from R1 must be withdrawn from the routing table if R1 cannot ping 10.1.1.1, but it is not working correctly. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>ip sla 2
+icmp-echo 10.1.1.1
+timeout 3000
+threshold 1000
+frequency 5
+!
+ip sla schedule 2 life forever start-time now
+!
+track 2 ip sla 2 reachability
+delay down 30 up 180
+!
+ip route 0.0.0.0 0.0.0.0 10.1.1.1 track 2</pre>` },
+                        {
+                            letter: "B", text: `<pre>ip sla 2
+icmp-echo 10.1.1.1
+timeout 3000
+threshold 1000
+frequency 5
+!
+track 2 ip sla 2 reachability
+delay down 30 up 180
+!
+ip route 0.0.0.0 0.0.0.0 10.1.1.1 track 2</pre>` },
+                        {
+                            letter: "C", text: `<pre>ip sla 2
+icmp-echo 10.1.1.1
+timeout 3000
+threshold 1000
+frequency 5
+!
+ip sla schedule 2 life forever start-time now
+!
+track 2 ip sla 200 reachability
+delay down 30 up 180
+!
+ip route 0.0.0.0 0.0.0.0 10.1.1.1</pre>` },
+                        {
+                            letter: "D", text: `<pre>ip sla 2
+icmp-echo 10.1.1.1
+timeout 3000
+threshold 1000
+frequency 5
+!
+ip sla schedule 2 life forever start-time now
+!
+track 2 ip sla 200 reachability
+delay down 30 up 180
+!
+ip route 0.0.0.0 0.0.0.0 10.1.1.1 track 2 250</pre>` },
                     ],
                     correct: ["A"],
                     isMultiple: false,
