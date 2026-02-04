@@ -6649,6 +6649,7 @@ R1(config-router)#neighbor 192.168.10.20 next-hop-self</pre>` },
                 {
                     id: 271,
                     type: "multiple-choice",
+                    image: "images/q271.png",
                     text: "An engineer configured a leak-map command to summarize EIGRP routes and advertise specifically loopback 0 with an IP of 10.1.1.1 255.255.255.252 along with the summary route. After finishing configuration, the customer complained not receiving summary route with specific loopback address. Which two configurations will fix it? (Choose two.)",
                     options: [
                         { letter: "A", text: "route-map Leak-Route permit 10 and match access-list 1." },
@@ -6664,11 +6665,37 @@ R1(config-router)#neighbor 192.168.10.20 next-hop-self</pre>` },
                 {
                     id: 272,
                     type: "multiple-choice",
-                    image: "images/page133_img1.jpeg",
+                    image: "images/q272.png",
                     text: "Refer to the exhibit. A network administrator configured an IPv6 access list to allow TCP return traffic only, but it is not working as expected. Which changes resolve this issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>ipv6 access-list inbound
+permit tcp any any syn
+deny ipv6 any any log
+!
+interface gi0/0
+ipv6 traffic-filter inbound in</pre>` },
+                        {
+                            letter: "B", text: `<pre>ipv6 access-list inbound
+permit tcp any any syn
+deny ipv6 any any log
+!
+interface gi0/0
+ipv6 traffic-filter inbound out</pre>` },
+                        {
+                            letter: "C", text: `<pre>ipv6 access-list inbound
+permit tcp any any established
+deny ipv6 any any log
+!
+interface gi0/0
+ipv6 traffic-filter inbound in</pre>` },
+                        {
+                            letter: "D", text: `<pre>ipv6 access-list inbound
+permit tcp any any established
+deny ipv6 any any log
+!
+interface gi0/0
+ipv6 traffic-filter inbound out</pre>` },
                     ],
                     correct: ["C"],
                     isMultiple: false,
@@ -6692,11 +6719,23 @@ R1(config-router)#neighbor 192.168.10.20 next-hop-self</pre>` },
                 {
                     id: 274,
                     type: "multiple-choice",
-                    image: "images/page134_img1.jpeg",
+                    image: "images/q274.png",
                     text: "Refer to the exhibit. R1 cannot authenticate via TACACS. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>tacacs server DC1_TACACS
+address ipv4 10.66.66.66
+key D@t@c3nter1TACACS</pre>` },
+                        {
+                            letter: "B", text: `<pre>tacacs server DC1_TACACS
+address ipv4 10.60.66.66
+key D@t@c3nter1TACACS</pre>` },
+                        {
+                            letter: "C", text: `<pre>aaa group server tacacs+ DC_TACACS
+server name DC_TACACS</pre>` },
+                        {
+                            letter: "D", text: `<pre>aaa group server tacacs+ DC1_TACACS
+server name DC_TACACS</pre>` },
                     ],
                     correct: ["A"],
                     isMultiple: false,
@@ -6705,7 +6744,7 @@ R1(config-router)#neighbor 192.168.10.20 next-hop-self</pre>` },
                 {
                     id: 275,
                     type: "multiple-choice",
-                    image: "images/page134_img1.jpeg",
+                    image: "images/q275.png",
                     text: "Refer to the exhibit. HostA and HostB cannot receive IP addresses from the DHCP server. The switches are configured with the DHCP snooping. Which configuration on SW3 resolves the issue?",
                     options: [
                         { letter: "A", text: "ip helper-address 1.0.0.2" },
@@ -6720,7 +6759,7 @@ R1(config-router)#neighbor 192.168.10.20 next-hop-self</pre>` },
                 {
                     id: 276,
                     type: "multiple-choice",
-                    image: "images/page135_img1.jpeg",
+                    image: "images/q276.png",
                     text: "Refer to the exhibit. The administrator configured route advertisement to a remote low resources router to use only the default route to reach any network but failed. Which action resolves this issue?",
                     options: [
                         { letter: "A", text: "Change the direction of the distribute-list command from out to in." },
