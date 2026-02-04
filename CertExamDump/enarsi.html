@@ -6841,7 +6841,8 @@ R1(config-ip-sla)#delay down 30 up 20</pre>` },
                 {
                     id: 281,
                     type: "multiple-choice",
-                    image: "images/page137_img1.jpeg",
+                    image: "images/q281.png",
+                    image2: "images/q281_2.png",
                     text: "Refer to the exhibit. A network engineer notices that the configured track option is down. Which configuration resolves the issue?",
                     options: [
                         { letter: "A", text: "ip sla schedule 10 no threshold" },
@@ -6856,8 +6857,8 @@ R1(config-ip-sla)#delay down 30 up 20</pre>` },
                 {
                     id: 282,
                     type: "multiple-choice",
-                    image: "images/page138_img1.jpeg",
-                    text: "Refer to the exhibit. Spoke routers do not learn about each other’s routes in the DMVPN Phase2 network. Which action resolves the issue?",
+                    image: "images/q282.png",
+                    text: "Refer to the exhibit. Spoke routers do not learn about each other's routes in the DMVPN Phase2 network. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Rectify incorrect wrldcard mask configured on the hub router network command." },
                         { letter: "B", text: "Remove default route from spoke routers to establish a spoke-to-spoke tunnel." },
@@ -6871,11 +6872,23 @@ R1(config-ip-sla)#delay down 30 up 20</pre>` },
                 {
                     id: 283,
                     type: "multiple-choice",
-                    image: "images/page138_img1.jpeg",
+                    image: "images/q283.png",
                     text: "Refer to the exhibit. An engineer configured NetFlow on R1, but the NMS server cannot see the flow from ethemet 0/0 of R1. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>interface Ethernet0/1
+ip flow monitor Flowmonitor1 input
+ip flow monitor Flowmonitor1 output</pre>` },
+                        {
+                            letter: "B", text: `<pre>interface Ethernet0/0
+ip flow monitor Flowmonitor1 input
+ip flow monitor Flowmonitor1 output</pre>` },
+                        {
+                            letter: "C", text: `<pre>flow monitor Flowmonitor1
+source Ethernet0/0</pre>` },
+                        {
+                            letter: "D", text: `<pre>flow exporter FlowAnalyzer1
+source Ethernet0/0</pre>` },
                     ],
                     correct: ["D"],
                     isMultiple: false,
@@ -6926,11 +6939,44 @@ R1(config-ip-sla)#delay down 30 up 20</pre>` },
                 {
                     id: 287,
                     type: "multiple-choice",
-                    image: "images/page139_img1.jpeg",
+                    image: "images/q287.png",
                     text: "Refer to the exhibit. Router R1 needs an access list to stop the client machines to file transfer toward the WAN. The router has an access list that is not working as desired. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>ip access-list extended WAN_Outbound
+permit ip 10.1.10.0 0.0.0.255 any
+deny icmp any any
+deny tcp 10.1.10.16 0.0.0.0 any eq 21
+permit ip host 10.1.10.16 any
+
+int gig0/0
+ip access-group WAN_outbound out</pre>` },
+                        {
+                            letter: "B", text: `<pre>ip access-list extended WAN_Outbound
+permit ip 10.1.10.0 0.0.0.255 any
+deny icmp any any
+deny tcp host 10.1.10.16 any eq 21
+permit ip host 10.1.10.16 any
+
+int gig0/1
+ip access-group WAN_outbound out</pre>` },
+                        {
+                            letter: "C", text: `<pre>ip access-list extended WAN_Outbound
+deny icmp any any
+deny tcp host 10.1.10.16 any eq 21
+permit ip 10.1.10.0 0.0.0.255 any
+
+int gig0/0
+ip access-group WAN_outbound out</pre>` },
+                        {
+                            letter: "D", text: `<pre>ip access-list extended WAN_Outbound
+permit ip 10.1.10.0 0.0.0.255 any
+deny icmp any any
+deny top host 10.1.10.16 any eq 20
+permit ip host 10.1.10.16 any
+
+int gig0/0
+ip access-group WAN_outbound out</pre>` },
                     ],
                     correct: ["C"],
                     isMultiple: false,
