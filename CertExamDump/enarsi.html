@@ -5394,7 +5394,9 @@ ip unicast RPF check reachable-via any allow-default allow-self-ping</pre>` },
                 {
                     id: 224,
                     type: "multiple-choice",
-                    image: "images/page108_img1.jpeg",
+                    image: "images/q224.png",
+                    image2: "images/q224_2.png",
+                    image3: "images/q224_3.png",
                     text: "Refer to the exhibit. R2 has two paths to reach 192.168.13.0/24, but traffic is sent only through R3.Which action allows traffic to use both paths?",
                     options: [
                         { letter: "A", text: "Configure the delay 1 command under interface FastEthernet0/0 on R2." },
@@ -5409,13 +5411,30 @@ ip unicast RPF check reachable-via any allow-default allow-self-ping</pre>` },
                 {
                     id: 225,
                     type: "multiple-choice",
-                    text: "ISE has gone down. The Network Administrator is not able to Telnet to R1 when ISE went down. Which two configuration changes will fix the issue? (Choose two.)",
+                    text: `The network administrator configured R1 to authenticate Telnet connections based on Cisco ISE using TACACS+, ISE has been configured with an IP address of 192.168.1.5 and with a network device pointing toward R1 (192.168.1.1) with a shared secret password of Cisco123. If ISE is down, the administrator should be able to connect using the local database with a username and password combination of admin/cisco123. The administrator has configured the following on R1:<br><br><pre>aaa new-model
+!
+username admin password cisco123
+!
+tacacs server ISE1
+address ipv4 192.168.1.5
+key Cisco123
+!
+aaa group server tacacs+ RAD-SERV
+server name ISE1
+!
+aaa authentication login RAD-LOCAL group RAD-SERV</pre><br>ISE has gone down. The Network Administrator is not able to Telnet to R1 when ISE went down. Which two configuration changes will fix the issue? (Choose two.)`,
                     options: [
                         { letter: "A", text: "aaa authentication login RAD-LOCAL group RAD-SERV local" },
-                        { letter: "B", text: "line vty 0 4 login authentication default" },
-                        { letter: "C", text: "line vty 0 4 login authentication RAD-SERV" },
+                        {
+                            letter: "B", text: `<pre>line vty 0 4
+login authentication default</pre>` },
+                        {
+                            letter: "C", text: `<pre>line vty 0 4
+login authentication RAD-SERV</pre>` },
                         { letter: "D", text: "aaa authentication login RAD-SERV group RAD-LOCAL local" },
-                        { letter: "E", text: "line vty 0 4 login authentication RAD-LOCAL" },
+                        {
+                            letter: "E", text: `<pre>line vty 0 4
+login authentication RAD-LOCAL</pre>` },
                     ],
                     correct: ["A", "E"],
                     isMultiple: true,
