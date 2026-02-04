@@ -5724,7 +5724,7 @@ network 192.168.0.0 0.0.0.3 area 0</pre>` },
                 {
                     id: 238,
                     type: "multiple-choice",
-                    image: "images/page114_img1.jpeg",
+                    image: "images/q238.png",
                     text: "Refer to the exhibit. An engineer configured NetFlow to capture traffic information through the router, but it is not working as expected. Which action captures the flow information from this router to the collector?",
                     options: [
                         { letter: "A", text: "Configure a flow exporter under flow monitor FLOW-MONITOR-1." },
@@ -5739,11 +5739,59 @@ network 192.168.0.0 0.0.0.3 area 0</pre>` },
                 {
                     id: 239,
                     type: "multiple-choice",
-                    image: "images/page115_img1.jpeg",
+                    image: "images/q239.png",
+                    image2: "images/q239_2.png",
                     text: "Refer to the exhibit. SW100 cannot receive routes from R1. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>R1
+router bap 100
+address-family ipv6
+neighbor 2001-2 route-reflector-client
+neighbor 2001 ABC:AABB:1100 1122:1111: 2222:AAA2 route-reflector-client
+
+R2
+router bgp 100
+address-family ipv6
+neighbor 2001 :: 2
+neighbor 2001 ;1 next-hop-self</pre>` },
+                        {
+                            letter: "B", text: `<pre>R1
+router bgp 100
+address-family ipv6
+neighbor 2001 :: 2 route-reflector-client
+neighbor 2001:ABC:AABB:1100:1122:1111:2222:AAA2 route-reflector-client
+
+R2
+router bgp 100
+address-family ipv6
+neighbor 2001 :: 2
+neighbor 2001 :: 1 as-override</pre>` },
+                        {
+                            letter: "C", text: `<pre>R1
+router bgp 100
+address-family ipv6
+redistribute connected
+
+R2
+router bap 100
+address-family ipv6
+redistribute connected</pre>` },
+                        {
+                            letter: "D", text: `<pre>R1
+router bgp 100
+address-family ipv6
+no synchronization
+
+R2
+router bgp 100
+address-family ipv6
+no synchronization
+
+SW100
+router bgp 100
+address-family ipv6
+no synchronization</pre>` },
                     ],
                     correct: ["A"],
                     isMultiple: false,
@@ -5752,11 +5800,25 @@ network 192.168.0.0 0.0.0.3 area 0</pre>` },
                 {
                     id: 240,
                     type: "multiple-choice",
-                    image: "images/page116_img1.jpeg",
+                    image: "images/q240.png",
                     text: "Refer to the exhibit. A customer reports that user traffic of bank XYZ to the AAA server is not using the primary path via the R3-R2 link The network team observes: 1. No fiber is cut on links R2 and R3. 2. AS101 and AS 201 routers established BGP peering. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>R2(config)#route-map BGP-Path permit 10
+R2(config-route-map)# set metric 200
+R2(config)#router bap 65101
+R2(config-router)#neighbor 10.10.10.3 route-map BGP-Path out</pre>` },
+                        {
+                            letter: "B", text: `<pre>R6(config)#router bgp 65201
+R6(config-router)#no neighbor 10.10.10.5 weight 32769</pre>` },
+                        {
+                            letter: "C", text: `<pre>R1(config#route-map BGP-Path permit 10
+R1(config-route-map)# set local-preference 200
+R1(config)#router bgp 65101
+R1(config-router)#neighbor 10.10.10.2 route-map BGP-Path out</pre>` },
+                        {
+                            letter: "D", text: `<pre>R4(config)#router bap 65201
+R4(config-router)#no neighbor 10.10.10.6 weight 32769</pre>` },
                     ],
                     correct: ["D"],
                     isMultiple: false,
