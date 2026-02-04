@@ -5175,7 +5175,7 @@ R2(config-router)#redistribute ospf 1 metric 1000000 1 1 1 1</pre>` },
                 {
                     id: 212,
                     type: "multiple-choice",
-                    image: "images/page103_img1.jpeg",
+                    image: "images/q212.png",
                     text: "Refer to the exhibit. R10 attempts to copy an image file from R11 using TFTP, and the operation is timing out. Which action resoh/es the issue?",
                     options: [
                         { letter: "A", text: "R10 must be configured to belong to the same VRF TFTP." },
@@ -5190,11 +5190,25 @@ R2(config-router)#redistribute ospf 1 metric 1000000 1 1 1 1</pre>` },
                 {
                     id: 213,
                     type: "multiple-choice",
-                    image: "images/page103_img1.jpeg",
+                    image: "images/q213.png",
                     text: "Refer to the exhibit. Which configuration advertises more specific routes to R1 without sending a BGP summary route?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>R1#configure terminal
+R1(config)#router BGP 100
+R1(config-router)#auto-summary</pre>` },
+                        {
+                            letter: "B", text: `<pre>R2#configure terminal
+R2(config)#router BGP 100
+R2(config-router)#auto-summary</pre>` },
+                        {
+                            letter: "C", text: `<pre>R1#configure terminal
+R1(config)#router BGP 100
+R1(config-router)#no auto-summary</pre>` },
+                        {
+                            letter: "D", text: `<pre>R2#configure terminal
+R2(config)#router BGP 100
+R2(config-router)#no auto-summary</pre>` },
                     ],
                     correct: ["D"],
                     isMultiple: false,
@@ -5203,11 +5217,37 @@ R2(config-router)#redistribute ospf 1 metric 1000000 1 1 1 1</pre>` },
                 {
                     id: 214,
                     type: "multiple-choice",
-                    image: "images/page103_img1.jpeg",
+                    image: "images/q214.png",
                     text: "Refer to the exhibit The remote branch locations have a static neighbor relationship configured to R1 only. R1 has successful neighbor relationships with the remote locations of R2 and R3, but the end users cannot communicate with each other. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>R2
+interface FastEthernet0/0.10
+encapsulation dot1Q
+ip address 10.10.10.2 255.255.255.0
+
+R3
+interface FastEthernet0/0.10
+encapsulation dot1Q
+ip address 10.10.10.3 255.255.255.0</pre>` },
+                        {
+                            letter: "B", text: `<pre>R2 and R3
+interface FastEthernet0/0
+no ip split-horizon eigrp 10</pre>` },
+                        {
+                            letter: "C", text: `<pre>R2
+interface FastEthernet0/0.10
+encapsulation dot1Q 10
+ip address 10.10.10.2 255.255.255.0
+
+R3
+interface FastEthernet0/0.10
+encapsulation dot1Q 10
+ip address 10.10.10.3 255.255.255.0</pre>` },
+                        {
+                            letter: "D", text: `<pre>R1
+interface FastEthernet0/0
+no ip split-horizon eigrp 10</pre>` },
                     ],
                     correct: ["D"],
                     isMultiple: false,
@@ -5230,11 +5270,21 @@ R2(config-router)#redistribute ospf 1 metric 1000000 1 1 1 1</pre>` },
                 {
                     id: 216,
                     type: "multiple-choice",
-                    image: "images/page104_img1.jpeg",
+                    image: "images/q216.png",
                     text: "Refer to the exhibit. The company implemented uRPF to address an antispoofing attack. A network engineer received a call-from the if security department that the regional data center is under an IP spoofing attack. Which configuration must be implemented on R1 to resolve this issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>interface ethernet0/1
+ip unicast RPF check reachable-via any allow-default allow-self-ping</pre>` },
+                        {
+                            letter: "B", text: `<pre>interface ethernet0/0
+ip verify unicast reverse-path</pre>` },
+                        {
+                            letter: "C", text: `<pre>interface ethernet0/1
+ip verify unicast reverse-path</pre>` },
+                        {
+                            letter: "D", text: `<pre>interface ethernet0/0
+ip unicast RPF check reachable-via any allow-default allow-self-ping</pre>` },
                     ],
                     correct: ["C"],
                     isMultiple: false,
