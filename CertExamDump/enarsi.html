@@ -6131,11 +6131,29 @@ route-target export 1:2</pre>` },
                 {
                     id: 257,
                     type: "multiple-choice",
-                    image: "images/page123_img1.jpeg",
+                    image: "images/q257.png",
+                    image2: "images/q257_2.png",
                     text: "Refer to the exhibit. The IT router has been configured with the Science VRF and the interfaces have been assigned to the VRE. Which set of configurations advertises Science-1 and Science-2 routes using ElGRP AS 111?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>router eigrp 111
+address-family ipv4 vrf Science autonomous-system 1
+network 192.168.1.0
+network 192.168.2.0</pre>` },
+                        {
+                            letter: "B", text: `<pre>router eigrp 1
+address-family ipv4 vrf Science autonomous-system 111
+network 192.168.1.0
+network 192.168.2.0</pre>` },
+                        {
+                            letter: "C", text: `<pre>router eigrp 111
+address-family ipv4 vrf Science
+network 192.168.1.0
+network 192.168.2.0</pre>` },
+                        {
+                            letter: "D", text: `<pre>router eigrp 111
+network 192.168.1.0
+network 192.168.2.0</pre>` },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -6144,10 +6162,103 @@ route-target export 1:2</pre>` },
                 {
                     id: 258,
                     type: "multiple-choice",
-                    text: "Which configuration accomplishes the task?",
+                    image: "images/q258.png",
+                    text: `Refer to the exhibit. An engineer must connect the Reno and Detroit spokes using DMVPN phase 2. Hub tunnel configuration is:<br><br>Dallas<br><pre>interface Tunnel0
+ip address 10.0.80.1 255.255.255.0
+ip nhrp authentication cisco123
+ip nhrp map multicast dynamic
+ip nhrp network-id 5
+tunnel source Serial0/0
+tunnel mode gre multipoint</pre><br>Which configuration accomplishes the task?`,
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>Reno
+interface TunnelO
+ip address 10.0.80.3 255.255.255.0
+ip nhrp authentication cisco321
+ip nhrp map multicast 10.92.18.2
+ip nhrp map 10.0.80.1 10.92.18.2
+ip nhrp network-id 5
+ip nhrp nhs 10.0.80.1
+tunnel source 10.238.194.2
+tunnel mode gre multipoint
+
+Detroit
+interface Tunnel0
+ip address 10.0.80.4 255.255.255.0
+ip nhrp authentication cisco321
+ip nhrp map 10.0.80.1 10.92.18.2
+ip nhrp map multicast 10.92.18.2
+ip nhrp network-id 5
+ip nhrp nhs 10.0.80.1
+tunnel source 10.7.44.2
+tunnel mode gre multipoint</pre>` },
+                        {
+                            letter: "B", text: `<pre>Reno
+interface Tunnel0
+ip address 10.0.80.3 255.255.255.0
+ip nhrp authentication cisco123
+ip nhrp map broadcast 10.92.18.2
+ip nhrp map 10.0.80.1 10.92.18.2
+ip nhrp network-id 5
+ip nhrp nhs 10.0.80.1
+tunnel source 10.238.194.2
+tunnel mode gre multipoint
+
+Detroit
+interface Tunnel0
+ip address 10.0.80.4 255.255.255.0
+ip nhrp authentication cisco123
+ip nhrp map 10.0.80.1 10.92.18.2
+ip nhrp map broadcast 10.92.18.2
+ip nhrp network-id 5
+ip nhrp nhs 10.0.80.1
+tunnel source 10.7.44.2
+tunnel mode gre multipoint</pre>` },
+                        {
+                            letter: "C", text: `<pre>Reno
+interface Tunnel0
+ip address 10.0.80.3 255.255.255.0
+ip nhrp authentication cisco123
+ip nhrp map multicast 10.92.18.2
+ip nhrp map 10.92.18.2 10.0.80.1
+ip nhrp network-id 5
+ip nhrp nhs 10.0.80.1
+tunnel source 10.238.194.2
+tunnel mode gre multipoint
+
+Detroit
+interface Tunnel0
+ip address 10.0.80.4 255.255.255.0
+ip nhrp authentication cisco123
+ip nhrp map 10.92.18.2 10.0.80.1
+ip nhrp map multicast 10.92.18.2
+ip nhrp network-id 5
+ip nhrp nhs 10.0.80.1
+tunnel source 10.7.44.2
+tunnel mode are multipoint</pre>` },
+                        {
+                            letter: "D", text: `<pre>Reno
+interface Tunnel0
+ip address 10.0.80.3 255.255.255.0
+ip nhrp authentication cisco123
+ip nhrp map multicast 10.92.18.2
+ip nhrp map 10.0.80.1 10.92.18.2
+ip nhrp network-id 5
+ip nhrp nhs 10.0.80.1
+tunnel source 10.238.194.2
+tunnel mode gre multipoint
+
+Detroit
+interface Tunnel0
+ip address 10.0.80.4 255.255.255.0
+ip nhrp authentication cisco123
+ip nhrp map 10 0.80.1 10.92.18.2
+ip nhrp map multicast 10.92.18.2
+ip nhrp network-id 5
+ip nhrp nhs 10.0.80.1
+tunnel source 10.7.44.2
+tunnel mode gre multipoint</pre>` },
                     ],
                     correct: ["D"],
                     isMultiple: false,
@@ -6156,11 +6267,27 @@ route-target export 1:2</pre>` },
                 {
                     id: 259,
                     type: "multiple-choice",
-                    image: "images/page125_img1.jpeg",
+                    image: "images/q259.png",
+                    image2: "images/q259_2.png",
                     text: "Refer to the exhibit. Not all connected and static routes of router B are received by router A even though EIGRP neighborship is established between the routers. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>router eigrp 100
+network 209.165.200.224 0.0.0.31
+redistribute static metric 1000 1 255 1 1500</pre>` },
+                        {
+                            letter: "B", text: `<pre>router eigrp 100
+network 209.165.200.224.0.0.0.7
+redistribute static metric 1000 1 255 1 1500
+eigrp stub connected</pre>` },
+                        {
+                            letter: "C", text: `<pre>router eigrp 100
+network 209:165.200.224 0.0.0.7
+redistribute static metric 1000 1 255 1 1500
+eigrp stub static</pre>` },
+                        {
+                            letter: "D", text: `<pre>router eigrp 100
+network 209.165.200.224 0.0.0.7</pre>` },
                     ],
                     correct: ["B"],
                     isMultiple: false,
