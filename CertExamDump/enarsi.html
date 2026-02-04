@@ -7912,7 +7912,7 @@ route-target export 1:2</pre>` },
         function init() {
             // Read URL parameters
             const urlParams = new URLSearchParams(window.location.search);
-            const questionCount = parseInt(urlParams.get('count')) || 200;
+            const questionCount = parseInt(urlParams.get('count')) || 256;
             const useRecent = urlParams.get('recent') === 'true';
             const showChronological = urlParams.get('chronological') === 'true';
 
