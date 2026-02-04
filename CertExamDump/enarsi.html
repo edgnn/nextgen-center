@@ -4925,11 +4925,29 @@ RouterA(config)#end</pre>` },
                 {
                     id: 201,
                     type: "multiple-choice",
-                    image: "images/page97_img1.jpeg",
+                    image: "images/q201.png",
+                    image2: "images/q201_2.png",
                     text: "Refer to the exhibit. OSPF adjacency is broken between router A and router B. Which configuration on router B resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>Router B(config)#int gigabitEthemet 1
+Router B(config-if)ip ospf hello-interval 10
+Router B(config-if)ip ospf cost 1000</pre>` },
+                        {
+                            letter: "B", text: `<pre>Router B(config)int gigabitEthernet 1
+Router B(config-if)ip address 172.16.192.2 255.255.255.192
+Router B(config-If)ip ospf network broadcast
+Router B(config-if)#exit</pre>` },
+                        {
+                            letter: "C", text: `<pre>Router B(config)#int gigabitEthernet 1
+Router B(config-if)ip address 172.16.192.2 255.255.192.0
+Router B(config-if)#ip ospf network broadcast
+Router B(config-if)#exit</pre>` },
+                        {
+                            letter: "D", text: `<pre>Router B(config)#int gigabitEthernet 1
+Router B(config-if)ip ospf hello-interval 40
+Router B(config-if)router ospf 10
+Router B(config-router)#router-id.1.1.1.1</pre>` },
                     ],
                     correct: ["C"],
                     isMultiple: false,
@@ -4938,13 +4956,33 @@ RouterA(config)#end</pre>` },
                 {
                     id: 202,
                     type: "multiple-choice",
-                    image: "images/page97_img1.jpeg",
+                    image: "images/q202.png",
+                    image2: "images/q202_2.png",
                     text: "Refer to the exhibit. R1 cannot reach the R4 loopback address (2001:4/128). Which configuration provides the most optimal and scalable resolution to the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>R2
+router bgp 100
+address-family ipv6
+neighbor 2001 :: 4 next-hop-unchanged
+redistribute connected</pre>` },
+                        {
+                            letter: "B", text: `<pre>R1
+router bgp 100
+address-family ipv6
+no synchronization</pre>` },
+                        {
+                            letter: "C", text: `<pre>R2
+router bgp 100
+address-family ipv6
+no synchronization</pre>` },
+                        {
+                            letter: "D", text: `<pre>R2
+router bgp 100
+address-family ipv6
+neighbor 2001 :: 4 next-hop-self</pre>` },
                     ],
-                    correct: ["A"],
+                    correct: ["C"],
                     isMultiple: false,
                     explanation: ""
                 },
