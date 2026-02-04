@@ -6478,7 +6478,7 @@ ip route 0.0.0.0 0.0.0.0 10.1.1.1 track 2 250</pre>` },
                 {
                     id: 264,
                     type: "multiple-choice",
-                    image: "images/page129_img1.jpeg",
+                    image: "images/q264.png",
                     text: "Refer to the exhibit. A network administrator must block ping from user 3 to the App Server only. An inbound standard access list is applied to R1 interface G0/0 to block ping. The network administrator was notified that user 3 cannot even ping user 9 anymore. Where must the access list be applied in the outgoing direction to resolve the issue?",
                     options: [
                         { letter: "A", text: "R2 interface G1/0" },
@@ -6495,8 +6495,54 @@ ip route 0.0.0.0 0.0.0.0 10.1.1.1 track 2 250</pre>` },
                     type: "multiple-choice",
                     text: "A network engineer must configure a DMVPN network so that a spoke establishes a direct path to another spoke if the two must send traffic to each other. A spoke must send traffic directty to the hub if required. Which configuration meets this requirement?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>At the hub router
+interface tunnel10
+ip nhrp nhs multicast dynamic
+ip nhrp redirect
+tunnel mode gre multipoint
+
+On the spokes router:
+interface tunnel10
+ip nhrp nhs multicast dynamic
+ip nhrp shortcut
+tunnel mode gre multipoint</pre>` },
+                        {
+                            letter: "B", text: `<pre>At the hub router
+interface tunnel10
+ip nhrp nhs multicast multipoint
+ip nhrp redirect
+tunnel mode gre multicat
+
+On the spokes router:
+interface tunnel10
+ip nhrp nhs multicast dynamic
+ip nhrp shortcut
+tunnel mode gre multicast</pre>` },
+                        {
+                            letter: "C", text: `<pre>At the hub router.
+interface tunnel10
+ip nhrp nhs dynamic multipoint
+ip nhrp nhs shortcut
+tunnel mode gre multicast
+
+On the spokes router:
+interface tunnel10
+ip nhrp nhs multicast dynamic
+ip nhrp nhs redirect
+tunnel mode gre multipoint</pre>` },
+                        {
+                            letter: "D", text: `<pre>At the hub router.
+interface tunnel10
+ip nhrp nhs multicast dynamic
+ip nhrp nhs shortcut
+tunnel mode gre multipoint
+
+On the spokes router:
+interface tunnel10
+ip nhrp nhs multicast dynamic
+ip nhrp nhs redirect
+tunnel mode gre multipoint</pre>` },
                     ],
                     correct: ["A"],
                     isMultiple: false,
@@ -6505,7 +6551,7 @@ ip route 0.0.0.0 0.0.0.0 10.1.1.1 track 2 250</pre>` },
                 {
                     id: 266,
                     type: "multiple-choice",
-                    image: "images/page131_img1.jpeg",
+                    image: "images/q266.png",
                     text: "Refer to the exhibit. SW303 connects to 3 CSR via VLAN10. The CSR is also an EIGRP neighbor to SW303. After enabling BFD on the CSR and SW303, an engineer notices the absence of stats related to BFD on SW303. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Configure the bfd l2cos 0 command." },
@@ -6520,10 +6566,21 @@ ip route 0.0.0.0 0.0.0.0 10.1.1.1 track 2 250</pre>` },
                 {
                     id: 267,
                     type: "multiple-choice",
-                    text: "Which configuration resolves the issue?",
+                    image: "images/q267.png",
+                    text: `Refer to the exhibit. The enterprise users fail to authenticate with the TACACS server when a direct fiber link fails between RB and RD. The NOC team observes:<br>1. Users connected on AS65201 fail to authenticate with TACACS server 192.168.1.1.<br>2. Users connected on AS65101 successfully authenticate with TACACS server 192.168.1.1.<br>3. All AS65101 and AS65201 users are configured to authenticate with the TACACS server.<br>Which configuration resolves the issue?`,
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>RC(config)# router bgp 65101
+RC(config-router)# neighbor 10:0.0.18 prefix-list Customer inc</pre>` },
+                        {
+                            letter: "B", text: `<pre>RF(config)# no ip prefix-list Customer seq 5 deny 192.168.1.1/32</pre>`
+                        },
+                        {
+                            letter: "C", text: `<pre>RC(config)# ip prefix-list Customer seq 5 permit 192.168.30.1/32</pre>`
+                        },
+                        {
+                            letter: "D", text: `<pre>RF(config) # router bgp 65201
+RF(config-router)# neighbor 10.0.0.17 prefix-list Customer out</pre>` },
                     ],
                     correct: ["A"],
                     isMultiple: false,
@@ -6532,11 +6589,21 @@ ip route 0.0.0.0 0.0.0.0 10.1.1.1 track 2 250</pre>` },
                 {
                     id: 268,
                     type: "multiple-choice",
-                    image: "images/page132_img1.jpeg",
+                    image: "images/q268.png",
                     text: "Refer to the exhibit. A NOC team receives a ticket that data traffic from RA to RF is not fomarded when the link between the RC-RE path goes down. All routers team loopback IP through the IGP protocol. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>RB(config)# router bgp 65101
+RB(config-router)# neighbor 10.10.10.3 update-source loopback 0</pre>` },
+                        {
+                            letter: "B", text: `<pre>RB(config)# router bgp 65101
+RB(config-router)# neighbor 10.10.10.3 ebgp-multihop 3</pre>` },
+                        {
+                            letter: "C", text: `<pre>RD(config)# router bgp 65201
+RD(config-router)# neighbor 10.10.10.2 update-source loopback 0</pre>` },
+                        {
+                            letter: "D", text: `<pre>RD(config)# router bgp 65201
+RD(config-router)# neighbor 10.10.10.2 ebgp-multihop 3</pre>` },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -6545,11 +6612,21 @@ ip route 0.0.0.0 0.0.0.0 10.1.1.1 track 2 250</pre>` },
                 {
                     id: 269,
                     type: "multiple-choice",
-                    image: "images/page132_img1.jpeg",
+                    image: "images/q269.png",
                     text: "Refer to the exhibit. An engineer is troubleshooting a prefix advertisement issue from R3, which is not directly connected to R1. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>R1(config)#router bgp 64512
+R1(config-router)#neighbor 192.168.20.20 next-hop-self</pre>` },
+                        {
+                            letter: "B", text: `<pre>R2(config)#router bgp 64512
+R2(config-router)#neighbor 192.168.10.20 next-hop-self</pre>` },
+                        {
+                            letter: "C", text: `<pre>R2(config)#router bgp 64512
+R2(config-router)#neighbor 192,168.20.10 next-hop-self</pre>` },
+                        {
+                            letter: "D", text: `<pre>R1(config)#router bgp 64512
+R1(config-router)#neighbor 192.168.10.20 next-hop-self</pre>` },
                     ],
                     correct: ["C"],
                     isMultiple: false,
