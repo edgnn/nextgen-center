@@ -5007,8 +5007,18 @@ neighbor 2001 :: 4 next-hop-self</pre>` },
                     image: "images/page99_img1.jpeg",
                     text: "Refer to the exhibit. A network administrator redistributed the default static route into OSPF toward all internal routers to reach to lnternet.Which set of commands restores reachability to the lnternet by internal routers?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>router ospf 1
+redistribute connected 0.0.0.0</pre>` },
+                        {
+                            letter: "B", text: `<pre>router ospf 1
+network 0.0.0.00.0.0.0 area 0</pre>` },
+                        {
+                            letter: "C", text: `<pre>router ospf 1
+default-information originate</pre>` },
+                        {
+                            letter: "D", text: `<pre>router ospf 1
+redistribute static subnets</pre>` },
                     ],
                     correct: ["C"],
                     isMultiple: false,
@@ -5017,7 +5027,7 @@ neighbor 2001 :: 4 next-hop-self</pre>` },
                 {
                     id: 205,
                     type: "multiple-choice",
-                    image: "images/page99_img1.jpeg",
+                    image: "images/q205.png",
                     text: "Refer to the exhibit. After an engineer updates the configuration on the device, they noticed unexpected behavior. Which command resolves the issue by completely replacing the startup configuration?",
                     options: [
                         { letter: "A", text: "copy system:running-config nvram:startup-config" },
@@ -5032,10 +5042,33 @@ neighbor 2001 :: 4 next-hop-self</pre>` },
                 {
                     id: 206,
                     type: "multiple-choice",
-                    text: "Which configuration meets the requirements for a customer site?",
+                    image: "images/q206.png",
+                    text: "Refer to the exhibit. A network engineer is provisioning end-to-end traffic service for two different enterprise networks with these requirements: 1. The OSPF process must differ between customers on HQ and Branch office routers, and adjacencies should come up instantly. 2. The enterprise networks are connected with overlapping networks between HQ and a Branch office. Which configuration meets the requirements for a customer site?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>ISP(config)# int f2/0
+ISP(config-if)# ip vrf forwarding EA
+ISP(config-if)# description TO->EA1_HQ
+ISP(config-if)# ip address 172.16.100.2 255.255.255.0
+ISP(config-if)# no shut</pre>` },
+                        {
+                            letter: "B", text: `<pre>ISP(config-if)# int f1/0
+ISP(config-if)# ip vrf forwarding EA
+ISP(config-if)# description TO->EA2_Branch
+ISP(config-if)#ip address 172.16.200.2:255.255.255.0
+ISP(config-if)# no shut</pre>` },
+                        {
+                            letter: "C", text: `<pre>ISP(config-vrf)# int f0/0
+ISP(config-if)# ip vrf forwarding EB
+ISP(config-if)# description TO->EB1_HQ
+ISP(config-if)# ip address 172.16.100.2 255.255.255.0
+ISP(config-if)# no shut</pre>` },
+                        {
+                            letter: "D", text: `<pre>ISP(config)# int f3/0
+ISP(config-if)# ip vrf forwarding EA
+ISP(config-if)# description TO->EA2_Branch
+ISP(config-if)# ip address 172.16.200.2 255.255.255.0
+ISP(config-if)# no shut</pre>` },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -5044,7 +5077,7 @@ neighbor 2001 :: 4 next-hop-self</pre>` },
                 {
                     id: 207,
                     type: "multiple-choice",
-                    image: "images/page100_img1.jpeg",
+                    image: "images/q207.png",
                     text: "Refer to the exhibit. While troubleshooting a BGP route reflector configuration, an engineer notices that reflected routes are missing from neighboring routers. Which two BGP configurations are needed to resolve the issue? (Choose two.)",
                     options: [
                         { letter: "A", text: "neighbor R4 route-reflector-client" },
@@ -5060,11 +5093,21 @@ neighbor 2001 :: 4 next-hop-self</pre>` },
                 {
                     id: 208,
                     type: "multiple-choice",
-                    image: "images/page100_img1.jpeg",
+                    image: "images/q208.png",
                     text: "Refer to the exhibit. An engineer is troubleshooting an OSPF adjacency issue between directly connected routers R1 and R2. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>R2(config)#interface GigabitEthernet 0/0
+R2(config-if)#ip address 10.10.10.9 255.255.255.252</pre>` },
+                        {
+                            letter: "B", text: `<pre>R2(config)#interface GigabitEthernet 0/0
+R2(config-if)#no ospfv3 network broadcast</pre>` },
+                        {
+                            letter: "C", text: `<pre>R1(config)#interface GigabitEthernet 0/0
+R1(config-if)#ospfv3 10 ipv4 area 0</pre>` },
+                        {
+                            letter: "D", text: `<pre>R1(config)#interface GigabitEthernet 0/0
+R1(config-it)#ospfv3 network broadcast</pre>` },
                     ],
                     correct: ["A"],
                     isMultiple: false,
