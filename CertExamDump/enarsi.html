@@ -6087,11 +6087,27 @@ ip address 192.168.1.3 255.255.255.0</pre>` },
                 {
                     id: 255,
                     type: "multiple-choice",
-                    image: "images/page122_img1.jpeg",
+                    image: "images/q255.png",
                     text: "Refer to the exhibit. The network administrator configured VRF lite for customer A. The technicianiat the remote site misconfigured VRF on the router. Which configuration will resolve connectivity for both sites of customer_a?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>ip vrf customer_a
+rd 1:2
+route-target both 1:2</pre>` },
+                        {
+                            letter: "B", text: `<pre>ip vri customer_a
+rd 1.2
+route-target both 1:1</pre>` },
+                        {
+                            letter: "C", text: `<pre>ip vrf customer_a
+rd 1:1
+route-target export 1:2
+route-target import 1:2</pre>` },
+                        {
+                            letter: "D", text: `<pre>ip vrf customer_a
+rd 1:1
+route-target import 1:1
+route-target export 1:2</pre>` },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -6100,7 +6116,7 @@ ip address 192.168.1.3 255.255.255.0</pre>` },
                 {
                     id: 256,
                     type: "multiple-choice",
-                    image: "images/page123_img1.jpeg",
+                    image: "images/q256.png",
                     text: "Refer to the exhibit. Users in VLAN46 cannot get the IP from the DHCP server. Assume that al the parameters are configured properly in VLAN 10 and on the DHCP server. Which command on interface VLAN46 allows users to receive IP from the DHCP server?",
                     options: [
                         { letter: "A", text: "ip dhcp relay information trust-all" },
