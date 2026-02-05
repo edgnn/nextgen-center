@@ -7198,7 +7198,7 @@ R6(config-ip-sla)#udp-jitter 10.60.60.6</pre>` },
                 {
                     id: 302,
                     type: "multiple-choice",
-                    image: "images/page145_img1.jpeg",
+                    image: "images/q302.png",
                     text: "Refer to the exhibit. Which action ensures that 10.10.10.0/24 reaches 10.10.20.0/24 through the direct link between R1 and R2?",
                     options: [
                         { letter: "A", text: "Configure R1 and R2 LAN links as nonpassive." },
@@ -7213,7 +7213,7 @@ R6(config-ip-sla)#udp-jitter 10.60.60.6</pre>` },
                 {
                     id: 303,
                     type: "multiple-choice",
-                    image: "images/page146_img1.jpeg",
+                    image: "images/q303.png",
                     text: "Refer to the exhibit. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Establish connectivity between the NTP server and Cisco DNA Center." },
@@ -7228,11 +7228,24 @@ R6(config-ip-sla)#udp-jitter 10.60.60.6</pre>` },
                 {
                     id: 304,
                     type: "multiple-choice",
-                    image: "images/page146_img1.jpeg",
+                    image: "images/q304.png",
                     text: "Refer to the exhibit. An engineer must filter prefixes that originate from AS65412, but it is not working correctly. Which configuration must the engineer apply to R1 to resolve the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>no ip as-path access-list 1
+ip as-path access-list 1 deny 65412$
+ip as-path access-list 1 permit .*</pre>` },
+                        {
+                            letter: "B", text: `<pre>no ip as-path access-list 1
+ip as-path access-list 1 deny 65412
+ip as-path access-list 1 permit .*</pre>` },
+                        {
+                            letter: "C", text: `<pre>route-map FILTER permit 10
+match as-path 1
+route-map FILTER permit 20</pre>` },
+                        {
+                            letter: "D", text: `<pre>router bgp 64560
+neighbor 10.10.10.10 route-map FILTER out</pre>` },
                     ],
                     correct: ["A"],
                     isMultiple: false,
@@ -7241,11 +7254,47 @@ R6(config-ip-sla)#udp-jitter 10.60.60.6</pre>` },
                 {
                     id: 305,
                     type: "multiple-choice",
-                    image: "images/page147_img1.jpeg",
+                    image: "images/q305.png",
                     text: "Refer to the exhibit. R1 uses SP1 as the primary path. A network engineer must force all SSH traffic generated from R1 toward SP2. Which configuration accomplishes the task?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>ip access-list extended match SSH
+permit tep any any eq 22
+!
+route-map PBR_SSH permit 10
+match ip address match_SSH
+set ip next-hop 10.20.20.1
+!
+interface Gig0/1
+ip policy route-map PBR_SSH</pre>` },
+                        {
+                            letter: "B", text: `<pre>ip access-list extended match_SSH
+permit tcp any any eq 22
+!
+route-map PBR_SSH permit 10
+match ip address match_SSH
+set ip next-hop 10.20.20.1
+!
+interface Gig0/0
+ip policy route-map PBR_SSH</pre>` },
+                        {
+                            letter: "C", text: `<pre>ip access-list extended match_SSH
+permit tcp any any eq 22
+!
+route-map PBR_SSH permit 10
+match ip address match_SSH
+set ip next-hop 10.20.20.1
+!
+ip local policy route-map PBR_SSH</pre>` },
+                        {
+                            letter: "D", text: `<pre>ip access-list extended match_SSH
+permit tcp any any eq 22
+!
+route-map PBR SSH permit 10
+match ip address match_SSH
+set ip next-hop 10.10.10.1
+!
+ip local policy route-map PBR_SSH</pre>` },
                     ],
                     correct: ["C"],
                     isMultiple: false,
