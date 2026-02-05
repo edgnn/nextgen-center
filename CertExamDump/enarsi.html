@@ -7067,7 +7067,7 @@ ip access-group WAN_outbound out</pre>` },
                     ],
                     correct: ["A"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "Reference: https://www.cisco.com/en/US/docs/ios/12_3/rewrite/mpls/mpbbk4_external_docbase_0900e4b180751897_4container_external_docbase_0900e4b180754412.html#wp1051464"
                 },
                 {
                     id: 294,
@@ -7086,7 +7086,8 @@ ip access-group WAN_outbound out</pre>` },
                 {
                     id: 295,
                     type: "multiple-choice",
-                    image: "images/page142_img1.jpeg",
+                    image: "images/q295.png",
+                    image2: "images/q295_2.png",
                     text: "Refer to the exhibit. An engineer applied an IPv6 traffic filter on R1. The interface flapped between R1 and R2 and clearing the BGP session did not restore the BGP session and failed. Which action must the engineer take to restore the BGP session from R2 to R1?",
                     options: [
                         { letter: "A", text: "Apply the IPv6 traffic filter in the outbound direction on the interface." },
@@ -7101,10 +7102,13 @@ ip access-group WAN_outbound out</pre>` },
                 {
                     id: 296,
                     type: "multiple-choice",
-                    text: "Which ElGRP configuration command resolves the issue?",
+                    image: "images/q296.png",
+                    text: "Refer to the exhibit. R2 can reach Loopback222, but R1, SW1, and PC1 cannot communicate with 172.16.222.254. Which ElGRP configuration command resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "R1(config-router)# network 172.16.222.254 255.255.255.255" },
+                        { letter: "B", text: "R1(config-router)# redistribute static" },
+                        { letter: "C", text: "R2(config-router)# redistribute static" },
+                        { letter: "D", text: "R1(config-router)# network 172.16.222.254 0.0.0.0" },
                     ],
                     correct: ["C"],
                     isMultiple: false,
@@ -7142,7 +7146,7 @@ ip access-group WAN_outbound out</pre>` },
                 {
                     id: 299,
                     type: "multiple-choice",
-                    image: "images/page144_img1.jpeg",
+                    image: "images/q299.png",
                     text: "Refer to the exhibit. PC2 is directly connected to R1. A user at PC2 cannot Telnet to 2001:db8:a:b:10. The user can ping 2001:db8:a:b:10 and receive DHCP- related information from the DHCP server. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Remove sequence 30 and put it back as sequence 5." },
@@ -7157,11 +7161,21 @@ ip access-group WAN_outbound out</pre>` },
                 {
                     id: 300,
                     type: "multiple-choice",
-                    image: "images/page145_img1.jpeg",
+                    image: "images/q300.png",
                     text: "Refer to the exhibit. Which configuration resolves the IP SLA issue from R1 to the server?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>R6(config)#ip sla responder</pre>`
+                        },
+                        {
+                            letter: "B", text: `<pre>R6(config)tip sia responder udp-echo ipaddress 10.60.60.6 po 5000</pre>`
+                        },
+                        {
+                            letter: "C", text: `<pre>R6(config)#ip sla 650
+R6(config-ip-sla)#udp-jitter 10.60.60.6</pre>` },
+                        {
+                            letter: "D", text: `<pre>R6(config)#ip sla schedule 10 life forever start-time now</pre>`
+                        },
                     ],
                     correct: ["A"],
                     isMultiple: false,
