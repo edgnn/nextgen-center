@@ -8344,15 +8344,17 @@ distance 200 10.29.89.2 0.0.0.0 10</pre>Which configuration resolves the issue?`
                 {
                     id: 373,
                     type: "multiple-choice",
-                    image: "images/page179_img1.jpeg",
+                    image: "images/q373_ipv6acl.png",
                     text: "Refer to the exhibit. An IPv6 ACL is applied to restrict PC1 from communicating with PC2 and allow all other traffic. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>R3(config-ipv6-acl)#no sequence 30\nR3(config-ipv6-acl)#deny ipv6 host 2001:DB8:0:10:3B host 2001:DB8:A:A:19 sequence 10</pre>" },
+                        { letter: "B", text: "<pre>R3(config-ipv6-acl)#no sequence 30\nR3(config-ipv6-acl)#deny ipv6 host 2001:DB8:0:10::3B any sequence 10</pre>" },
+                        { letter: "C", text: "<pre>R3(config-ipv6-acl)#no sequence 20\nR3(config-ipv6-acl)#deny ipv6 host 2001:DB8:0:10::3B host 2001:DB8:A:A:19 sequence 10</pre>" },
+                        { letter: "D", text: "<pre>R3(config-ipv6-acl)#no sequence 20\nR3(config-ipv6-acl)#deny ipv6 host 2001:DB8:0:10:3B any sequence 10</pre>" }
                     ],
                     correct: ["A"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "The deny statement at sequence 30 needs to be removed and replaced with a deny at sequence 10 to block specific host-to-host IPv6 traffic before the permit statement."
                 },
                 {
                     id: 374,
@@ -8362,51 +8364,57 @@ distance 200 10.29.89.2 0.0.0.0 10</pre>Which configuration resolves the issue?`
                         { letter: "A", text: "CEF" },
                         { letter: "B", text: "LDP" },
                         { letter: "C", text: "FEC" },
-                        { letter: "D", text: "RIB" },
+                        { letter: "D", text: "RIB" }
                     ],
                     correct: ["C"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "FEC (Forwarding Equivalence Class) groups packets that are forwarded the same way - same interface, same next hop, and same queuing policies in MPLS."
                 },
                 {
                     id: 375,
                     type: "multiple-choice",
-                    image: "images/page180_img1.jpeg",
+                    image: "images/q375_bgp_1.png",
+                    image2: "images/q375_bgp_2.png",
                     text: "Refer to the exhibit. R2 has been receiving routes from R4 that originated outside AS300. A network engineer configured an AS-Path ACL to avoid adding these routes to the R2 BGP table, but the routes are still present in the R2 routing table. Which action resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "Replace as-path access-list 1 with the <b>ip as-path access-list 1 permit ^300$</b> command." },
+                        { letter: "B", text: "Replace as-path access-list 1 with the <b>ip as-path access-list 1 permit ^300_</b> command." },
+                        { letter: "C", text: "Replace as-path access-list 1 with the <b>ip as-path access-list 1 permit _300.</b> command." },
+                        { letter: "D", text: "Replace as-path access-list 1 with the <b>ip as-path access-list 1 permit ^300.*</b> command." }
                     ],
                     correct: ["D"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "The regex ^300.* matches any AS-path that starts with 300 followed by any characters, which filters routes originating from AS300 and beyond."
                 },
                 {
                     id: 376,
                     type: "multiple-choice",
-                    image: "images/page180_img1.jpeg",
+                    image: "images/q376_ipv6.png",
                     text: "Refer to the exhibit. A network administrator configured name resolution for IPv6 traffic to be allowed through an inbound access list. After the access list is applied to resolve the issue, name resolution still did not work. Which action does the network administrator take to resolve the name resolution problem?",
                     options: [
-                        { letter: "A", text: "Add permit udp any eq domain any log in the access list" },
-                        { letter: "B", text: "Add permit udp any eq domain 53 any log in the access list." },
-                        { letter: "C", text: "Remove ipv6 inspect ipv6-firewall in from interface gi0/1." },
-                        { letter: "D", text: "Inspect ipv6 inspect name ipv6-firewall udp 53 in global config." },
+                        { letter: "A", text: "Add <b>permit udp any eq domain any log</b> in the access list" },
+                        { letter: "B", text: "Add <b>permit udp any eq domain 53 any log</b> in the access list." },
+                        { letter: "C", text: "Remove <b>ipv6 inspect ipv6-firewall in</b> from interface gi0/1." },
+                        { letter: "D", text: "Inspect <b>ipv6 inspect name ipv6-firewall udp 53</b> in global config." }
                     ],
                     correct: ["A"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "The ACL needs to permit UDP traffic with source port domain (53) to allow DNS response traffic. The current ACL only permits destination port domain."
                 },
                 {
                     id: 377,
                     type: "multiple-choice",
-                    text: "After the configuration, the LA router receives all the specific NewYork routes except the summary route. Which set of configurations resolve the issue on the Chicago router?",
+                    image: "images/q377_ospf.png",
+                    text: "Refer to the exhibit. The network administrator configures the Chicago router to mutually redistribute the LA and NewYork routes with EIGRP routes to be summarized as a single route in OSPF. After the configuration, the LA router receives all the specific NewYork routes except the summary route. Which set of configurations resolve the issue on the Chicago router?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>interface E 0/0\n ip summary-address eigrp 100 192.168.4.0 255.255.252.0</pre>" },
+                        { letter: "B", text: "<pre>router ospf 1\n summary-address 192.168.4.0 255.255.252.0</pre>" },
+                        { letter: "C", text: "<pre>interface E 0/0\n summary-address 192.168.4.0 255.255.252.0</pre>" },
+                        { letter: "D", text: "<pre>router ospf 1\n area 0 range 192.168.0.0 255.255.0.0</pre>" }
                     ],
                     correct: ["B"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "For summarizing external routes redistributed into OSPF, use 'summary-address' under the OSPF process. 'area range' is for inter-area summarization, and 'ip summary-address eigrp' is for EIGRP."
                 },
                 {
                     id: 378,
