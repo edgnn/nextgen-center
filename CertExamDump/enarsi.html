@@ -7379,15 +7379,19 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 311,
                     type: "multiple-choice",
-                    image: "images/page150_img1.jpeg",
-                    text: "Refer to the exhibit. The engineer is trying to transfer the new lOS file to the router R3 but is getting an error. Which configuration achieves the file transfer?",
+                    image: "images/q311_tftp_1.png",
+                    image2: "images/q311_tftp_2.png",
+                    image3: "images/q311_tftp_3.png",
+                    text: "Refer to the exhibit. The engineer is trying to transfer the new IOS file to the router R3 but is getting an error. Which configuration achieves the file transfer?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>R4(config)#no access-list 120 permit udp host 172.16.1.2 host 172.16.2.19 eq 69\nR3(config)#no ip tftp source-interface GigabitEthernet0/3</pre>" },
+                        { letter: "B", text: "<pre>R4(config)#no access-list 120 permit udp host 172.16.1.2 host 172.16.2.19 eq 69\nR4(config)#access-list 120 permit tcp host 172.16.1.17 host 172.16.2.19 eq 69\nR4(config)#access-list 120 permit tcp any any</pre>" },
+                        { letter: "C", text: "<pre>R4(config)#no access-list 120 permit udp host 172.16.1.2 host 172.16.2.19 eq 69\nR4(config)#no access-list 120 deny udp any any eq tftp\nR4(config)#access-list 120 permit tcp any any</pre>" },
+                        { letter: "D", text: "<pre>R4(config)#no access-list 120 permit udp host 172.16.1.2 host 172.16.2.19 eq 69\nR4(config)#access-list 120 permit udp host 172.16.1.17 host 172.16.2.19 eq 69\nR4(config)#access-list 120 permit tcp any any</pre>" }
                     ],
                     correct: ["D"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "The ACL on R4 permits TFTP from 172.16.1.2 but the TFTP source on R3 is configured as Gi0/3 which has IP 172.16.1.17. Option D corrects the ACL to permit TFTP from the correct source IP 172.16.1.17."
                 },
                 {
                     id: 312,
@@ -7406,28 +7410,33 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 313,
                     type: "multiple-choice",
-                    image: "images/page152_img1.jpeg",
+                    image: "images/q313_bgp_1.png",
+                    image2: "images/q313_bgp_2.png",
                     text: "Refer to the exhibit. AS 111 wanted to use AS 200 as the preferred path for 172.20.5.0/24 and AS 100 as the backup. After the configuration, AS 100 is not used for any other routes. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>route-map SETLP permit 10\n match ip address prefix-list PLIST1\n set local-preference 99\nroute-map SETLP permit 20</pre>" },
+                        { letter: "B", text: "<pre>router bgp 111\n no neighbor 192.168.10.1 route-map SETLP in\n neighbor 192.168.20.2 route-map SETLP in</pre>" },
+                        { letter: "C", text: "<pre>route-map SETLP permit 10\n match ip address prefix-list PLIST10\n set local-preference 110\nroute-map SETLP permit 20</pre>" },
+                        { letter: "D", text: "<pre>router bgp 111\n no neighbor 192.168.10.1 route-map SETLP in\n neighbor 192.168.10.1 route-map SETLP out</pre>" }
                     ],
                     correct: ["A"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "The current configuration sets local-preference 90 for 172.20.5.0/24 via AS 100. To prefer AS 200 for this prefix while using AS 100 for other routes, we need to set lower local-preference (99) for 172.20.5.0/24 via AS 100 and add permit 20 to allow other routes through."
                 },
                 {
                     id: 314,
                     type: "multiple-choice",
-                    image: "images/page152_img1.jpeg",
-                    text: "Refer to the exhibit. An engineer configures DMVPN and receives the hub location prefix of 10.1.1.0/24 on R2 and R3. The R3 prefix of 10.13.0/24 is not received on R2, and the R2 prefix 10.1.2.0/24 is not received on R3. Which action resolves the issue?",
+                    image: "images/q314_dmvpn.png",
+                    text: "Refer to the exhibit. An engineer configures DMVPN and receives the hub location prefix of 10.1.1.0/24 on R2 and R3. The R3 prefix of 10.1.3.0/24 is not received on R2, and the R2 prefix 10.1.2.0/24 is not received on R3. Which action resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "There is no spoke-to-spoke connection. DMVPN configuration should be modified with a manual neighbor relationship configured between R2 and R3 and confirmed by use of the show ip eigrp neighbor command." },
+                        { letter: "B", text: "Split horizon prevents the routes from being advertised between spoke routers. It should be disabled with the command no ip split-horizon eigrp 10 on the tunnel interface of R1." },
+                        { letter: "C", text: "Split horizon prevents the routes from being advertised between spoke routers. It should be disabled with the no ip split-horizon eigrp 10 command on the Gi0/0 interface of R1." },
+                        { letter: "D", text: "There is no spoke-to-spoke connection. DMVPN configuration should be modified to enable a tunnel connection between R2 and R3 and neighbor relationship confirmed by use of the show ip eigrp neighbor command." }
                     ],
                     correct: ["B"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "In DMVPN Phase 2/3 with EIGRP, split-horizon on the hub's tunnel interface prevents spoke routes from being advertised to other spokes. Disabling split-horizon with 'no ip split-horizon eigrp 10' on R1's tunnel interface allows spoke-to-spoke route advertisement."
                 },
                 {
                     id: 315,
@@ -7460,7 +7469,7 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 317,
                     type: "multiple-choice",
-                    image: "images/page153_img1.jpeg",
+                    image: "images/q317_ipsla.png",
                     text: "Refer to the exhibit. Alter recovering from a power failure, Ethernet0/1 stayed down while Ethernet0/0 returned to the up/up state. The default route through ISP1 was not reinstated in the routing table until Ethernet0/1 also came up. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Remove the references to the interface names from both static default routes." },
@@ -7475,7 +7484,7 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 318,
                     type: "multiple-choice",
-                    image: "images/page154_img1.jpeg",
+                    image: "images/q318_eigrp.png",
                     text: "Refer to the exhibit. The primary link between R1 and R2 went down, but R3 is still advertising the 192.168.200.0/24 network to R1 and the 192.168.100.0/24 network to R2, which creates a loop. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Configure the eigrp stub command under the EIGRP process on R2." },
@@ -7490,27 +7499,31 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 319,
                     type: "multiple-choice",
-                    image: "images/page154_img1.jpeg",
+                    image: "images/q319_bgp.png",
                     text: "Refer to the exhibit. R3 is dual-homed to two service providers for traffic redundancy. R3 prefers its outbound traffic via R2. Which set of configurations achieves this goal?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>route-map R1 permit 10\n set metric 200\nroute-map R2 permit 10\n set metric 100</pre>" },
+                        { letter: "B", text: "<pre>route-map R1 permit 10\n set AS-Path Prepend 200\nroute-map R2 permit 10\n set AS-Path Prepend 100</pre>" },
+                        { letter: "C", text: "<pre>route-map R1 permit 10\n set metric 100\nroute-map R2 permit 10\n set metric 200</pre>" },
+                        { letter: "D", text: "<pre>route-map R1 permit 10\n set AS-Path Prepend 100\nroute-map R2 permit 10\n set AS-Path Prepend 200</pre>" }
                     ],
                     correct: ["A"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "To prefer outbound traffic via R2, R3 should set a higher MED (metric) for routes received from R1 and lower MED for R2. This makes R2 path more preferred."
                 },
                 {
                     id: 320,
                     type: "multiple-choice",
                     text: "A policy is required that overrides normal routing behavior. If the web traffic is sent to a destination of 10.200.200.0/24 and the route is withdrawn from the routing table of a router under this condition, the policy that is applied in the ingress direction on the interface must direct traffic to a next hop of 10.2.2.2. If the route is present in the routing table, then normal forwarding must occur for web traffic. Which configuration meets the requirements?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>access-list 100 permit ip any any\n!\nroute-map POLICY permit 10\n match ip address 100\n set ip next-hop recursive 10.2.2.2\n!\nip local policy route-map POLICY</pre>" },
+                        { letter: "B", text: "<pre>access-list 100 permit tcp any 10.200.200.0 0.0.0.255 eq http\n!\nroute-map POLICY permit 10\n match ip address 100\n set ip next-hop recursive 10.2.2.2\n!\nroute-map POLICY permit 20</pre>" },
+                        { letter: "C", text: "<pre>access-list 100 permit tcp any 10.200.200.0 0.0.0.255 eq http\n!\nroute-map POLICY permit 10\n match ip address 100\n set ip default next-hop 10.2.2.2</pre>" },
+                        { letter: "D", text: "<pre>access-list 100 permit ip any 10.100.100.0 0.0.0.255\n!\nroute-map POLICY permit 10\n match ip address 100\n set ip next-hop 10.2.2.2\n!\nroute-map POLICY permit 20\n!\nip local policy route-map POLICY</pre>" }
                     ],
                     correct: ["C"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "The 'set ip default next-hop' command only applies when the route is NOT in the routing table. This meets the requirement of redirecting traffic only when the route is withdrawn, while normal forwarding occurs when the route exists."
                 },
                 {
                     id: 321,
@@ -7525,6 +7538,20 @@ ip local policy route-map PBR_SSH</pre>` },
                     correct: ["A"],
                     isMultiple: false,
                     explanation: ""
+                },
+                {
+                    id: 322,
+                    type: "multiple-choice",
+                    text: "Which IP precedence value does BFD use to prioritize traffic within an infrastructure device?",
+                    options: [
+                        { letter: "A", text: "6" },
+                        { letter: "B", text: "4" },
+                        { letter: "C", text: "5" },
+                        { letter: "D", text: "7" }
+                    ],
+                    correct: ["D"],
+                    isMultiple: false,
+                    explanation: "BFD uses IP precedence value 7 (Network Control) to ensure highest priority for its control packets within infrastructure devices."
                 },
                 {
                     id: 323,
@@ -7543,7 +7570,7 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 324,
                     type: "multiple-choice",
-                    image: "images/page156_img1.jpeg",
+                    image: "images/q324_rip.png",
                     text: "Refer to the exhibit. A customer reports that networks in the 10.0.1.0/24 space do not appear in the RIP database. What action resolves the issue?",
                     options: [
                         { letter: "A", text: "Permit 10.0.1.0/24 address in the ACL." },
@@ -7572,20 +7599,22 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 326,
                     type: "multiple-choice",
-                    image: "images/page156_img1.jpeg",
-                    text: "Refer to the exhibit. Routers R1, R2, R3, and R4 use EIGRP. However, traffic always prefers R1 to R5 backup links in nonfailure scenarios. Which configuration resolves the issue?",
+                    image: "images/q326_eigrp.png",
+                    text: "Refer to the exhibit. Routers R1, R2, R3, R4, and R5 use EIGRP. However, traffic always prefers R1 to R5 backup links in nonfailure scenarios. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>R1(config)# no ip route 10.40.10.0 255.255.255.252 10.10.20.2\nR1(config)# ip route 10.40.10.0 255.255.255.252 10.10.20.2 115</pre>" },
+                        { letter: "B", text: "<pre>R1(config)# no ip route 10.40.10.0 255.255.255.252 10.10.20.2\nR1(config)# ip route 0.0.0.0 0.0.0.0 10.10.10.2</pre>" },
+                        { letter: "C", text: "<pre>R1(config)# int GigabitEthernet 0/0/0\nR1(config-if)# bandwidth 10000</pre>" },
+                        { letter: "D", text: "<pre>R1(config)# int GigabitEthernet 0/0/0\nR1(config-if)# bandwidth 10000000</pre>" }
                     ],
                     correct: ["A"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "The static route has administrative distance of 1 by default which is preferred over EIGRP (90). Setting the static route AD to 115 makes EIGRP preferred for normal operation while keeping the static as backup."
                 },
                 {
                     id: 327,
                     type: "multiple-choice",
-                    image: "images/page156_img1.jpeg",
+                    image: "images/q327_ospf.png",
                     text: "Refer to the exhibit. Router ABR-Rtr is not propagating the internet routes in OSPF area 10, which causes internet reachability problems in the area. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "ABR-Rtr must configure the default-information originate always command" },
@@ -7602,30 +7631,35 @@ ip local policy route-map PBR_SSH</pre>` },
                     type: "multiple-choice",
                     text: "An engineer must configure encrypted packets for a single router OSPF neighborship. Which configuration meets this requirement?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>router ospf 100\n area 0 authentication\n!\ninterface Ethernet0/2\n ip ospf authentication-key exam</pre>" },
+                        { letter: "B", text: "<pre>router ospf 100\n area 0 authentication message-digest-key 1 md5 exam\n!\ninterface Ethernet0/2\n ip ospf message-digest-key 1 md5 exam</pre>" },
+                        { letter: "C", text: "<pre>interface Ethernet0/2\n ip ospf authentication-key exam</pre>" },
+                        { letter: "D", text: "<pre>interface Ethernet0/2\n ip ospf authentication message-digest\n ip ospf message-digest-key 1 md5 exam</pre>" }
                     ],
                     correct: ["D"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "For encrypted OSPF authentication on a single interface, MD5 authentication must be configured at interface level using 'ip ospf authentication message-digest' and 'ip ospf message-digest-key'. Option D correctly configures both commands on the interface."
                 },
                 {
                     id: 329,
                     type: "multiple-choice",
-                    image: "images/page157_img1.jpeg",
+                    image: "images/q329_vrf.png",
                     text: "Refer to the exhibit. The Math and Science departments connect through the corporate IT router, but users in the Math department must not be able to reach the Science department and vice versa. Which configuration accomplishes this task?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>vrf definition Science\n address-family ipv4\n!\ninterface E 0/2\n vrf forwarding Science\n ip address 192.168.1.1 255.255.255.0\n no shut\n!\ninterface E 0/3\n vrf forwarding Science\n ip address 192.168.2.1 255.255.255.0\n no shut</pre>" },
+                        { letter: "B", text: "<pre>vrf definition Science\n address-family ipv4\n!\ninterface E 0/2\n ip address 192.168.1.1 255.255.255.0\n no shut\n!\ninterface E 0/3\n ip address 192.168.2.1 255.255.255.0\n no shut</pre>" },
+                        { letter: "C", text: "<pre>vrf definition Science\n!\ninterface E0/2\n ip address 192.168.1.1 255.255.255.0\n no shut\n!\ninterface E0/3\n ip address 192.168.2.1 255.255.255.0\n no shut</pre>" },
+                        { letter: "D", text: "<pre>vrf definition Science\n address-family ipv4\n!\ninterface E0/2\n ip address 192.168.1.1 255.255.255.0\n vrf forwarding Science\n no shut\n!\ninterface E0/3\n ip address 192.168.2.1 255.255.255.0\n vrf forwarding Science\n no shut</pre>" }
                     ],
                     correct: ["A"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "VRF must be defined with address-family, and 'vrf forwarding' must be applied BEFORE the IP address on the interface. Option A correctly applies VRF forwarding before assigning IP addresses to isolate Science department traffic."
                 },
                 {
                     id: 330,
                     type: "multiple-choice",
-                    image: "images/page158_img1.jpeg",
+                    image: "images/q330_netflow_1.png",
+                    image2: "images/q330_netflow_2.png",
                     text: "Refer to the exhibit. The remote server is failing to receive the NetFlow data. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Modify the flow transport command transport udp 2055 to move under flow monitor profile." },
@@ -7640,7 +7674,8 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 331,
                     type: "multiple-choice",
-                    image: "images/page159_img1.jpeg",
+                    image: "images/q331_ipsla_1.png",
+                    image2: "images/q331_ipsla_2.png",
                     text: "Refer to the exhibit. A user has set up an IP SLA probe to test if a non SLA host web server on IP address 10.1.1.1 accepts HTTP sessions prior to deployment. The probe is failing. Which action should the network administrator recommend for the probe to succeed?",
                     options: [
                         { letter: "A", text: "Add icmp-echo command for the host." },
@@ -7669,15 +7704,17 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 333,
                     type: "multiple-choice",
-                    image: "images/page160_img1.jpeg",
+                    image: "images/q333_bgp.png",
                     text: "Refer to the exhibit. Which action adds the 10.1.7.6/32 route to the BGP table?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "Add the network 10.1.7.6 mask 255.255.255.255 backdoor command" },
+                        { letter: "B", text: "Add summary-address 10.1.7.6 255.255.255.0" },
+                        { letter: "C", text: "Add a static route for the 10.1.7.6/32 network." },
+                        { letter: "D", text: "Add the network 10.1.7.6 mask 255.255.255.255 command." }
                     ],
                     correct: ["D"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "The 10.1.7.6/32 address is configured on Loopback6 but not advertised in BGP. Adding the 'network 10.1.7.6 mask 255.255.255.255' command will advertise this specific route in BGP."
                 },
                 {
                     id: 334,
@@ -7696,7 +7733,7 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 335,
                     type: "multiple-choice",
-                    image: "images/q161.png",
+                    image: "images/q335_acl.png",
                     text: "Refer to the exhibit. An IT staff member comes into the office during normal office hours and cannot access devices through SSH. Which action should be taken to resotve this issue?",
                     options: [
                         { letter: "A", text: "Configure the access list in the outbound direction." },
@@ -7711,7 +7748,7 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 336,
                     type: "multiple-choice",
-                    image: "images/q161.png",
+                    image: "images/q336_ssh.png",
                     text: "Refer to the exhibit. A user cannot SSH to the router. What action must be taken to resolve this issue?",
                     options: [
                         { letter: "A", text: "Configure ip ssh version 2" },
@@ -7726,7 +7763,7 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 337,
                     type: "multiple-choice",
-                    image: "images/page162_img1.jpeg",
+                    image: "images/q337_eigrp.png",
                     text: "Refer to the exhibit. A bank ATM site has difficulty connecting with the bank server. A network engineer troubleshoots the issue and finds that R4 has no active route to the bank ATM site. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "ElGRP peering between R3 and R4 to be fixed." },
@@ -7743,17 +7780,19 @@ ip local policy route-map PBR_SSH</pre>` },
                     type: "multiple-choice",
                     text: "How does LDP operate in an MPLS network?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "Peer routers establish the LDP session, and the LDP neighbors maintain and terminate the session by exchanging messages." },
+                        { letter: "B", text: "When an adjacent LSR receives LDP discovery messages, TCP two-way handshake ensures that the LDP session has unidirectional connectivity." },
+                        { letter: "C", text: "LDP notification messages allow LERs to exchange label information to determine the next hops within a particular LSP" },
+                        { letter: "D", text: "When topology changes occur such as a router failure, LDP generates peer discovery messages that terminate the LDP session to propagate an LSP change" }
                     ],
                     correct: ["A"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "LDP uses TCP for session establishment. Peer routers establish LDP sessions and maintain them by exchanging keepalive messages. The session can be terminated when needed."
                 },
                 {
                     id: 339,
                     type: "multiple-choice",
-                    image: "images/page163_img1.jpeg",
+                    image: "images/q339_pbr.png",
                     text: "Refer to the exhibit. An engineer has configured policy-based routing and applied the configuration to the correct interface. How is the configuration applied to the traffic that matches the access list?",
                     options: [
                         { letter: "A", text: "It is sent to 209.165.202.129." },
@@ -7768,20 +7807,23 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 340,
                     type: "multiple-choice",
-                    image: "images/page163_img1.jpeg",
+                    image: "images/q340_bgp_1.png",
+                    image2: "images/q340_bgp_2.png",
                     text: "Refer to the exhibit. Customer B has decided not to receive any routes from R1 that originated outside the AS 100. Which AS path access list must the engineer choose to meet this requirement?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "ip as-path access-list 1 permit _100$" },
+                        { letter: "B", text: "ip as-path access-list 1 permit ^100$" },
+                        { letter: "C", text: "ip as-path access-list 1 permit ^10[0-9]*$" },
+                        { letter: "D", text: "ip as-path access-list 1 permit _100" }
                     ],
                     correct: ["B"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "The regex ^100$ matches routes that originated ONLY from AS 100. ^ means start of AS path, 100 is the AS number, and $ means end of path. This filters out any routes that traversed other ASes."
                 },
                 {
                     id: 341,
                     type: "multiple-choice",
-                    image: "images/q164.png",
+                    image: "images/q341_eigrp.png",
                     text: "Refer to the exhibit. Which action restores the routes from neighbors while still filtering 1.1.1.0/24?",
                     options: [
                         { letter: "A", text: "Modify the access list to deny instead of permit it." },
@@ -7796,19 +7838,57 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 342,
                     type: "multiple-choice",
-                    text: "Which configuration resolves the issue?",
+                    image: "images/q342_eigrp.png",
+                    text: `Refer to the exhibit. The network operation team opened a trouble ticket stating that users connected to R2 and R4 cannot reach server 1. Some partial configuration and show commands are included in the ticket:<pre>R4#sh ip route 10.71.2.100
+Routing entry for 10.71.2.0/24
+Known via "eigrp 100", distance 90, metric 35840, type internal
+Redistributing via eigrp 100
+Last update from 10.3.111.2 on FastEthernet1/1, 00:01:14 ago
+Routing Descriptor Blocks:
+10.3.111.2, from 10.3.111.2, 00:01:14 ago, via FastEthernet1/1
+
+R2#sh ip route 10.71.2.0
+Routing entry for 10.71.2.0/24
+Known via "eigrp 100", distance 90, metric 33280, type internal
+Redistributing via eigrp 100
+Last update from 10.1.95.2 on FastEthernet0/0, 00:12:58 ago
+Routing Descriptor Blocks:
+*10.1.95.2, from 10.1.95.2, 00:12:58 ago, via FastEthernet0/0
+
+R2#sh run | i route
+ip route 10.71.2.100 255.255.255.255 Null0 name SERVER1
+
+R2#sh run | s eigrp
+router eigrp 100
+network 10.1.95.0 0.0.0.3
+network 10.2.2.2 0.0.0.0
+network 10.3.111.0 0.0.0.3
+network 10.23.32.0 0.0.0.255
+
+R4#sh run | i route
+ip route 10.71.2.0 255.255.254.0 Null0 name SERVER1
+
+R4#sh run | s eigrp
+router eigrp 100
+network 10.3.111.0 0.0.0.3
+network 10.4.4.4 0.0.0.0
+network 10.29.89.0 0.0.0.3
+network 10.60.9.0 0.0.0.255
+distance 200 10.29.89.2 0.0.0.0 10</pre>Which configuration resolves the issue?`,
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>R2#\nrouter eigrp 100\n distance 170 10.1.95.2 0.0.0.0 10\n!\nno ip route 10.71.2.100 255.255.255.255 Null0 name SERVER1</pre>" },
+                        { letter: "B", text: "<pre>R4#\nrouter eigrp 100\n distance 160 10.29.89.2 0.0.0.0 10\n!\nno ip route 10.71.2.0 255.255.254.0 Null0 name SERVER1</pre>" },
+                        { letter: "C", text: "<pre>R4#\nrouter eigrp 100\n no distance 200 10.29.89.2 0.0.0.0 10\n!\nno access-list 10 permit 10.71.2.0 0.0.0.255</pre>" },
+                        { letter: "D", text: "<pre>R2#\nrouter eigrp 100\n distance 90 10.1.95.2 0.0.0.0 10\n!\nno ip route 10.71.2.100 255.255.255.0 Null0 name SERVER1</pre>" }
                     ],
                     correct: ["A"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "R2 has a static route to Null0 for 10.71.2.100/32 which is more specific than the EIGRP route for 10.71.2.0/24. Removing this static route and adjusting the EIGRP distance allows traffic to flow properly to Server 1."
                 },
                 {
                     id: 343,
                     type: "multiple-choice",
-                    image: "images/q165.png",
+                    image: "images/q343_ospf.png",
                     text: "Refer to the exhibit. An engineer configured VRF CCNP on router R1 but is unable to successfully ping host 10.1.1.1. What is the cause of this issue?",
                     options: [
                         {
@@ -7833,68 +7913,78 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 344,
                     type: "multiple-choice",
-                    image: "images/page165_img1.jpeg",
-                    text: "Rafer to the exhibit. An engineer implemented CoPP but did not see OSPF traffic going through it. Which configuration resolves the issue?7",
+                    image: "images/q344_copp.png",
+                    text: "Refer to the exhibit. An engineer implemented CoPP but did not see OSPF traffic going through it. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>control-plane\n service-policy input COPP</pre>" },
+                        { letter: "B", text: "<pre>ip access-list extended OSPF\n permit ospf any any</pre>" },
+                        { letter: "C", text: "<pre>policy-map COPP\n class OSPF\n  police 8000 conform-action transmit exceed-action transmit violate-action drop</pre>" },
+                        { letter: "D", text: "<pre>class-map match-all OSPF\n match access-group name OSPF</pre>" }
                     ],
                     correct: ["A"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "CoPP requires the service-policy to be applied to the control-plane. Without 'service-policy input COPP' under control-plane, OSPF traffic won't be processed by the CoPP policy."
                 },
                 {
                     id: 345,
                     type: "multiple-choice",
-                    text: "Which configuration meets the requirement on R1?",
+                    image: "images/q345_pbr.png",
+                    text: "Refer to the exhibit. The R1 routing table has the prefixes for the FTP1 and FTP2 file servers. A network engineer must configure the R1 with these requirements: 1. Host1 must use the FTP1 fileserver. 2. Host2 must use the FTP2 fileserver. Which configuration meets the requirement on R1?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>ip access-list extended FTP1_R1\n permit ip host 10.10.10.11 host 10.10.100.11\nip access-list extended FTP2_R1\n permit ip host 10.10.10.22 host 10.10.200.22\n!\nroute-map PBR_FTP permit 10\n match ip address FTP1_R1\n set ip next-hop 10.10.40.1\n!\nroute-map PBR_FTP permit 20\n match ip address FTP2_R1\n set ip next-hop 10.10.30.1\n!\nip local policy route-map PBR_FTP</pre>" },
+                        { letter: "B", text: "<pre>ip access-list extended FTP1_R1\n permit ip host 10.10.10.11 any\nip access-list extended FTP2_R1\n permit ip host 10.10.10.22 any\nroute-map PBR_FTP permit 10\n match ip address FTP1_R1\n set ip next-hop 10.10.30.1\n!\nroute-map PBR_FTP permit 20\n match ip address FTP2_R1\n set ip next-hop 10.10.40.1\n!\ninterface GigabitEthernet 0/0\n ip policy route-map PBR_FTP</pre>" },
+                        { letter: "C", text: "<pre>ip access-list extended FTP1_R1\n permit ip host 10.10.10.11 host 10.10.100.11\nip access-list extended FTP2_R1\n permit ip host 10.10.10.22 host 10.10.200.22\n!\nroute-map PBR_FTP permit 10\n match ip address FTP1_R1\n set ip next-hop 10.10.30.1\n!\nroute-map PBR_FTP permit 20\n match ip address FTP2_R1\n set ip next-hop 10.10.40.1\n!\nip local policy route-map PBR_FTP</pre>" },
+                        { letter: "D", text: "<pre>ip access-list extended FTP1_R1\n permit ip host 10.10.10.11 host 10.10.100.11\nip access-list extended FTP2_R1\n permit ip host 10.10.10.22 host 10.10.200.22\n!\nroute-map PBR_FTP permit 10\n match ip address FTP1_R1\n set ip next-hop 10.10.30.1\n!\nroute-map PBR_FTP permit 20\n match ip address FTP2_R1\n set ip next-hop 10.10.40.1\n!\ninterface GigabitEthernet 0/0\n ip policy route-map PBR_FTP</pre>" }
                     ],
                     correct: ["D"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "PBR should be applied on the interface where traffic enters (Gi0/0). Host1 (10.10.10.11) needs to reach FTP1 (10.10.100.11) via 10.10.30.1, and Host2 (10.10.10.22) needs to reach FTP2 (10.10.200.22) via 10.10.40.1."
                 },
                 {
                     id: 346,
                     type: "multiple-choice",
-                    image: "images/q166.png",
-                    text: "Refer to the exhibit. A network engineer wants to prevent users from connecting to the console port. Which action resolves the issue?",
+                    text: "Which feature drops packets if the source address is not found in the snooping table?",
                     options: [
                         { letter: "A", text: "IPv6 Source Guard" },
                         { letter: "B", text: "IPv6 Prefix Guard" },
                         { letter: "C", text: "Binding Table Recovery" },
-                        { letter: "D", text: "IPv6 Destination Guard" },
+                        { letter: "D", text: "IPv6 Destination Guard" }
                     ],
                     correct: ["A"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "IPv6 Source Guard validates the source address of IPv6 packets against the binding table (snooping table). If the source address is not found in the table, the packet is dropped."
                 },
                 {
                     id: 347,
                     type: "multiple-choice",
-                    image: "images/page167_img1.jpeg",
+                    image: "images/q347_ipsla_1.png",
+                    image2: "images/q347_ipsla_2.png",
                     text: "Refer to the exhibit. Jitter on the link between R101 and R201 was tested for voice traffic over port 16384 without the control communication on port 1967. Which command enables R201 to receive RTT for the configured IP SLA?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "ip sla responder auto-register 1.1.1.1" },
+                        { letter: "B", text: "ip sla responder udp-echo ipaddress 2.2.2.2 port 16384" },
+                        { letter: "C", text: "ip sla responder udp-echo ipaddress 1.1.1.1 port 16384" },
+                        { letter: "D", text: "ip sla responder tcp-connect port 1967" }
                     ],
                     correct: ["B"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "Since 'control disable' is used in the IP SLA configuration, the responder must be configured with the specific IP address and port. The destination is 2.2.2.2 with port 16384."
                 },
                 {
                     id: 348,
                     type: "multiple-choice",
-                    image: "images/page168_img1.jpeg",
+                    image: "images/q348_redist_1.png",
+                    image2: "images/q348_redist_2.png",
                     text: "Refer to the exhibit. Users from the 192.168.2.0/24 network cannot connect to the 172.16.2.32/28 network. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>R1(config)#access-list 15 permit 192.168.2.0 0.0.255.255</pre>" },
+                        { letter: "B", text: "<pre>R4(config)#ip route 0.0.0.0 0.0.0.0 172.16.2.1\nR1(config)#router eigrp 100\nR1(config-router)#network 192.168.0.0</pre>" },
+                        { letter: "C", text: "<pre>R1(config)#router eigrp 100\nR1(config-router)#redistribute rip\nR1(config-router)#default-metric 10000 100 255 100 1500</pre>" },
+                        { letter: "D", text: "<pre>R1(config)#route-map REDIST permit 10\nR1(config-route-map)#match ip address 15\nR1(config-route-map)#set metric 1000 10 255 1 1500\nR1(config-route-map)#exit</pre>" }
                     ],
                     correct: ["C"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "The RIP routes from 192.168.x.0 networks need to be redistributed into EIGRP with proper default-metric for EIGRP to accept external routes."
                 },
                 {
                     id: 349,
@@ -7927,20 +8017,23 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 351,
                     type: "multiple-choice",
-                    image: "images/page169_img1.jpeg",
+                    image: "images/q351_vrf_1.png",
+                    image2: "images/q351_vrf_2.png",
                     text: "Refer to the exhibit. The IT router has been configured with the Maths VRF and the interfaces have been assigned to the VRF. Which set of configurations exchanges routes between the Maths-1 and Maths-2 routers using OSPF in area 0?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>router ospf 1\n address-family ipv4 vrf Maths\n  network 192.168.1.0 0.0.0.255 area 0</pre>" },
+                        { letter: "B", text: "<pre>router ospf 1\n network 192.168.2.0 0.0.0.255 area 0</pre>" },
+                        { letter: "C", text: "<pre>router ospf 1 vrf Maths\n network 192.168.1.0 0.0.0.255 area 0\n network 192.168.2.0 0.0.0.255 area 0</pre>" },
+                        { letter: "D", text: "<pre>router ospf 1 vrf Maths area 0\n network 192.168.1.0\n network 192.168.2.0</pre>" }
                     ],
                     correct: ["C"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "For VRF-aware OSPF, use 'router ospf <process-id> vrf <vrf-name>' syntax. Both networks 192.168.1.0 and 192.168.2.0 need to be advertised in area 0."
                 },
                 {
                     id: 352,
                     type: "multiple-choice",
-                    image: "images/page170_img1.jpeg",
+                    image: "images/q352_telnet.jpg",
                     text: "Refer to the exhibit. A network engineer cannot remote access R3 using Telnet from switch S1. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Allow to use the ssh -| admin 10.0.0.1 command on the switch." },
@@ -7955,20 +8048,22 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 353,
                     type: "multiple-choice",
-                    image: "images/page170_img1.jpeg",
+                    image: "images/q353_eigrp.png",
                     text: "Refer to the exhibit. R1 and R2 cannot establish an EIGRP adjacency. Which action establishes EIGRP adjacency?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "Add the <b>no auto-summary</b> command to the R2 configuration so that it matches the R1 configuration." },
+                        { letter: "B", text: "Remove the <b>passive-interface</b> command from the R2 configuration so that it matches the R1 configuration." },
+                        { letter: "C", text: "Add the <b>passive-interface</b> command to the R1 configuration so that it matches the R2 configuration." },
+                        { letter: "D", text: "Remove the current autonomous system number on one of the routers and change to a different value." }
                     ],
                     correct: ["B"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "R2 has passive-interface configured on FastEthernet0/0, which prevents EIGRP from sending hello packets on that interface. Removing passive-interface allows EIGRP adjacency to form."
                 },
                 {
                     id: 354,
                     type: "multiple-choice",
-                    image: "images/page171_img1.jpeg",
+                    image: "images/q354_ospf.png",
                     text: "Refer to the exhibit. A network engineer receives a report that Spoke 1 users can perform bank transactions with the server located at the Center site, but Spoke 2 users cannot. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Configure the Spoke 2 users IP on the router B OSPF domain." },
@@ -7998,15 +8093,18 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 356,
                     type: "multiple-choice",
-                    image: "images/page171_img1.jpeg",
+                    image: "images/q356_redist_1.jpg",
+                    image2: "images/q356_redist_2.png",
                     text: "Refer to the exhibit. Which configuration resolves the route filtering issue on R1 to redistribute all the routes except 172.16.2.48/28?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>R1(config)#route-map CCNP deny 10\nR1(config-route-map)#no match route-type local\nR1(config-route-map)#match route-type external type-1\nR1(config)#route-map CCNP permit 20</pre>" },
+                        { letter: "B", text: "<pre>R1(config)#route-map CCNP deny 10\nR1(config-route-map)#no match route-type local\nR1(config-route-map)#match route-type external\nR1(config)#route-map CCNP permit 20</pre>" },
+                        { letter: "C", text: "<pre>R1(config)#route-map CCNP deny 10\nR1(config-route-map)#no match route-type local\nR1(config-route-map)#match route-type level-2\nR1(config)#route-map CCNP permit 20</pre>" },
+                        { letter: "D", text: "<pre>R1(config)#route-map CCNP deny 10\nR1(config-route-map)#no match route-type local\nR1(config-route-map)#match route-type external type-2\nR1(config)#route-map CCNP permit 20</pre>" }
                     ],
                     correct: ["B"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "The route-map needs to deny external routes and permit all others. Removing the 'match route-type local' and adding 'match route-type external' correctly filters external routes."
                 },
                 {
                     id: 357,
@@ -8025,7 +8123,7 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 358,
                     type: "multiple-choice",
-                    image: "images/page172_img1.jpeg",
+                    image: "images/q358_ospf.png",
                     text: "Refer to the exhibit. R6 should reach R1 via R5>R2>R1. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Increase the cost to 61 between R2-R3-R1." },
@@ -8040,7 +8138,7 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 359,
                     type: "multiple-choice",
-                    image: "images/page173_img1.jpeg",
+                    image: "images/q359_ipv6.png",
                     text: "Refer to the exhibit. R1 is configured with uRPF, and ping to R1 is failing from a source present in the R1 routing table via the GigabitEthernet 0/0 interface. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Add a floating static route to the source on R1 to the GigabitEthernet 0/1 interface." },
@@ -8055,7 +8153,7 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 360,
                     type: "multiple-choice",
-                    image: "images/page173_img1.jpeg",
+                    image: "images/q360_dhcpv6.png",
                     text: "Refer to the exhibit. The client received the IPv6 address from the IPv6 DHCP server but the show command does not show the IPv6 DHCP bindings on the server. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Configure authorized DHCP servers to avoid IPv6 addresses from a rogue DHCP server." },
@@ -8070,7 +8168,7 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 361,
                     type: "multiple-choice",
-                    image: "images/page174_img1.jpeg",
+                    image: "images/q361_tftp.png",
                     text: "Refer to the exhibit. The engineer is getting an error when trying to transfer a new IOS file to the router. Which action resolves the issue?",
                     options: [
                         { letter: "A", text: "Delete some files on the router flash memory." },
@@ -8141,93 +8239,107 @@ ip local policy route-map PBR_SSH</pre>` },
                 {
                     id: 366,
                     type: "multiple-choice",
-                    image: "images/page175_img1.jpeg",
+                    image: "images/q366_ospf.png",
                     text: "Refer to the exhibit. The network engineer configured the summarization of the RIP routes into the OSPF domain on R5 but still sees four different 172.16.0.0/24 networks on R4. Which action resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>R4(config)# router ospf 99\nR4(config-router)# network 172.16.0.0 0.255.255.255 area 56\nR4(config-router)# area 56 range 172.16.0.0 255.255.255.0</pre>" },
+                        { letter: "B", text: "<pre>R5(config)# router ospf 1\nR5(config-router)# no area\nR5(config-router)# summary-address 172.16.0.0 255.255.252.0</pre>" },
+                        { letter: "C", text: "<pre>R5(config)# router ospf 99\nR5(config-router)# network 172.16.0.0 0.255.255.255 area 56\nR5(config-router)# area 56 range 172.16.0.0 255.255.255.0</pre>" },
+                        { letter: "D", text: "<pre>R4(config)# router ospf 1\nR4(config-router)# no area\nR4(config-router)# summary-address 172.16.0.0 255.255.252.0</pre>" }
                     ],
                     correct: ["B"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "For redistributed routes into OSPF, use 'summary-address' command under OSPF process to summarize external routes. 'area range' is used for inter-area summarization."
                 },
                 {
                     id: 367,
                     type: "multiple-choice",
-                    image: "images/page175_img1.jpeg",
-                    text: "Refer to the exhibit. An engineer must extend VRF-Lite over a trunk to another switch for VLAN 70 (10.70.70.0/24) on port GigabitEthernet0/0 and VLAN 80 (10.80.80.0/24) on port GioabitEthermet0/1. Which configuration accomplishes this objective?",
+                    image: "images/q367_vrf.png",
+                    text: "Refer to the exhibit. An engineer must extend VRF-Lite over a trunk to another switch for VLAN 70 (10.70.70.0/24) on port GigabitEthernet0/0 and VLAN 80 (10.80.80.0/24) on port GigabitEthernet0/1. Which configuration accomplishes this objective?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>interface GigabitEthernet0/0\n switchport trunk encapsulation dot1q\n switchport mode trunk\n switchport trunk allowed vlan 70\n!\ninterface GigabitEthernet0/1\n switchport trunk encapsulation dot1q\n switchport mode trunk\n switchport trunk allowed vlan 80</pre>" },
+                        { letter: "B", text: "<pre>interface GigabitEthernet0/0\n switchport mode access\n switchport access vlan 70\n!\ninterface GigabitEthernet0/1\n switchport mode access\n switchport access vlan 80</pre>" },
+                        { letter: "C", text: "<pre>interface GigabitEthernet0/0\n switchport mode access\n switchport access vlan 70\n ip vrf forwarding 70\n!\ninterface GigabitEthernet0/1\n switchport mode access\n switchport access vlan 80\n ip vrf forwarding 80</pre>" },
+                        { letter: "D", text: "<pre>interface GigabitEthernet0/0\n no switchport\n ip vrf forwarding 70\n ip address 10.70.70.1 255.255.255.0\n!\ninterface GigabitEthernet0/1\n no switchport\n ip vrf forwarding 80\n ip address 10.80.80.1 255.255.255.0</pre>" }
                     ],
                     correct: ["A"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "To extend VRF-Lite over a trunk, configure trunk interfaces with dot1q encapsulation and allow the specific VLANs. Each VLAN carries traffic for its respective VRF."
                 },
                 {
                     id: 368,
                     type: "multiple-choice",
-                    image: "images/page176_img1.jpeg",
+                    image: "images/q368_tacacs.png",
                     text: "Refer to the exhibit. An administrator configured a Cisco router for TACACS authentication, but the router is using the local enable password instead. Which action resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "Configure the <b>aaa authentication login admin group admin local enable</b> command instead." },
+                        { letter: "B", text: "Configure the <b>aaa authentication login default group admin local if-authenticated</b> command instead." },
+                        { letter: "C", text: "Configure the <b>aaa authentication login admin group tacacs+ local if-authenticated</b> command instead." },
+                        { letter: "D", text: "Configure the <b>aaa authentication login admin group tacacs+ local enable none</b> command instead." }
                     ],
                     correct: ["A"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "The debug output shows the method list 'admin' is being used. The configuration should use 'group admin' which is the TACACS+ server group name defined in the configuration."
                 },
                 {
                     id: 369,
                     type: "multiple-choice",
-                    image: "images/page176_img1.jpeg",
+                    image: "images/q369_ospf.png",
                     text: "Refer to the exhibit. The security department recently installed a monitoring device between routers R3 and R5, which caused a loss of network connectivity for users connected to R5. Troubleshooting revealed that the monitoring device cannot forward multicast packets. The team already updated R5 with the correct configuration. Which configuration must be implemented on R3 to resolve the problem by ensuring R3 as the DR for the R3-R5 segment?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>interface FastEthernet0/0\n ip address 10.99.53.1 255.255.255.252\n ip access-group 122 in\n ip ospf network non-broadcast\n ip ospf priority 0\n!\nrouter ospf 10\n router-id 10.10.3.255\n network 10.99.53.0 0.0.0.3 area 0\n neighbor 10.99.53.2\n!\naccess-list 122 permit 89 host 10.99.53.2 host 10.99.53.1\naccess-list 122 deny 89 any any\naccess-list 122 permit tcp any any\naccess-list 122 permit udp any any\naccess-list 122 permit icmp any any</pre>" },
+                        { letter: "B", text: "<pre>interface FastEthernet0/0\n ip address 10.99.53.1 255.255.255.252\n ip access-group 122 in\n ip ospf network non-broadcast\n ip ospf priority 0\n!\nrouter ospf 10\n router-id 10.10.3.255\n neighbor 10.99.53.2\n!\naccess-list 122 permit 88 host 10.99.53.2 host 10.99.53.1\naccess-list 122 deny 88 any any\naccess-list 122 permit tcp any any\naccess-list 122 permit udp any any\naccess-list 122 permit icmp any any</pre>" },
+                        { letter: "C", text: "<pre>interface FastEthernet0/0\n ip address 10.99.53.1 255.255.255.252\n ip access-group 122 in\n ip ospf network non-broadcast\n ip ospf priority 100\n!\nrouter ospf 10\n router-id 10.10.3.255\n network 10.99.53.0 0.0.0.3 area 0\n neighbor 10.99.53.2\n!\naccess-list 122 permit 89 host 10.99.53.2 host 10.99.53.1\naccess-list 122 deny 89 any any\naccess-list 122 permit tcp any any\naccess-list 122 permit udp any any\naccess-list 122 permit icmp any any</pre>" },
+                        { letter: "D", text: "<pre>interface FastEthernet0/0\n ip address 10.99.53.1 255.255.255.252\n ip access-group 122 in\n ip ospf network point-to-point\n ip ospf priority 100\n!\nrouter ospf 10\n router-id 10.10.3.255\n network 10.99.53.0 0.0.0.3 area 0\n neighbor 10.99.53.2\n!\naccess-list 122 permit 88 host 10.99.53.2 host 10.99.53.1\naccess-list 122 deny 88 any any\naccess-list 122 permit tcp any any\naccess-list 122 permit udp any any\naccess-list 122 permit icmp any any</pre>" }
                     ],
                     correct: ["C"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "To ensure R3 becomes DR, use non-broadcast network type with higher priority (100). Protocol 89 is OSPF. The ACL permits unicast OSPF between specific hosts since multicast doesn't work."
                 },
                 {
                     id: 370,
                     type: "multiple-choice",
-                    image: "images/page177_img1.jpeg",
-                    text: "Refer to the exhibits. A user on the 192.168.1.0/24 network can successfully ping192.168.3.1, but the administrator cannot ping 192.168.3.1 from the LA router. Which set of configurations fixes the issue?",
+                    image: "images/q370_eigrp.png",
+                    text: "Refer to the exhibits. A user on the 192.168.1.0/24 network can successfully ping 192.168.3.1, but the administrator cannot ping 192.168.3.1 from the LA router. Which set of configurations fixes the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>LA Router\nip route 192.168.3.0 255.255.255.0 10.1.1.1\nip route 192.168.4.0 255.255.255.0 10.1.1.1</pre>" },
+                        { letter: "B", text: "<pre>Chicago Router\nip route 192.168.3.0 255.255.255.0 10.1.2.2\nip route 192.168.4.0 255.255.255.0 10.1.2.2</pre>" },
+                        { letter: "C", text: "<pre>Chicago Router\nrouter eigrp 100\n redistribute connected</pre>" },
+                        { letter: "D", text: "<pre>Chicago Router\nrouter eigrp 100\n redistribute static metric 10 10 10 10 10</pre>" }
                     ],
                     correct: ["C"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "The Chicago router has static routes to the NewYork networks but needs to redistribute connected networks into EIGRP so LA router can learn about the directly connected LA segments."
                 },
                 {
                     id: 371,
                     type: "multiple-choice",
-                    image: "images/page178_img1.jpeg",
+                    image: "images/q371_eigrp.png",
                     text: "Refer to the exhibit. An engineer sets up a DMVPN connection to connect branch 1 and branch 2 to HQ. Branch 1 and branch 2 cannot communicate with each other. Which change must be made to resolve this issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>R1(config)# int eth1/1\nR1(config-if)# no ip split-horizon eigrp 100</pre>" },
+                        { letter: "B", text: "<pre>R2(config)# router eigrp 100\nR2(config-router)# neighbor 172.16.1.3</pre>" },
+                        { letter: "C", text: "<pre>R1(config)# int tunnel 1\nR1(config-if)# no ip split-horizon eigrp 100</pre>" },
+                        { letter: "D", text: "<pre>R3(config)# router eigrp 100\nR3(config-router)# neighbor 172.16.1.2</pre>" }
                     ],
                     correct: ["C"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "In DMVPN hub-and-spoke topology, split-horizon must be disabled on the hub's tunnel interface to allow routes learned from one spoke to be advertised to other spokes."
                 },
                 {
                     id: 372,
                     type: "multiple-choice",
-                    image: "images/page179_img1.jpeg",
+                    image: "images/q372_acl.png",
                     text: "Refer to the exhibit. Users on a call center report that they cannot browse the internet on Saturdays during the afternoon. Which configuration resolves the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "<pre>interface gig0/0\n ip access-group NO_Internet out</pre>" },
+                        { letter: "B", text: "<pre>no time-range timer</pre>" },
+                        { letter: "C", text: "<pre>time-range timer\n no periodic weekend 9:00 to 17:00\n periodic weekend 17:00 to 23:59</pre>" },
+                        { letter: "D", text: "<pre>ip access-list extended NO_Internet\n 15 permit tcp any any eq www</pre>" }
                     ],
                     correct: ["C"],
                     isMultiple: false,
-                    explanation: ""
+                    explanation: "The time-range 'timer' blocks traffic during weekend 9:00-17:00. To allow afternoon access, modify the time-range to only block traffic outside business hours (17:00-23:59 on weekends)."
                 },
                 {
                     id: 373,
