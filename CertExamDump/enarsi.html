@@ -8419,10 +8419,14 @@ distance 200 10.29.89.2 0.0.0.0 10</pre>Which configuration resolves the issue?`
                 {
                     id: 378,
                     type: "multiple-choice",
-                    text: "Which two actions must the engineer take to resolve the issue? (Choose two.)",
+                    image: "images/q378.png",
+                    text: "Refer to the exhibit. A PC at a new branch office can access the IPv4 network from the head office and internet segments, and it can reach the IPv6 App and DB servers in the head office as well. However, the PC cannot reach IPv6 hosts on the internet segment. A network engineer observed that the branch is not learning the internet IPv6 route via OSPF. Which two actions must the engineer take to resolve the issue? (Choose two.)",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: "Add a default IPv6 static route on the head office router toward the internet." },
+                        { letter: "B", text: "Add a default IPv6 static route on the branch router toward the head office router." },
+                        { letter: "C", text: "Advertise the default-information originate command under the OSPFv3 IPv6 address-family instance." },
+                        { letter: "D", text: "Redistribute the default IPv6 default static route into the OSPF routing protocol." },
+                        { letter: "E", text: "Advertise the default-information originate command under the OSPFv3 routing instance." },
                     ],
                     correct: ["B", "C"],
                     isMultiple: true,
@@ -8431,11 +8435,77 @@ distance 200 10.29.89.2 0.0.0.0 10</pre>Which configuration resolves the issue?`
                 {
                     id: 379,
                     type: "multiple-choice",
-                    image: "images/page182_img1.jpeg",
+                    image: "images/q379.png",
                     text: "Refer to the exhibit. Two routers are connected back to back via Gigabit Ethernet 0/0 interfaces. Which configuration provides VRF-Lite connectivity for two separate VRFs using the prefixes 10.1.1.0/24 for one VRF and 10.2.2.0/24 for the other VRF?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>ip vrf 1
+ip vrf 2
+!
+int GigabitEthernet0/0
+no shut
+!
+int GigabitEthemet0/0.1
+encapsulation dot1Q 1
+ip address 10.1.1.1 255.255.255.0
+ip vrf forwarding 1
+!
+int GigabitEthernet0/0.2
+encapsulation dot1Q 2
+ip address 10.2.2.1 255.255.255.0
+ip vrf forwarding 2</pre>` },
+                        {
+                            letter: "B", text: `<pre>ip vrf 1
+ip vrf 2
+!
+int GigabitEthernet0/0
+no shut
+!
+int GigabitEthernet0/0.1
+encapsulation dot1Q 1
+ip vrf forwarding 1
+ip address 10.1.1.1 255.255.255.0
+!
+int GigabitEthernet0/0.2
+encapsulation dot1Q 2
+ip vrf forwarding 2
+ip address 10.2.2.1 255.255.255.0</pre>` },
+                        {
+                            letter: "C", text: `<pre>ip vrf 1
+rd 65001:1
+ip vrf 2
+rd 65001:1
+!
+int GigabitEthernet0/0
+no shut
+!
+int GigabitEthernet0/0.1
+encapsulation dot1Q 1
+ip vrf forwarding
+ip address 10.1.1.1 255.255.255.0
+!
+int GigabitEthernet0/0.2
+encapsulation dot1Q 2
+ip vrf forwarding
+ip address 10.2.2.1 255.255.255.0</pre>` },
+                        {
+                            letter: "D", text: `<pre>ip vrf 1
+rd 65001:1
+ip vrf 2
+rd 65001:1
+!
+int GigabitEthernet0/0
+no shut
+!
+int GigabitEthernet0/0.1
+encapsulation dot1Q 1
+ip vrf forwarding 1
+ip address 10.1.1.1 255.255.255.0
+!
+int GigabitEthernet0/0.2
+encapsulation dot1Q 2
+ip vrf forwarding 2
+ip address 10.2.2.1 255.255.255.0</pre>` },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -8444,11 +8514,13 @@ distance 200 10.29.89.2 0.0.0.0 10</pre>Which configuration resolves the issue?`
                 {
                     id: 380,
                     type: "multiple-choice",
-                    image: "images/page183_img1.jpeg",
+                    image: "images/q380.png",
                     text: "Refer to the exhibit. R6 must be configured using an access list to only accept the network 1.1.1.1/32 from R1. Which access list must the engineer choose to meet this requirement?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        { letter: "A", text: `<pre>access-list 100 permit ip 1.1.1.0 0.0.255.255 255.255.0.0 0.0.255.255</pre>` },
+                        { letter: "B", text: `<pre>access-list 100 permit ip 1.1.1.1 0.0.0.0 255.255.255.255 0.0.0.0</pre>` },
+                        { letter: "C", text: `<pre>access-list 100 permit ip 1.1.1.1 0.0.0.0 255.255.255.0 0.0.0.255</pre>` },
+                        { letter: "D", text: `<pre>access-list 100 permit ip 1.1.1.0 0.0.0.255 255.0.0.0 0.255.255.255</pre>` },
                     ],
                     correct: ["B"],
                     isMultiple: false,
@@ -8457,11 +8529,33 @@ distance 200 10.29.89.2 0.0.0.0 10</pre>Which configuration resolves the issue?`
                 {
                     id: 381,
                     type: "multiple-choice",
-                    image: "images/page184_img1.jpeg",
+                    image: "images/q381.png",
                     text: "Refer to the exhibit. R5 should not receive any routes originated in the EIGRP domain. Which set of configuration changes removes the EIGRP routes from routing table to fix the issue?",
                     options: [
-                        { letter: "A", text: "B." },
-                        { letter: "C", text: "D." },
+                        {
+                            letter: "A", text: `<pre>R4
+route-map O2R deny 10
+match tag 111
+route-map O2R permit 20
+router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
+                        {
+                            letter: "B", text: `<pre>R4
+route-map O2R permit 10
+match tag 111
+route-map O2R deny 20
+router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
+                        {
+                            letter: "C", text: `<pre>R4
+route-map O2R deny 10
+match tag 111
+router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
+                        {
+                            letter: "D", text: `<pre>R2
+route-map E20 deny 20
+R4
+route-map O2R deny 10
+match tag 111
+router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                     ],
                     correct: ["A"],
                     isMultiple: false,
