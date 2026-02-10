@@ -189,6 +189,225 @@
             margin-bottom: 12px;
         }
 
+        .exam-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .exam-tab {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .exam-tab:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .exam-tab.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .exam-section-label {
+            grid-column: 1 / -1;
+            padding: 8px 0 4px 0;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 4px;
+        }
+
+        /* Drag and Drop Styles */
+        .drag-drop-container {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .drag-drop-sources {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .drag-drop-targets {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .drag-drop-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .source-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .source-item {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #90caf9;
+            border-radius: 8px;
+            padding: 12px 16px;
+            cursor: grab;
+            font-size: 0.9rem;
+            color: #1565c0;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .source-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+            border-color: #42a5f5;
+        }
+
+        .source-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .source-item.used {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
+            border-color: #bdbdbd;
+            color: #9e9e9e;
+        }
+
+        .source-item.distractor {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-color: #ffb74d;
+            color: #e65100;
+        }
+
+        .target-zones {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .target-zone {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+        }
+
+        .target-dropzone {
+            flex: 1;
+            min-height: 60px;
+            padding: 12px;
+            border-right: 2px dashed var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.2s ease;
+        }
+
+        .target-dropzone.drag-over {
+            background: rgba(33, 150, 243, 0.1);
+            border-color: var(--accent);
+        }
+
+        .target-dropzone.has-item {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-color: #81c784;
+        }
+
+        .target-dropzone .dropped-item {
+            background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+            border: 2px solid #66bb6a;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            color: #2e7d32;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .target-dropzone .dropped-item:hover {
+            background: linear-gradient(135deg, #ffcdd2 0%, #ef9a9a 100%);
+            border-color: #e57373;
+            color: #c62828;
+        }
+
+        .target-dropzone .placeholder {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+
+        .target-label {
+            min-width: 140px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #7b1fa2;
+            text-align: center;
+        }
+
+        /* Review mode styles for drag-drop */
+        .target-zone.correct .target-dropzone {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%) !important;
+            border-color: #4caf50 !important;
+        }
+
+        .target-zone.correct .dropped-item {
+            background: linear-gradient(135deg, #a5d6a7 0%, #81c784 100%) !important;
+            border-color: #4caf50 !important;
+            color: #1b5e20 !important;
+        }
+
+        .target-zone.incorrect .target-dropzone {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%) !important;
+            border-color: #f44336 !important;
+        }
+
+        .target-zone.incorrect .dropped-item {
+            background: linear-gradient(135deg, #ef9a9a 0%, #e57373 100%) !important;
+            border-color: #f44336 !important;
+            color: #b71c1c !important;
+        }
+
+        .correct-answer-text {
+            font-size: 0.75rem;
+            color: #4caf50;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
         .question-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -1314,6 +1533,10 @@
 
             <div class="question-grid-container">
                 <div class="grid-title">Navigasi Soal</div>
+                <div class="exam-tabs" id="examTabs">
+                    <button class="exam-tab active" data-exam="A" onclick="switchExam('A')">Exam A</button>
+                    <button class="exam-tab" data-exam="B" onclick="switchExam('B')">Exam B</button>
+                </div>
                 <div class="question-grid" id="questionGrid">
                     <!-- Generated by JS -->
                 </div>
@@ -8604,6 +8827,34 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                     correct: ["A", "E"],
                     isMultiple: true,
                     explanation: ""
+                },
+                // ========== EXAM B QUESTIONS ==========
+                {
+                    id: 1,
+                    exam: "B",
+                    type: "drag-drop",
+                    text: "Drag and drop the descriptions from the left onto the IPv6 first hop security features on the right. Not all options are used.",
+                    sourceItems: [
+                        { id: "s1", text: "prerequisite to other IPv6 first hop security features" },
+                        { id: "s2", text: "blocks DHCP replies or advertisements not originating from a DHCP server or relay" },
+                        { id: "s3", text: "validates the contents of RA and redirect messages" },
+                        { id: "s4", text: "filters IPv6 traffic on layer 2 ports that are not trusted" },
+                        { id: "s5", text: "enables the filtering of IPv6 traffic based on the destination address" },
+                        { id: "s6", text: "populates the binding table with binding information extracted from the data packets" }
+                    ],
+                    targetZones: [
+                        { id: "t1", label: "IPv6 RA guard" },
+                        { id: "t2", label: "IPv6 snooping" },
+                        { id: "t3", label: "IPv6 Source Guard" },
+                        { id: "t4", label: "DHCP guard" }
+                    ],
+                    correct: {
+                        "t1": "s3",  // validates the contents of RA and redirect messages -> IPv6 RA guard
+                        "t2": "s1",  // prerequisite to other IPv6 first hop security features -> IPv6 snooping
+                        "t3": "s6",  // populates the binding table with binding information extracted from the data packets -> IPv6 Source Guard
+                        "t4": "s2"   // blocks DHCP replies or advertisements not originating from a DHCP server or relay -> DHCP guard
+                    },
+                    explanation: "IPv6 RA guard validates RA and redirect messages. IPv6 snooping is a prerequisite to other FHS features. IPv6 Source Guard populates the binding table. DHCP guard blocks unauthorized DHCP replies."
                 }
             ]
         };
@@ -8619,6 +8870,8 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
         let isReviewMode = false;
         let isPaused = false;
         let showAnswerVisible = false;
+        let currentExam = 'A';
+        let allQuestions = [...examData.questions];
 
         // Initialize
         function init() {
@@ -8627,9 +8880,22 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
             const questionCount = parseInt(urlParams.get('count')) || 384;
             const useRecent = urlParams.get('recent') === 'true';
             const showChronological = urlParams.get('chronological') === 'true';
+            const examParam = urlParams.get('exam') || 'A';
+            currentExam = examParam.toUpperCase();
 
-            // Filter and shuffle questions based on parameters
-            let filteredQuestions = [...examData.questions];
+            // Filter questions by exam type
+            let filteredQuestions = allQuestions.filter(q => {
+                if (currentExam === 'A') {
+                    return !q.exam || q.exam === 'A'; // Questions without exam field or with exam='A' are Exam A
+                } else {
+                    return q.exam === currentExam;
+                }
+            });
+
+            // Update exam tab active state
+            document.querySelectorAll('.exam-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.exam === currentExam);
+            });
 
             if (useRecent) {
                 // Use most recent questions (from the end of the array)
@@ -8679,18 +8945,67 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
             return shuffled;
         }
 
+        // Switch between Exam A and Exam B
+        function switchExam(exam) {
+            if (exam === currentExam) return;
+
+            // Confirm before switching if exam is in progress
+            if (Object.keys(userAnswers).length > 0 && !examSubmitted) {
+                if (!confirm('Anda akan berpindah ke Exam ' + exam + '. Progress saat ini akan hilang. Lanjutkan?')) {
+                    return;
+                }
+            }
+
+            // Redirect to same page with exam parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('exam', exam);
+            window.location.search = urlParams.toString();
+        }
+
         // Generate Question Grid
         function generateQuestionGrid() {
             const grid = document.getElementById('questionGrid');
             grid.innerHTML = '';
 
-            examData.questions.forEach((q, i) => {
+            // Get Exam A and Exam B questions
+            const examAQuestions = allQuestions.filter(q => !q.exam || q.exam === 'A');
+            const examBQuestions = allQuestions.filter(q => q.exam === 'B');
+
+            // Add Exam A label
+            const examALabel = document.createElement('div');
+            examALabel.className = 'exam-section-label';
+            examALabel.textContent = 'Exam A';
+            grid.appendChild(examALabel);
+
+            // Add Exam A question buttons
+            examAQuestions.forEach((q, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'q-btn';
+                btn.dataset.exam = 'A';
+                btn.dataset.qIndex = i;
                 btn.textContent = i + 1;
-                btn.onclick = () => goToQuestion(i);
+                btn.onclick = () => goToQuestionByExam('A', i);
                 grid.appendChild(btn);
             });
+
+            // Add Exam B label if there are Exam B questions
+            if (examBQuestions.length > 0) {
+                const examBLabel = document.createElement('div');
+                examBLabel.className = 'exam-section-label';
+                examBLabel.textContent = 'Exam B';
+                grid.appendChild(examBLabel);
+
+                // Add Exam B question buttons (numbering starts from 1)
+                examBQuestions.forEach((q, i) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'q-btn';
+                    btn.dataset.exam = 'B';
+                    btn.dataset.qIndex = i;
+                    btn.textContent = i + 1;
+                    btn.onclick = () => goToQuestionByExam('B', i);
+                    grid.appendChild(btn);
+                });
+            }
 
             updateQuestionGrid();
         }
@@ -8698,37 +9013,131 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
         // Update Question Grid
         function updateQuestionGrid() {
             const buttons = document.querySelectorAll('.q-btn');
-            buttons.forEach((btn, i) => {
+            buttons.forEach((btn) => {
+                const btnExam = btn.dataset.exam;
+                const btnIndex = parseInt(btn.dataset.qIndex);
+
                 btn.classList.remove('current', 'answered', 'flagged', 'review-correct', 'review-incorrect');
 
-                if (i === currentQuestion) {
+                // Find the actual index in current examData.questions
+                const actualIndex = findActualIndex(btnExam, btnIndex);
+
+                if (actualIndex === currentQuestion && btnExam === currentExam) {
                     btn.classList.add('current');
                 }
 
+                // Build answer key with exam prefix
+                const answerKey = btnExam + '_' + btnIndex;
+
                 // In review mode, show correct/incorrect colors
-                if (isReviewMode && examSubmitted) {
-                    const isCorrect = checkQuestionCorrect(i);
-                    if (isCorrect) {
-                        btn.classList.add('review-correct');
-                    } else if (userAnswers[i] !== undefined) {
-                        btn.classList.add('review-incorrect');
+                if (isReviewMode && examSubmitted && btnExam === currentExam) {
+                    const question = getQuestionByExam(btnExam, btnIndex);
+                    if (question) {
+                        const isCorrect = checkQuestionCorrectByKey(answerKey, question);
+                        if (isCorrect) {
+                            btn.classList.add('review-correct');
+                        } else if (userAnswers[answerKey] !== undefined) {
+                            btn.classList.add('review-incorrect');
+                        }
                     }
                 } else {
-                    if (userAnswers[i] !== undefined) {
+                    if (userAnswers[answerKey] !== undefined) {
                         btn.classList.add('answered');
                     }
                 }
 
-                if (flaggedQuestions.has(i)) {
+                if (flaggedQuestions.has(answerKey)) {
                     btn.classList.add('flagged');
                 }
             });
         }
 
+        // Find actual index in examData.questions
+        function findActualIndex(exam, index) {
+            const questions = exam === 'A'
+                ? allQuestions.filter(q => !q.exam || q.exam === 'A')
+                : allQuestions.filter(q => q.exam === exam);
+            return questions.indexOf(getQuestionByExam(exam, index));
+        }
+
+        // Get question by exam and index
+        function getQuestionByExam(exam, index) {
+            const questions = exam === 'A'
+                ? allQuestions.filter(q => !q.exam || q.exam === 'A')
+                : allQuestions.filter(q => q.exam === exam);
+            return questions[index];
+        }
+
+        // Go to question by exam type
+        function goToQuestionByExam(exam, index) {
+            // Switch to the exam if different
+            if (exam !== currentExam) {
+                currentExam = exam;
+
+                // Filter questions for the new exam
+                const filteredQuestions = allQuestions.filter(q => {
+                    if (exam === 'A') {
+                        return !q.exam || q.exam === 'A';
+                    } else {
+                        return q.exam === exam;
+                    }
+                });
+
+                examData.questions = filteredQuestions;
+
+                // Update tab active state
+                document.querySelectorAll('.exam-tab').forEach(tab => {
+                    tab.classList.toggle('active', tab.dataset.exam === currentExam);
+                });
+
+                // Update total questions display
+                document.getElementById('totalQ').textContent = examData.questions.length;
+            }
+
+            currentQuestion = index;
+            loadQuestion(index);
+            updateQuestionGrid();
+        }
+
+        // Check if question is correct by answer key
+        function checkQuestionCorrectByKey(answerKey, question) {
+            const answer = userAnswers[answerKey];
+            if (answer === undefined) return false;
+
+            if (question.type === 'multiple-choice') {
+                const userAns = Array.isArray(answer) ? answer.sort().join(',') : answer || '';
+                const correctAns = question.correct.sort().join(',');
+                return userAns === correctAns;
+            } else if (question.type === 'true-false') {
+                return answer === question.correct;
+            } else if (question.type === 'drag-drop') {
+                // For drag-drop, check if all mappings match
+                const correct = question.correct;
+                for (const targetId in correct) {
+                    if (answer[targetId] !== correct[targetId]) {
+                        return false;
+                    }
+                }
+                return Object.keys(answer).length === Object.keys(correct).length;
+            }
+            return false;
+        }
+
+        // Get current answer key for storage
+        function getCurrentAnswerKey() {
+            return currentExam + '_' + currentQuestion;
+        }
+
+        // Get current flag key for storage
+        function getCurrentFlagKey() {
+            return currentExam + '_' + currentQuestion;
+        }
+
         // Check if a question is answered correctly
         function checkQuestionCorrect(index) {
             const question = examData.questions[index];
-            const answer = userAnswers[index];
+            const answerKey = getCurrentAnswerKey();
+            const answer = userAnswers[answerKey] !== undefined ? userAnswers[answerKey] : userAnswers[index];
 
             if (answer === undefined) return false;
 
@@ -8740,6 +9149,14 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                 return answer === question.correct;
             } else if (question.type === 'short-answer') {
                 return question.correct.some(ans => ans.toLowerCase() === (answer || '').toLowerCase());
+            } else if (question.type === 'drag-drop') {
+                const correct = question.correct;
+                for (const targetId in correct) {
+                    if (answer[targetId] !== correct[targetId]) {
+                        return false;
+                    }
+                }
+                return Object.keys(answer).length === Object.keys(correct).length;
             }
             return false;
         }
@@ -8766,7 +9183,8 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
             const typeLabels = {
                 'multiple-choice': question.isMultiple ? 'Multiple Select' : 'Single Choice',
                 'true-false': 'Benar/Salah',
-                'short-answer': 'Isian Singkat'
+                'short-answer': 'Isian Singkat',
+                'drag-drop': 'Drag & Drop'
             };
 
             typeBadge.textContent = typeLabels[question.type] || question.type;
@@ -8825,7 +9243,8 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
         // Render Options
         function renderOptions(question) {
             const container = document.getElementById('optionsContainer');
-            const userAnswer = userAnswers[currentQuestion];
+            const answerKey = getCurrentAnswerKey();
+            const userAnswer = userAnswers[answerKey];
 
             if (question.type === 'multiple-choice') {
                 container.innerHTML = `<div class="options-list" id="optionsList"></div>`;
@@ -8901,9 +9320,173 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                         ${examSubmitted ? `<p style="margin-top: 10px; color: var(--success);">Jawaban benar: ${question.correct[0]}</p>` : ''}
                     </div>
                 `;
+            } else if (question.type === 'drag-drop') {
+                renderDragDrop(question, userAnswer);
             }
 
             lucide.createIcons();
+        }
+
+        // Render Drag and Drop Question
+        function renderDragDrop(question, userAnswer) {
+            const container = document.getElementById('optionsContainer');
+            const answerKey = getCurrentAnswerKey();
+            const currentMappings = userAnswers[answerKey] || {};
+
+            // Get list of used source items
+            const usedSourceIds = Object.values(currentMappings);
+
+            // Build source items HTML
+            let sourceItemsHtml = '';
+            question.sourceItems.forEach(item => {
+                const isUsed = usedSourceIds.includes(item.id);
+                const classes = `source-item ${isUsed ? 'used' : ''}`;
+                sourceItemsHtml += `
+                    <div class="${classes}" 
+                         draggable="${!examSubmitted && !isUsed}" 
+                         data-source-id="${item.id}"
+                         ondragstart="handleDragStart(event, '${item.id}')"
+                         ondragend="handleDragEnd(event)">
+                        ${item.text}
+                    </div>
+                `;
+            });
+
+            // Determine if we should show answer indicators
+            const showingAnswers = examSubmitted || showAnswerVisible;
+
+            // Build target zones HTML
+            let targetZonesHtml = '';
+            question.targetZones.forEach(zone => {
+                const mappedSourceId = currentMappings[zone.id];
+                const mappedSource = mappedSourceId ? question.sourceItems.find(s => s.id === mappedSourceId) : null;
+                const correctSourceId = question.correct[zone.id];
+                const correctSource = question.sourceItems.find(s => s.id === correctSourceId);
+
+                // Check correctness in review/show-answer mode
+                let zoneClass = 'target-zone';
+                let correctAnswerHtml = '';
+                let statusIcon = '';
+
+                if (showingAnswers) {
+                    const isCorrect = mappedSourceId === correctSourceId;
+                    if (mappedSourceId) {
+                        zoneClass += isCorrect ? ' correct' : ' incorrect';
+                        statusIcon = isCorrect
+                            ? '<span style="font-size:1.2rem;margin-right:6px;">✅</span>'
+                            : '<span style="font-size:1.2rem;margin-right:6px;">❌</span>';
+                    }
+                    if (!isCorrect) {
+                        correctAnswerHtml = `<div class="correct-answer-text">✓ Jawaban benar: ${correctSource ? correctSource.text : ''}</div>`;
+                    }
+                }
+
+                let dropzoneContent;
+                if (mappedSource) {
+                    const clickHandler = showingAnswers ? '' : `onclick="removeFromTarget('${zone.id}')"`;
+                    dropzoneContent = `<div class="dropped-item" ${clickHandler}>${statusIcon}${mappedSource.text}</div>${correctAnswerHtml}`;
+                } else {
+                    if (showingAnswers) {
+                        // Show what should have been placed here
+                        dropzoneContent = `<div class="correct-answer-text" style="text-align:center;">✓ ${correctSource ? correctSource.text : ''}</div>`;
+                    } else {
+                        dropzoneContent = `<span class="placeholder">Drop here...</span>`;
+                    }
+                }
+
+                targetZonesHtml += `
+                    <div class="${zoneClass}">
+                        <div class="target-dropzone ${mappedSource ? 'has-item' : ''}" 
+                             data-target-id="${zone.id}"
+                             ondragover="handleDragOver(event)"
+                             ondragleave="handleDragLeave(event)"
+                             ondrop="handleDrop(event, '${zone.id}')">
+                            ${dropzoneContent}
+                        </div>
+                        <div class="target-label">${zone.label}</div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="drag-drop-container">
+                    <div class="drag-drop-sources">
+                        <div class="drag-drop-label">📋 Descriptions (Drag from here)</div>
+                        <div class="source-items">
+                            ${sourceItemsHtml}
+                        </div>
+                    </div>
+                    <div class="drag-drop-targets">
+                        <div class="drag-drop-label">🎯 Security Features (Drop here)</div>
+                        <div class="target-zones">
+                            ${targetZonesHtml}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Drag and Drop Event Handlers
+        let draggedSourceId = null;
+
+        function handleDragStart(event, sourceId) {
+            if (examSubmitted) return;
+            draggedSourceId = sourceId;
+            event.target.classList.add('dragging');
+            event.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragEnd(event) {
+            event.target.classList.remove('dragging');
+            draggedSourceId = null;
+        }
+
+        function handleDragOver(event) {
+            if (examSubmitted) return;
+            event.preventDefault();
+            event.target.closest('.target-dropzone').classList.add('drag-over');
+        }
+
+        function handleDragLeave(event) {
+            event.target.closest('.target-dropzone')?.classList.remove('drag-over');
+        }
+
+        function handleDrop(event, targetId) {
+            if (examSubmitted) return;
+            event.preventDefault();
+            event.target.closest('.target-dropzone').classList.remove('drag-over');
+
+            if (!draggedSourceId) return;
+
+            const answerKey = getCurrentAnswerKey();
+            const currentMappings = userAnswers[answerKey] || {};
+
+            // Remove the source from any previous target
+            for (const key in currentMappings) {
+                if (currentMappings[key] === draggedSourceId) {
+                    delete currentMappings[key];
+                }
+            }
+
+            // Add to new target
+            currentMappings[targetId] = draggedSourceId;
+            userAnswers[answerKey] = currentMappings;
+
+            // Re-render
+            loadQuestion(currentQuestion);
+        }
+
+        function removeFromTarget(targetId) {
+            if (examSubmitted) return;
+
+            const answerKey = getCurrentAnswerKey();
+            const currentMappings = userAnswers[answerKey] || {};
+
+            delete currentMappings[targetId];
+            userAnswers[answerKey] = Object.keys(currentMappings).length > 0 ? currentMappings : undefined;
+
+            // Re-render
+            loadQuestion(currentQuestion);
         }
 
         // Select Option (Multiple Choice)
@@ -8911,17 +9494,18 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
             if (examSubmitted) return;
 
             const question = examData.questions[currentQuestion];
+            const answerKey = getCurrentAnswerKey();
 
             if (question.isMultiple) {
-                let current = userAnswers[currentQuestion] || [];
+                let current = userAnswers[answerKey] || [];
                 if (current.includes(letter)) {
                     current = current.filter(l => l !== letter);
                 } else {
                     current.push(letter);
                 }
-                userAnswers[currentQuestion] = current.length > 0 ? current : undefined;
+                userAnswers[answerKey] = current.length > 0 ? current : undefined;
             } else {
-                userAnswers[currentQuestion] = letter;
+                userAnswers[answerKey] = letter;
             }
 
             loadQuestion(currentQuestion);
@@ -8930,23 +9514,24 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
         // Select True/False
         function selectTF(value) {
             if (examSubmitted) return;
-            userAnswers[currentQuestion] = value;
+            userAnswers[getCurrentAnswerKey()] = value;
             loadQuestion(currentQuestion);
         }
 
         // Save Short Answer
         function saveShortAnswer(value) {
             if (examSubmitted) return;
-            userAnswers[currentQuestion] = value.trim() || undefined;
+            userAnswers[getCurrentAnswerKey()] = value.trim() || undefined;
             updateQuestionGrid();
         }
 
         // Toggle Flag
         function toggleFlag() {
-            if (flaggedQuestions.has(currentQuestion)) {
-                flaggedQuestions.delete(currentQuestion);
+            const flagKey = getCurrentFlagKey();
+            if (flaggedQuestions.has(flagKey)) {
+                flaggedQuestions.delete(flagKey);
             } else {
-                flaggedQuestions.add(currentQuestion);
+                flaggedQuestions.add(flagKey);
             }
             loadQuestion(currentQuestion);
         }
@@ -9174,7 +9759,8 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
         function toggleShowAnswer() {
             showAnswerVisible = !showAnswerVisible;
             const question = examData.questions[currentQuestion];
-            const userAnswer = userAnswers[currentQuestion];
+            const answerKey = getCurrentAnswerKey();
+            const userAnswer = userAnswers[answerKey];
             const answerBox = document.getElementById('answerRevealBox');
             const showBtn = document.getElementById('showAnswerBtn');
             const showText = document.getElementById('showAnswerText');
@@ -9194,8 +9780,18 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                     yourAns = userAnswer === true ? 'True' : userAnswer === false ? 'False' : '-';
                 } else if (question.type === 'short-answer') {
                     yourAns = userAnswer || '-';
+                } else if (question.type === 'drag-drop') {
+                    // For drag-drop, show mapped pairs
+                    if (userAnswer && typeof userAnswer === 'object') {
+                        const pairs = question.targetZones.map(zone => {
+                            const sourceId = userAnswer[zone.id];
+                            const source = sourceId ? question.sourceItems.find(s => s.id === sourceId) : null;
+                            return `<b>${zone.label}</b> : ${source ? source.text : '-'}`;
+                        });
+                        yourAns = pairs.join('<br>');
+                    }
                 }
-                document.getElementById('yourAnswerText').textContent = yourAns;
+                document.getElementById('yourAnswerText').innerHTML = yourAns;
 
                 // Format correct answer
                 let correctAns = '';
@@ -9205,8 +9801,15 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                     correctAns = question.correct ? 'True' : 'False';
                 } else if (question.type === 'short-answer') {
                     correctAns = question.correct[0];
+                } else if (question.type === 'drag-drop') {
+                    const pairs = question.targetZones.map(zone => {
+                        const sourceId = question.correct[zone.id];
+                        const source = question.sourceItems.find(s => s.id === sourceId);
+                        return `<b>${zone.label}</b> : ${source ? source.text : ''}`;
+                    });
+                    correctAns = pairs.join('<br>');
                 }
-                document.getElementById('correctAnswerText').textContent = correctAns;
+                document.getElementById('correctAnswerText').innerHTML = correctAns;
 
                 // Show explanation
                 document.getElementById('revealExplanationText').innerHTML = question.explanation || '';
@@ -9215,11 +9818,21 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                 const isCorrect = checkQuestionCorrect(currentQuestion);
                 const correctBox = document.getElementById('correctAnswerBox');
                 correctBox.classList.toggle('is-correct', isCorrect);
+
+                // Re-render drag-drop to show correct/incorrect indicators
+                if (question.type === 'drag-drop') {
+                    renderDragDrop(question, userAnswer);
+                }
             } else {
                 // Hide answer
                 answerBox.classList.remove('show');
                 showText.textContent = 'Show Answer';
                 showIcon.setAttribute('data-lucide', 'eye');
+
+                // Re-render drag-drop to hide indicators
+                if (question.type === 'drag-drop') {
+                    renderDragDrop(question, userAnswer);
+                }
             }
             lucide.createIcons();
         }
