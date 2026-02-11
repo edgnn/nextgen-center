@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nextgen Center - Learning Hub</title>
 
-    <!-- Auth Check - Redirect to login if not authenticated -->
+    <!-- Auth Check -->
     <script>
         if (localStorage.getItem('nextgenAuth') !== 'authenticated') {
             window.location.href = 'login.html';
         }
     </script>
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +24,6 @@
 
     <style>
         :root {
-            /* Dark Theme (Default) */
             --bg-primary: #0a0a0f;
             --bg-secondary: #12121a;
             --bg-tertiary: #1a1a25;
@@ -35,13 +35,9 @@
             --border-color: rgba(255, 255, 255, 0.08);
             --accent-1: #6366f1;
             --accent-2: #8b5cf6;
-            --accent-3: #a855f7;
-            --accent-4: #ec4899;
             --gradient-1: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-            --gradient-2: linear-gradient(135deg, #f97316 0%, #ec4899 100%);
-            --gradient-3: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
-            --glow-1: rgba(99, 102, 241, 0.4);
-            --glow-2: rgba(139, 92, 246, 0.3);
+            --glow-1: rgba(99, 102, 241, 0.15);
+            --glow-2: rgba(139, 92, 246, 0.1);
         }
 
         [data-theme="light"] {
@@ -54,6 +50,8 @@
             --text-secondary: #475569;
             --text-muted: #94a3b8;
             --border-color: rgba(0, 0, 0, 0.08);
+            --glow-1: rgba(99, 102, 241, 0.06);
+            --glow-2: rgba(139, 92, 246, 0.04);
         }
 
         * {
@@ -62,19 +60,15 @@
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
-            line-height: 1.6;
+            line-height: 1.5;
             overflow-x: hidden;
         }
 
-        /* Animated Background */
+        /* Subtle BG */
         .bg-gradient {
             position: fixed;
             top: 0;
@@ -82,7 +76,6 @@
             right: 0;
             bottom: 0;
             z-index: -1;
-            overflow: hidden;
         }
 
         .bg-gradient::before {
@@ -93,149 +86,87 @@
             width: 200%;
             height: 200%;
             background: radial-gradient(circle at 20% 80%, var(--glow-1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, var(--glow-2) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(236, 72, 153, 0.1) 0%, transparent 40%);
-            animation: bgMove 20s ease-in-out infinite;
+                radial-gradient(circle at 80% 20%, var(--glow-2) 0%, transparent 50%);
+            animation: bgMove 25s ease-in-out infinite;
         }
 
         @keyframes bgMove {
 
             0%,
             100% {
-                transform: translate(0, 0) rotate(0deg);
+                transform: translate(0, 0);
             }
 
-            33% {
-                transform: translate(30px, -30px) rotate(5deg);
-            }
-
-            66% {
-                transform: translate(-20px, 20px) rotate(-5deg);
+            50% {
+                transform: translate(20px, -20px);
             }
         }
 
-        /* Grid Pattern Overlay */
-        .grid-pattern {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
-            background-image:
-                linear-gradient(var(--border-color) 1px, transparent 1px),
-                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
-            background-size: 60px 60px;
-            opacity: 0.3;
-        }
-
-        /* Navigation */
+        /* ========== NAVBAR ========== */
         .navbar {
-            position: fixed;
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            height: 70px;
-            background: rgba(10, 10, 15, 0.8);
+            height: 56px;
+            background: rgba(10, 10, 15, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-color);
             z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-        .navbar.scrolled {
-            background: rgba(10, 10, 15, 0.95);
         }
 
         [data-theme="light"] .navbar {
-            background: rgba(255, 255, 255, 0.85);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        [data-theme="light"] .navbar.scrolled {
-            background: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.9);
         }
 
         .navbar-content {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 40px;
+            padding: 0 24px;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             text-decoration: none;
             color: var(--text-primary);
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             background: var(--gradient-1);
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .logo-icon svg {
-            width: 22px;
-            height: 22px;
+            width: 18px;
+            height: 18px;
             color: white;
         }
 
         .logo-text {
             font-weight: 700;
-            font-size: 1.25rem;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 8px;
-        }
-
-        .nav-link {
-            padding: 10px 18px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-        }
-
-        [data-theme="light"] .nav-link {
-            color: #475569;
-        }
-
-        .nav-link:hover {
-            color: var(--text-primary);
-            background: var(--bg-card-hover);
-        }
-
-        [data-theme="light"] .nav-link:hover {
-            color: #0f172a;
-            background: rgba(0, 0, 0, 0.05);
+            font-size: 1.05rem;
         }
 
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
         }
 
-        .theme-toggle {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+        .nav-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             cursor: pointer;
@@ -243,156 +174,517 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
-        }
-
-        .theme-toggle:hover {
-            background: var(--bg-card-hover);
-            transform: rotate(15deg);
-        }
-
-        .theme-toggle svg {
-            width: 18px;
-            height: 18px;
             color: var(--text-primary);
         }
 
-        .theme-toggle .sun-icon {
+        .nav-btn:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .nav-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .nav-btn .sun-icon {
             display: none;
         }
 
-        [data-theme="light"] .theme-toggle .moon-icon {
+        [data-theme="light"] .nav-btn .moon-icon {
             display: none;
         }
 
-        [data-theme="light"] .theme-toggle .sun-icon {
+        [data-theme="light"] .nav-btn .sun-icon {
             display: block;
         }
 
-        /* Hero Section */
-        .hero {
-            min-height: auto;
+        /* ========== QUICK ACTIONS ========== */
+        .quick-actions {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 24px 8px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 100px 40px 40px;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 900px;
-            text-align: center;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 30px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 24px;
-            animation: fadeInUp 0.6s ease;
-        }
-
-        .hero-badge .dot {
-            width: 8px;
-            height: 8px;
-            background: #10b981;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            animation: fadeInUp 0.6s ease 0.1s both;
-        }
-
-        .hero h1 .gradient-text {
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 40px;
-            animation: fadeInUp 0.6s ease 0.2s both;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-            animation: fadeInUp 0.6s ease 0.3s both;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
             gap: 10px;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-size: 0.95rem;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.82rem;
             font-weight: 600;
             text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
+            transition: all 0.25s ease;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-primary);
         }
 
-        .btn svg {
+        .quick-btn svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        .quick-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-1);
+            box-shadow: 0 4px 16px var(--glow-1);
+        }
+
+        .quick-btn.accent {
+            background: var(--gradient-1);
+            color: white;
+            border-color: transparent;
+        }
+
+        .quick-btn.accent:hover {
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* ========== MAIN CONTAINER ========== */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8px 24px 32px;
+        }
+
+        /* ========== SECTION BLOCK ========== */
+        .section-block {
+            margin-top: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .section-block:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        [data-theme="light"] .section-block:hover {
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .section-header:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .section-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: white;
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .section-count {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+            margin-left: 8px;
+        }
+
+        .section-chevron {
+            transition: transform 0.3s ease;
+            color: var(--text-muted);
+        }
+
+        .section-chevron svg {
             width: 18px;
             height: 18px;
         }
 
-        .btn-primary {
-            background: var(--gradient-1);
-            color: white;
-            box-shadow: 0 4px 20px var(--glow-1);
+        .section-block.collapsed .section-chevron {
+            transform: rotate(-90deg);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px var(--glow-1);
+        .section-block.collapsed .section-body {
+            display: none;
         }
 
-        .btn-secondary {
-            background: var(--bg-card);
+        /* ========== SECTION BODY (LINK GRID) ========== */
+        .section-body {
+            padding: 0 12px 12px;
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 6px;
+        }
+
+        /* ========== LINK ITEM ========== */
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            text-decoration: none;
             color: var(--text-primary);
-            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
         }
 
-        .btn-secondary:hover {
+        .link-item:hover {
             background: var(--bg-card-hover);
-            border-color: var(--accent-1);
+            border-color: var(--border-color);
+            transform: translateX(4px);
         }
 
-        @keyframes fadeInUp {
+        .link-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .link-icon svg {
+            width: 17px;
+            height: 17px;
+            color: white;
+        }
+
+        .link-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .link-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .link-desc {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .link-badge {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 6px;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .link-arrow {
+            opacity: 0;
+            transform: translateX(-6px);
+            transition: all 0.2s ease;
+            color: var(--accent-1);
+        }
+
+        .link-arrow svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .link-item:hover .link-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Badge Colors */
+        .badge-cisco {
+            background: rgba(4, 159, 217, 0.15);
+            color: #00bceb;
+        }
+
+        .badge-velo {
+            background: rgba(255, 149, 0, 0.15);
+            color: #ff9500;
+        }
+
+        .badge-fortinet {
+            background: rgba(218, 41, 28, 0.15);
+            color: #ff5252;
+        }
+
+        .badge-meraki {
+            background: rgba(120, 190, 32, 0.15);
+            color: #78be20;
+        }
+
+        .badge-analytics {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+        }
+
+        .badge-sheet {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+        }
+
+        .badge-drive {
+            background: rgba(236, 72, 153, 0.15);
+            color: #f472b6;
+        }
+
+        .badge-dashboard {
+            background: rgba(14, 165, 233, 0.15);
+            color: #38bdf8;
+        }
+
+        .badge-guide {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+        }
+
+        .badge-tutorial {
+            background: rgba(249, 115, 22, 0.15);
+            color: #fb923c;
+        }
+
+        .badge-gist {
+            background: rgba(249, 115, 22, 0.15);
+            color: #fb923c;
+        }
+
+        .badge-video {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+        }
+
+        .badge-cert {
+            background: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
+        }
+
+        /* Section Icon Colors */
+        .icon-sdwan {
+            background: linear-gradient(135deg, #049fd9, #00bceb);
+        }
+
+        .icon-neucentrix {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        .icon-sheet {
+            background: linear-gradient(135deg, #14b8a6, #22c55e);
+        }
+
+        .icon-resource {
+            background: linear-gradient(135deg, #f97316, #ec4899);
+        }
+
+        .icon-cert {
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+        }
+
+        /* Link Icon Colors */
+        .li-cisco {
+            background: linear-gradient(135deg, #049fd9, #00bceb);
+        }
+
+        .li-velo {
+            background: linear-gradient(135deg, #ff9500, #ff6b00);
+        }
+
+        .li-fortinet {
+            background: linear-gradient(135deg, #da291c, #ff4444);
+        }
+
+        .li-meraki {
+            background: linear-gradient(135deg, #78be20, #00a651);
+        }
+
+        .li-analytics {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        .li-idc {
+            background: linear-gradient(135deg, #ec4899, #f43f5e);
+        }
+
+        .li-omnix {
+            background: linear-gradient(135deg, #14b8a6, #22c55e);
+        }
+
+        .li-sheet-green {
+            background: linear-gradient(135deg, #14b8a6, #22c55e);
+        }
+
+        .li-sheet-orange {
+            background: linear-gradient(135deg, #f97316, #f59e0b);
+        }
+
+        .li-sheet-purple {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        .li-sheet-pink {
+            background: linear-gradient(135deg, #ec4899, #f43f5e);
+        }
+
+        .li-sheet-cyan {
+            background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+        }
+
+        .li-sheet-teal {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+
+        .li-sheet-violet {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+        }
+
+        .li-sheet-amber {
+            background: linear-gradient(135deg, #f59e0b, #eab308);
+        }
+
+        .li-gist {
+            background: linear-gradient(135deg, #f97316, #ec4899);
+        }
+
+        .li-guide {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .li-youtube {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+        }
+
+        .li-tutorial-teal {
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+        }
+
+        .li-tutorial-orange {
+            background: linear-gradient(135deg, #f97316, #ef4444);
+        }
+
+        .li-tutorial-purple {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+        }
+
+        .li-tutorial-cyan {
+            background: linear-gradient(135deg, #06b6d4, #a855f7);
+        }
+
+        .li-tutorial-cisco {
+            background: linear-gradient(135deg, #049fd9, #0277bd);
+        }
+
+        .li-cert {
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 24px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* ========== MOBILE ========== */
+        @media (max-width: 768px) {
+            .navbar-content {
+                padding: 0 16px;
+            }
+
+            .quick-actions {
+                padding: 12px 16px 6px;
+                gap: 8px;
+            }
+
+            .quick-btn {
+                padding: 7px 12px;
+                font-size: 0.78rem;
+            }
+
+            .main-container {
+                padding: 6px 16px 24px;
+            }
+
+            .link-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                padding: 12px 16px;
+            }
+
+            .section-body {
+                padding: 0 8px 8px;
+            }
+
+            .link-item {
+                padding: 9px 10px;
+            }
+
+            .link-name {
+                font-size: 0.82rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quick-actions {
+                flex-wrap: wrap;
+            }
+
+            .quick-btn {
+                flex: 1;
+                min-width: calc(50% - 8px);
+                justify-content: center;
+            }
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(10px);
             }
 
             to {
@@ -401,1317 +693,511 @@
             }
         }
 
-        /* Stats Bar */
-        .stats-bar {
-            display: flex;
-            justify-content: center;
-            gap: 60px;
-            margin-top: 80px;
-            animation: fadeInUp 0.6s ease 0.4s both;
+        .section-block {
+            animation: fadeIn 0.4s ease both;
         }
 
-        .stat-item {
-            text-align: center;
+        .section-block:nth-child(2) {
+            animation-delay: 0.05s;
         }
 
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .section-block:nth-child(3) {
+            animation-delay: 0.1s;
         }
 
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 4px;
+        .section-block:nth-child(4) {
+            animation-delay: 0.15s;
         }
 
-        /* Section */
-        .section {
-            padding: 100px 40px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .section-tag {
-            display: inline-block;
-            padding: 6px 14px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--accent-1);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 16px;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .section-desc {
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Resource Cards */
-        .resource-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 24px;
-        }
-
-        .resource-card {
-            position: relative;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 32px;
-            text-decoration: none;
-            color: var(--text-primary);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden;
-        }
-
-        .resource-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--card-accent, var(--gradient-1));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .resource-card:hover {
-            transform: translateY(-8px);
-            background: var(--bg-card-hover);
-            border-color: var(--accent-1);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .resource-card:hover::before {
-            opacity: 1;
-        }
-
-        .resource-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 14px;
-            background: var(--card-accent, var(--gradient-1));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .resource-card:hover .resource-icon {
-            transform: scale(1.1) rotate(-5deg);
-        }
-
-        .resource-icon svg {
-            width: 28px;
-            height: 28px;
-            color: white;
-        }
-
-        .resource-card h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .resource-card p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-        }
-
-        .resource-meta {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .resource-meta span {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .resource-meta svg {
-            width: 14px;
-            height: 14px;
-        }
-
-        .resource-arrow {
-            position: absolute;
-            top: 32px;
-            right: 32px;
-            opacity: 0;
-            transform: translateX(-10px);
-            transition: all 0.3s ease;
-        }
-
-        .resource-arrow svg {
-            width: 20px;
-            height: 20px;
-            color: var(--accent-1);
-        }
-
-        .resource-card:hover .resource-arrow {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        /* Feature Cards */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-        }
-
-        @media (max-width: 1024px) {
-            .feature-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 640px) {
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .feature-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 28px;
-            text-decoration: none;
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-        }
-
-        .feature-card:hover {
-            background: var(--bg-card-hover);
-            transform: translateY(-4px);
-            border-color: var(--accent-2);
-        }
-
-        .feature-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
-            background: var(--bg-tertiary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .feature-icon svg {
-            width: 22px;
-            height: 22px;
-            color: var(--accent-1);
-        }
-
-        .feature-content h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .feature-content p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        /* CTA Section */
-        .cta-section {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .cta-content {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .cta-content h2 {
-            font-size: 2rem;
-            margin-bottom: 16px;
-        }
-
-        .cta-content p {
-            color: var(--text-secondary);
-            margin-bottom: 32px;
-        }
-
-        .cta-form {
-            display: flex;
-            gap: 12px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .cta-form input {
-            flex: 1;
-            padding: 14px 20px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            color: var(--text-primary);
-            font-size: 0.95rem;
-        }
-
-        .cta-form input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .cta-form input:focus {
-            outline: none;
-            border-color: var(--accent-1);
-        }
-
-        /* Footer */
-        .footer {
-            padding: 60px 40px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 24px;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 24px;
-        }
-
-        .footer-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.2s ease;
-        }
-
-        .footer-links a:hover {
-            color: var(--text-primary);
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 12px;
-        }
-
-        .social-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-
-        .social-btn:hover {
-            background: var(--accent-1);
-            border-color: var(--accent-1);
-        }
-
-        .social-btn:hover svg {
-            color: white;
-        }
-
-        .social-btn svg {
-            width: 18px;
-            height: 18px;
-            color: var(--text-secondary);
-        }
-
-        .footer-copyright {
-            width: 100%;
-            text-align: center;
-            padding-top: 40px;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .navbar-content {
-                padding: 0 20px;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .hero {
-                padding: 100px 20px 60px;
-            }
-
-            .hero p {
-                font-size: 1.1rem;
-            }
-
-            .stats-bar {
-                flex-direction: column;
-                gap: 30px;
-            }
-
-            .section {
-                padding: 60px 20px;
-            }
-
-            .section-title {
-                font-size: 1.8rem;
-            }
-
-            .resource-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .cta-form {
-                flex-direction: column;
-            }
-
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-
-        /* Scroll Animations */
-        .animate-on-scroll {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.6s ease;
-        }
-
-        .animate-on-scroll.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Mobile Menu */
-        .mobile-menu-btn {
-            display: none;
-            width: 40px;
-            height: 40px;
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            flex-direction: column;
-            gap: 5px;
-            align-items: center;
-            justify-content: center;
-            z-index: 1001;
-        }
-
-        .mobile-menu-btn span {
-            width: 24px;
-            height: 2px;
-            background: var(--text-primary);
-            transition: all 0.3s ease;
-        }
-
-        .mobile-menu-btn.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .mobile-menu-btn.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .mobile-menu-btn.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(5px, -5px);
-        }
-
-        /* Mobile Navigation Overlay */
-        .mobile-nav-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .mobile-nav-overlay.active {
-            opacity: 1;
-        }
-
-        .mobile-nav {
-            position: fixed;
-            top: 0;
-            right: -300px;
-            width: 280px;
-            height: 100vh;
-            background: var(--bg-secondary);
-            border-left: 1px solid var(--border-color);
-            z-index: 1000;
-            padding: 80px 24px 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            transition: right 0.3s ease;
-            overflow-y: auto;
-        }
-
-        .mobile-nav.active {
-            right: 0;
-        }
-
-        .mobile-nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 500;
-            border-radius: 10px;
-            transition: all 0.2s ease;
-        }
-
-        .mobile-nav-link:hover {
-            color: var(--text-primary);
-            background: var(--bg-card-hover);
-        }
-
-        .mobile-nav-link svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        [data-theme="light"] .mobile-nav {
-            background: #ffffff;
-        }
-
-        [data-theme="light"] .mobile-nav-link {
-            color: #475569;
-        }
-
-        [data-theme="light"] .mobile-nav-link:hover {
-            color: #0f172a;
-            background: rgba(0, 0, 0, 0.05);
-        }
-
-        @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: flex;
-            }
-
-            .mobile-nav-overlay {
-                display: block;
-                pointer-events: none;
-            }
-
-            .mobile-nav-overlay.active {
-                pointer-events: auto;
-            }
+        .section-block:nth-child(5) {
+            animation-delay: 0.2s;
         }
     </style>
 </head>
 
 <body>
-    <!-- Background -->
     <div class="bg-gradient"></div>
-    <div class="grid-pattern"></div>
 
-    <!-- Navigation -->
+    <!-- ===== NAVBAR ===== -->
     <nav class="navbar">
         <div class="navbar-content">
-            <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="logo">
-                <div class="logo-icon">
-                    <i data-lucide="rocket"></i>
-                </div>
+            <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="logo">
+                <div class="logo-icon"><i data-lucide="rocket"></i></div>
                 <span class="logo-text">Nextgen Center</span>
             </a>
-
-            <div class="nav-links">
-                <a href="#tools" class="nav-link">Tools</a>
-                <a href="#gsheet" class="nav-link">G-Sheet</a>
-                <a href="#resources" class="nav-link">Resources</a>
-                <a href="#certifications" class="nav-link">Certifications</a>
-                <a href="CertExamDump/" class="nav-link">CertExam Dump</a>
-                <a href="JadwalNextgen/" class="nav-link">Jadwal Kerja</a>
-            </div>
-
             <div class="nav-actions">
-                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                <button class="nav-btn" onclick="toggleTheme()" aria-label="Toggle theme">
                     <i data-lucide="moon" class="moon-icon"></i>
                     <i data-lucide="sun" class="sun-icon"></i>
                 </button>
-                <button class="theme-toggle" onclick="logout()" aria-label="Logout" title="Logout">
+                <button class="nav-btn" onclick="logout()" aria-label="Logout" title="Logout">
                     <i data-lucide="log-out"></i>
-                </button>
-                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-                    <span></span>
-                    <span></span>
-                    <span></span>
                 </button>
             </div>
         </div>
     </nav>
 
-    <!-- Mobile Navigation -->
-    <div class="mobile-nav-overlay" onclick="closeMobileMenu()"></div>
-    <div class="mobile-nav">
-        <a href="#tools" class="mobile-nav-link" onclick="closeMobileMenu()">
-            <i data-lucide="wrench"></i>
-            Tools
+    <!-- ===== QUICK ACTIONS ===== -->
+    <div class="quick-actions">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLScIeasNHpiiMDIaZhfVA7XliIk7riv5uV02YOOniCiWfLfy9Q/viewform"
+            target="_blank" class="quick-btn accent">
+            <i data-lucide="clipboard-list"></i> Daily Activity
         </a>
-        <a href="#gsheet" class="mobile-nav-link" onclick="closeMobileMenu()">
-            <i data-lucide="table"></i>
-            G-Sheet
+        <a href="dashboard/" class="quick-btn accent">
+            <i data-lucide="bar-chart-3"></i> Dashboard
         </a>
-        <a href="#resources" class="mobile-nav-link" onclick="closeMobileMenu()">
-            <i data-lucide="folder-open"></i>
-            Resources
+        <a href="CertExamDump/" class="quick-btn">
+            <i data-lucide="file-question"></i> CertExam Dump
         </a>
-        <a href="#certifications" class="mobile-nav-link" onclick="closeMobileMenu()">
-            <i data-lucide="award"></i>
-            Certifications
-        </a>
-        <a href="CertExamDump/" class="mobile-nav-link">
-            <i data-lucide="file-question"></i>
-            CertExam Dump
-        </a>
-        <a href="JadwalNextgen/" class="mobile-nav-link">
-            <i data-lucide="calendar"></i>
-            Jadwal Kerja
+        <a href="JadwalNextgen/" class="quick-btn">
+            <i data-lucide="calendar"></i> Jadwal Kerja
         </a>
     </div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-buttons">
-                <a href="#resources" class="btn btn-primary">
-                    <i data-lucide="compass"></i>
-                    Explore Resources
-                </a>
-                <a href="#tools" class="btn btn-primary">
-                    <i data-lucide="wrench"></i>
-                    Explore Tools
-                </a>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLScIeasNHpiiMDIaZhfVA7XliIk7riv5uV02YOOniCiWfLfy9Q/viewform"
-                    target="_blank" class="btn btn-secondary">
-                    <i data-lucide="clipboard-list"></i>
-                    Daily Activity
-                </a>
-                <a href="dashboard/" class="btn btn-secondary">
-                    <i data-lucide="bar-chart-3"></i>
-                    Dashboard
-                </a>
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-container">
+
+        <!-- ====== SDWAN TOOLS ====== -->
+        <div class="section-block" id="tools">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-header-left">
+                    <div class="section-icon icon-sdwan"><i data-lucide="router"></i></div>
+                    <span class="section-title">SD-WAN Tools</span>
+                    <span class="section-count">11</span>
+                </div>
+                <div class="section-chevron"><i data-lucide="chevron-down"></i></div>
+            </div>
+            <div class="section-body">
+                <div class="link-grid">
+                    <a href="#" onclick="openLink('aHR0cHM6Ly8zNi45NC4yNTIuMjQv');return false;" class="link-item">
+                        <div class="link-icon li-cisco"><i data-lucide="router"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">CISCO Multi Tenant Telkom</div>
+                            <div class="link-desc">vManage Multi-Tenant SD-WAN</div>
+                        </div>
+                        <span class="link-badge badge-cisco">Cisco</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly92bWFuYWdlLWtmYS5zZHdhbi5jaXNjby5jb20vIy9hcHAvbW9uaXRvcjIvb3ZlcnZpZXc=');return false;"
+                        class="link-item">
+                        <div class="link-icon li-cisco"><i data-lucide="router"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">CISCO KFA</div>
+                            <div class="link-desc">vManage SD-WAN KFA</div>
+                        </div>
+                        <span class="link-badge badge-cisco">Cisco</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly92bWFuYWdlLWFkYXJvaW5kb25lc2lhLnNkd2FuLmNpc2NvLmNvbQ==');return false;"
+                        class="link-item">
+                        <div class="link-icon li-cisco"><i data-lucide="router"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">CISCO Adaro Indonesia</div>
+                            <div class="link-desc">vManage SD-WAN Adaro Indonesia</div>
+                        </div>
+                        <span class="link-badge badge-cisco">Cisco</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly92bWFuYWdlLWFkYXJvbG9naXN0aWNzLnNkd2FuLmNpc2NvLmNvbQ==');return false;"
+                        class="link-item">
+                        <div class="link-icon li-cisco"><i data-lucide="router"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">CISCO Adaro Logistics</div>
+                            <div class="link-desc">vManage SD-WAN Adaro Logistics</div>
+                        </div>
+                        <span class="link-badge badge-cisco">Cisco</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly92bWFuYWdlLWFkYXJvbWluZXJhbHMuc2R3YW4uY2lzY28uY29tLw==');return false;"
+                        class="link-item">
+                        <div class="link-icon li-cisco"><i data-lucide="router"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">CISCO Adaro Mineral</div>
+                            <div class="link-desc">vManage SD-WAN Adaro Minerals</div>
+                        </div>
+                        <span class="link-badge badge-cisco">Cisco</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#" onclick="openLink('aHR0cHM6Ly8zNi45NC4yNTIuNjcvb3BlcmF0b3I=');return false;"
+                        class="link-item">
+                        <div class="link-icon li-velo"><i data-lucide="cloud"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">VELOCLOUD Telkom</div>
+                            <div class="link-desc">VeloCloud Orchestrator Telkom</div>
+                        </div>
+                        <span class="link-badge badge-velo">VeloCloud</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#" onclick="openLink('aHR0cHM6Ly92Y28tZHJjLXRsa20uYmFua21hbmRpcmkuY28uaWQv');return false;"
+                        class="link-item">
+                        <div class="link-icon li-velo"><i data-lucide="cloud"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">VELOCLOUD Bank Mandiri</div>
+                            <div class="link-desc">VeloCloud Orchestrator Bank Mandiri</div>
+                        </div>
+                        <span class="link-badge badge-velo">VeloCloud</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#" onclick="openLink('aHR0cHM6Ly9mbWcuZGlnaXNlcnZlLndlYi5pZDoxMDQ0My91aS8=');return false;"
+                        class="link-item">
+                        <div class="link-icon li-fortinet"><i data-lucide="shield-check"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">FORTINET SD-WAN Multi Tenant</div>
+                            <div class="link-desc">FortiManager Multi-Tenant SD-WAN</div>
+                        </div>
+                        <span class="link-badge badge-fortinet">Fortinet</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#" onclick="openLink('aHR0cHM6Ly8xMC42MC4xNzQuMTg5L3VpL2xvZ2lu');return false;"
+                        class="link-item">
+                        <div class="link-icon li-fortinet"><i data-lucide="shield-check"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">FORTINET Telkom</div>
+                            <div class="link-desc">FortiManager SD-WAN Telkom</div>
+                        </div>
+                        <span class="link-badge badge-fortinet">Fortinet</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly8xODk1MzQwLmFwLW5vcnRoZWFzdC0xLmZvcnRpbWFuYWdlci5mb3J0aWNsb3VkLmNvbS9wL2xvZ2luLz9uZXh0PS9wL2FwcC8jIS9hZG9tL2RlZmF1bHQvZHZtL21haW4vZ3JvdXBzLzUwNjE4');return false;"
+                        class="link-item">
+                        <div class="link-icon li-fortinet"><i data-lucide="shield-check"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">FORTINET Indomarco</div>
+                            <div class="link-desc">FortiManager Cloud Indomarco</div>
+                        </div>
+                        <span class="link-badge badge-fortinet">Fortinet</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly9uMjQzLmRhc2hib2FyZC5tZXJha2kuY29tL28vRi1xTnJiWmQvbWFuYWdlL29yZ2FuaXphdGlvbi9zdW1tYXJ5');return false;"
+                        class="link-item">
+                        <div class="link-icon li-meraki"><i data-lucide="wifi"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">CISCO MERAKI PT DAM</div>
+                            <div class="link-desc">Meraki Dashboard PT DAM</div>
+                        </div>
+                        <span class="link-badge badge-meraki">Meraki</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                </div>
             </div>
         </div>
-    </section>
 
-    <!-- IT Tools untuk SDWAN Section -->
-    <section class="section" id="tools">
-        <div class="section-header animate-on-scroll">
-            <span class="section-tag">Tools</span>
-            <h2 class="section-title">SDWAN</h2>
-            <p class="section-desc">Akses dashboard monitoring dan management platform SD-WAN</p>
+        <!-- ====== NEUCENTRIX TOOLS ====== -->
+        <div class="section-block" id="neucentrix-tools">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-header-left">
+                    <div class="section-icon icon-neucentrix"><i data-lucide="server"></i></div>
+                    <span class="section-title">Neucentrix</span>
+                    <span class="section-count">3</span>
+                </div>
+                <div class="section-chevron"><i data-lucide="chevron-down"></i></div>
+            </div>
+            <div class="section-body">
+                <div class="link-grid">
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly9uZXV0cmFseXRpYy50ZWxrb20uY28uaWQvb3ZlcnZpZXc=');return false;"
+                        class="link-item">
+                        <div class="link-icon li-analytics"><i data-lucide="bar-chart-3"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">NEUTRALYTIC</div>
+                            <div class="link-desc">Neutralytic Analytics Dashboard</div>
+                        </div>
+                        <span class="link-badge badge-analytics">Analytics</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#" onclick="openLink('aHR0cHM6Ly9pZGMudGVsa29tLmNvLmlkL2xvZ2lu');return false;"
+                        class="link-item">
+                        <div class="link-icon li-idc"><i data-lucide="server"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">IDC</div>
+                            <div class="link-desc">IDC Telkom Dashboard</div>
+                        </div>
+                        <span class="link-badge badge-analytics">Data Center</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#" onclick="openLink('aHR0cHM6Ly9vbnguY28uaWQvbG9naW4=');return false;" class="link-item">
+                        <div class="link-icon li-omnix"><i data-lucide="globe"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">OMNIX</div>
+                            <div class="link-desc">Omnix Network Platform</div>
+                        </div>
+                        <span class="link-badge badge-analytics">Platform</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <div class="resource-grid">
-            <!-- CISCO SD-WAN -->
-            <a href="#" onclick="openLink('aHR0cHM6Ly8zNi45NC4yNTIuMjQv'); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #049fd9, #00bceb)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #049fd9, #00bceb)">
-                    <i data-lucide="router"></i>
+        <!-- ====== SPREADSHEET & REPORTS ====== -->
+        <div class="section-block" id="gsheet">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-header-left">
+                    <div class="section-icon icon-sheet"><i data-lucide="table"></i></div>
+                    <span class="section-title">Spreadsheet & Reports</span>
+                    <span class="section-count">8</span>
                 </div>
-                <h3>CISCO Multi Tenant Telkom</h3>
-                <p>vManage Multi-Tenant SD-WAN Telkom</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="shield"></i> Cisco SD-WAN</span>
+                <div class="section-chevron"><i data-lucide="chevron-down"></i></div>
+            </div>
+            <div class="section-body">
+                <div class="link-grid">
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMWZOOXJqZnNoRzdVeE9PRWxVLW82Q3lkN0VwX3p0a1VuUjZUVWJBWlBWQTgvZWRpdD91c3A9c2hhcmluZw==');return false;"
+                        class="link-item">
+                        <div class="link-icon li-sheet-green"><i data-lucide="book-open"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">Logbook Surveillance SDWAN</div>
+                            <div class="link-desc">Logbook aktivitas surveillance SD-WAN</div>
+                        </div>
+                        <span class="link-badge badge-sheet">Sheet</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMS0xV2hlci1ZSHIxRG1rb0hJOXhfMXoyQ1ItLVlDTFhvQVRZOHd0MkNEQlUvZWRpdD9naWQ9Nzg4NTg5MDg2I2dpZD03ODg1ODkwODY=');return false;"
+                        class="link-item">
+                        <div class="link-icon li-sheet-orange"><i data-lucide="ticket"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">Manual Tiket Nextgen Center</div>
+                            <div class="link-desc">Panduan manual tiket</div>
+                        </div>
+                        <span class="link-badge badge-sheet">Sheet</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMXV0cDFydVZTR0x2YU4tWE91UDRYNWFNSU5HWXhuSUh0R21ZcFdUZWkyelkvZWRpdD9naWQ9MCNnaWQ9MA==');return false;"
+                        class="link-item">
+                        <div class="link-icon li-sheet-purple"><i data-lucide="map-pin"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">Alokasi Datek SD-WAN</div>
+                            <div class="link-desc">Data alokasi Datek SD-WAN</div>
+                        </div>
+                        <span class="link-badge badge-sheet">Sheet</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly9kcml2ZS5nb29nbGUuY29tL2RyaXZlL2ZvbGRlcnMvMWhaNlVhMEUwSlMwWWJ5Sy1nUDdabmJ2SDNBVk9jNUxv');return false;"
+                        class="link-item">
+                        <div class="link-icon li-sheet-pink"><i data-lucide="folder"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">Report Neucentrix</div>
+                            <div class="link-desc">Folder laporan Neucentrix</div>
+                        </div>
+                        <span class="link-badge badge-drive">Drive</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly9kcml2ZS5nb29nbGUuY29tL2RyaXZlL2ZvbGRlcnMvMXVJS084a1FUWGRSWTZzS1hUNG5xSnFTN2RWXzJTcXJQ');return false;"
+                        class="link-item">
+                        <div class="link-icon li-sheet-cyan"><i data-lucide="folder"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">Report SDWAN</div>
+                            <div class="link-desc">Folder laporan SD-WAN</div>
+                        </div>
+                        <span class="link-badge badge-drive">Drive</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly9sb29rZXJzdHVkaW8uZ29vZ2xlLmNvbS91LzAvcmVwb3J0aW5nLzFkZjI5YTk5LWFiNzUtNGEzMy04ZjJlLTQ5OWU1NjkzNGQzOC9wYWdlLzV3cHFE');return false;"
+                        class="link-item">
+                        <div class="link-icon li-sheet-teal"><i data-lucide="bar-chart-3"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">Dashboard Delivery SD-WAN KFA</div>
+                            <div class="link-desc">Looker Studio monitoring delivery</div>
+                        </div>
+                        <span class="link-badge badge-dashboard">Dashboard</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMW5hZDFUNHZURWZTZGgxVW1RejRNTU04V0JQbHR6cEppM3pRUi1ENEU2X0kvZWRpdD9naWQ9MzQ3MzAwOTY5I2dpZD0zNDczMDA5Njk=');return false;"
+                        class="link-item">
+                        <div class="link-icon li-sheet-violet"><i data-lucide="network"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">LIST IP NEUCENTRIX</div>
+                            <div class="link-desc">Daftar IP address Neucentrix</div>
+                        </div>
+                        <span class="link-badge badge-sheet">Sheet</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMVAzZnFmRWlHNFl6UUpZcjd6X3hEd3BnSVhoa3RadGtjN1pJd1hEVFdrc0EvZWRpdD91c3A9c2hhcmluZw==');return false;"
+                        class="link-item">
+                        <div class="link-icon li-sheet-amber"><i data-lucide="server"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">LIST IP TCACS NEUCENTRIX</div>
+                            <div class="link-desc">Daftar IP TCACS Neucentrix (Migrasi)</div>
+                        </div>
+                        <span class="link-badge badge-sheet">Sheet</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
                 </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly92bWFuYWdlLWtmYS5zZHdhbi5jaXNjby5jb20vIy9hcHAvbW9uaXRvcjIvb3ZlcnZpZXc='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #049fd9, #00bceb)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #049fd9, #00bceb)">
-                    <i data-lucide="router"></i>
-                </div>
-                <h3>CISCO KFA</h3>
-                <p>vManage SD-WAN KFA</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="shield"></i> Cisco SD-WAN</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly92bWFuYWdlLWFkYXJvaW5kb25lc2lhLnNkd2FuLmNpc2NvLmNvbQ=='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #049fd9, #00bceb)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #049fd9, #00bceb)">
-                    <i data-lucide="router"></i>
-                </div>
-                <h3>CISCO Adaro Indonesia</h3>
-                <p>vManage SD-WAN Adaro Indonesia</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="shield"></i> Cisco SD-WAN</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly92bWFuYWdlLWFkYXJvbG9naXN0aWNzLnNkd2FuLmNpc2NvLmNvbQ=='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #049fd9, #00bceb)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #049fd9, #00bceb)">
-                    <i data-lucide="router"></i>
-                </div>
-                <h3>CISCO Adaro Logistics</h3>
-                <p>vManage SD-WAN Adaro Logistics</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="shield"></i> Cisco SD-WAN</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly92bWFuYWdlLWFkYXJvbWluZXJhbHMuc2R3YW4uY2lzY28uY29tLw=='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #049fd9, #00bceb)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #049fd9, #00bceb)">
-                    <i data-lucide="router"></i>
-                </div>
-                <h3>CISCO Adaro Mineral</h3>
-                <p>vManage SD-WAN Adaro Minerals</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="shield"></i> Cisco SD-WAN</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <!-- VELOCLOUD -->
-            <a href="#" onclick="openLink('aHR0cHM6Ly8zNi45NC4yNTIuNjcvb3BlcmF0b3I='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #ff9500, #ff6b00)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #ff9500, #ff6b00)">
-                    <i data-lucide="cloud"></i>
-                </div>
-                <h3>VELOCLOUD Telkom</h3>
-                <p>VeloCloud Orchestrator Telkom</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="cloud"></i> VeloCloud</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#" onclick="openLink('aHR0cHM6Ly92Y28tZHJjLXRsa20uYmFua21hbmRpcmkuY28uaWQv'); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #ff9500, #ff6b00)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #ff9500, #ff6b00)">
-                    <i data-lucide="cloud"></i>
-                </div>
-                <h3>VELOCLOUD Bank Mandiri</h3>
-                <p>VeloCloud Orchestrator Bank Mandiri</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="cloud"></i> VeloCloud</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <!-- FORTINET -->
-            <a href="#" onclick="openLink('aHR0cHM6Ly9mbWcuZGlnaXNlcnZlLndlYi5pZDoxMDQ0My91aS8='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #da291c, #ff4444)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #da291c, #ff4444)">
-                    <i data-lucide="shield-check"></i>
-                </div>
-                <h3>FORTINET SD-WAN Multi Tenant</h3>
-                <p>FortiManager Multi-Tenant SD-WAN</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="shield"></i> Fortinet</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#" onclick="openLink('aHR0cHM6Ly8xMC42MC4xNzQuMTg5L3VpL2xvZ2lu'); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #da291c, #ff4444)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #da291c, #ff4444)">
-                    <i data-lucide="shield-check"></i>
-                </div>
-                <h3>FORTINET Telkom</h3>
-                <p>FortiManager SD-WAN Telkom</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="shield"></i> Fortinet</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly8xODk1MzQwLmFwLW5vcnRoZWFzdC0xLmZvcnRpbWFuYWdlci5mb3J0aWNsb3VkLmNvbS9wL2xvZ2luLz9uZXh0PS9wL2FwcC8jIS9hZG9tL2RlZmF1bHQvZHZtL21haW4vZ3JvdXBzLzUwNjE4'); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #da291c, #ff4444)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #da291c, #ff4444)">
-                    <i data-lucide="shield-check"></i>
-                </div>
-                <h3>FORTINET Indomarco</h3>
-                <p>FortiManager Cloud Indomarco</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="shield"></i> Fortinet</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <!-- CISCO MERAKI -->
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly9uMjQzLmRhc2hib2FyZC5tZXJha2kuY29tL28vRi1xTnJiWmQvbWFuYWdlL29yZ2FuaXphdGlvbi9zdW1tYXJ5'); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #78be20, #00a651)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #78be20, #00a651)">
-                    <i data-lucide="wifi"></i>
-                </div>
-                <h3>CISCO MERAKI PT DAM</h3>
-                <p>Meraki Dashboard PT DAM</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="wifi"></i> Meraki</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-        </div>
-    </section>
-
-    <!-- IT Tools untuk Neucentrix Section -->
-    <section class="section" id="neucentrix-tools">
-        <div class="section-header animate-on-scroll">
-            <span class="section-tag">Tools</span>
-            <h2 class="section-title">Neucentrix</h2>
-            <p class="section-desc">Akses dashboard monitoring dan platform Neucentrix</p>
+            </div>
         </div>
 
-        <div class="resource-grid">
-            <a href="#" onclick="openLink('aHR0cHM6Ly9uZXV0cmFseXRpYy50ZWxrb20uY28uaWQvb3ZlcnZpZXc='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #6366f1, #8b5cf6)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #6366f1, #8b5cf6)">
-                    <i data-lucide="bar-chart-3"></i>
+        <!-- ====== LEARNING RESOURCES ====== -->
+        <div class="section-block" id="resources">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-header-left">
+                    <div class="section-icon icon-resource"><i data-lucide="book-open"></i></div>
+                    <span class="section-title">Learning Resources</span>
+                    <span class="section-count">10</span>
                 </div>
-                <h3>NEUTRALYTIC</h3>
-                <p>Neutralytic Analytics Dashboard</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="activity"></i> Analytics</span>
+                <div class="section-chevron"><i data-lucide="chevron-down"></i></div>
+            </div>
+            <div class="section-body">
+                <div class="link-grid">
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly9naXN0LmdpdGh1Yi5jb20vZWRnbm4vODZhNDAxZmRkNTc0ODY4OWM4ODBjNzRiMmRmNGI5NTg=');return false;"
+                        class="link-item">
+                        <div class="link-icon li-gist"><i data-lucide="terminal"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">CHECK Cisco C6807-XL SWITCH</div>
+                            <div class="link-desc">Script check status Cisco C6807-XL</div>
+                        </div>
+                        <span class="link-badge badge-gist">Gist</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly9naXN0LmdpdGh1Yi5jb20vZWRnbm4vNTU0NGI4OTBkZjAzNzI0NDBhZjRlOWNhNDZmNDA1NjA=');return false;"
+                        class="link-item">
+                        <div class="link-icon li-gist"><i data-lucide="terminal"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">CHECK SWITCH EDGECORE AS4610</div>
+                            <div class="link-desc">Script check status Edgecore AS4610_54T</div>
+                        </div>
+                        <span class="link-badge badge-gist">Gist</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly9naXN0LmdpdGh1Yi5jb20vZWRnbm4vOWYwMjBkOGFmNmQ5ZWMzNTUzYjg2Nzg5MTZlYjRiYTU=');return false;"
+                        class="link-item">
+                        <div class="link-icon li-gist"><i data-lucide="terminal"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">CHECK SWITCH ARISTA via Controller</div>
+                            <div class="link-desc">Script check Arista Switch via Controller</div>
+                        </div>
+                        <span class="link-badge badge-gist">Gist</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="materi/preconfig-sdwan.html" class="link-item">
+                        <div class="link-icon li-guide"><i data-lucide="terminal"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">Pre Config SD-WAN Devices</div>
+                            <div class="link-desc">Day 0 config Cisco C8300, C8200, ISR</div>
+                        </div>
+                        <span class="link-badge badge-guide">Guide</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly95b3V0dS5iZS9CNlA2VXA3ZEtMTT9zaT1oMW1ZZDBhTEZBRG16TldK');return false;"
+                        class="link-item">
+                        <div class="link-icon li-youtube"><i data-lucide="youtube"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">CREATE CISCO VIPTELA TEMPLATE</div>
+                            <div class="link-desc">Video tutorial template Cisco Viptela</div>
+                        </div>
+                        <span class="link-badge badge-video">Video</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="materi/visual-certexam-vce.html" class="link-item">
+                        <div class="link-icon li-tutorial-teal"><i data-lucide="file-code"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">Visual CertExam & VCE</div>
+                            <div class="link-desc">Install & setup Visual CertExam Manager</div>
+                        </div>
+                        <span class="link-badge badge-tutorial">Tutorial</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="materi/git-github-tutorial.html" class="link-item">
+                        <div class="link-icon li-tutorial-orange"><i data-lucide="git-branch"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">Git & GitHub Tutorial</div>
+                            <div class="link-desc">Menghubungkan repository lokal ke GitHub</div>
+                        </div>
+                        <span class="link-badge badge-tutorial">Tutorial</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="materi/foxyproxy-tutorial.html" class="link-item">
+                        <div class="link-icon li-tutorial-purple"><i data-lucide="globe"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">FoxyProxy & SSH Tunnel</div>
+                            <div class="link-desc">Setup proxy browser akses remote server</div>
+                        </div>
+                        <span class="link-badge badge-tutorial">Tutorial</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="materi/local-dns.html" class="link-item">
+                        <div class="link-icon li-tutorial-cyan"><i data-lucide="server"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">Local DNS Setup</div>
+                            <div class="link-desc">DNS lokal dengan file hosts</div>
+                        </div>
+                        <span class="link-badge badge-tutorial">Tutorial</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
+                    <a href="materi/cisco-sdwan-tutorial.html" class="link-item">
+                        <div class="link-icon li-tutorial-cisco"><i data-lucide="network"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">Cisco Catalyst SD-WAN</div>
+                            <div class="link-desc">Design, Deploy, and Secure Your WAN</div>
+                        </div>
+                        <span class="link-badge badge-cert">CCNP</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
                 </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#" onclick="openLink('aHR0cHM6Ly9pZGMudGVsa29tLmNvLmlkL2xvZ2lu'); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #ec4899, #f43f5e)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #ec4899, #f43f5e)">
-                    <i data-lucide="server"></i>
-                </div>
-                <h3>IDC</h3>
-                <p>IDC Telkom Dashboard</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="database"></i> Data Center</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#" onclick="openLink('aHR0cHM6Ly9vbnguY28uaWQvbG9naW4='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #14b8a6, #22c55e)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #14b8a6, #22c55e)">
-                    <i data-lucide="globe"></i>
-                </div>
-                <h3>OMNIX</h3>
-                <p>Omnix Network Platform</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="network"></i> Platform</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-        </div>
-    </section>
-
-    <!-- G-Sheet Tools Section -->
-    <section class="section" id="gsheet">
-        <div class="section-header animate-on-scroll">
-            <span class="section-tag">G-Sheet Tools</span>
-            <h2 class="section-title">Spreadsheet & Reports</h2>
-            <p class="section-desc">Akses langsung ke spreadsheet, dashboard, dan dokumentasi penting</p>
-        </div>
-
-        <div class="resource-grid">
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMWZOOXJqZnNoRzdVeE9PRWxVLW82Q3lkN0VwX3p0a1VuUjZUVWJBWlBWQTgvZWRpdD91c3A9c2hhcmluZw=='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #14b8a6, #22c55e)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #14b8a6, #22c55e)">
-                    <i data-lucide="book-open"></i>
-                </div>
-                <h3>Logbook Surveillance SDWAN</h3>
-                <p>Logbook aktivitas surveillance SD-WAN Center</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="file-spreadsheet"></i> Spreadsheet</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMS0xV2hlci1ZSHIxRG1rb0hJOXhfMXoyQ1ItLVlDTFhvQVRZOHd0MkNEQlUvZWRpdD9naWQ9Nzg4NTg5MDg2I2dpZD03ODg1ODkwODY='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #f97316, #f59e0b)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #f97316, #f59e0b)">
-                    <i data-lucide="ticket"></i>
-                </div>
-                <h3>Manual Tiket Nextgen Center</h3>
-                <p>Panduan manual tiket untuk Nextgen Center</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="file-spreadsheet"></i> Spreadsheet</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMXV0cDFydVZTR0x2YU4tWE91UDRYNWFNSU5HWXhuSUh0R21ZcFdUZWkyelkvZWRpdD9naWQ9MCNnaWQ9MA=='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #6366f1, #8b5cf6)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #6366f1, #8b5cf6)">
-                    <i data-lucide="map-pin"></i>
-                </div>
-                <h3>Alokasi Datek SD-WAN</h3>
-                <p>Data alokasi Datek SD-WAN Center</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="file-spreadsheet"></i> Spreadsheet</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly9kcml2ZS5nb29nbGUuY29tL2RyaXZlL2ZvbGRlcnMvMWhaNlVhMEUwSlMwWWJ5Sy1nUDdabmJ2SDNBVk9jNUxv'); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #ec4899, #f43f5e)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #ec4899, #f43f5e)">
-                    <i data-lucide="folder"></i>
-                </div>
-                <h3>Report Neucentrix</h3>
-                <p>Folder laporan dan dokumentasi Neucentrix</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="folder-open"></i> Drive Folder</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly9kcml2ZS5nb29nbGUuY29tL2RyaXZlL2ZvbGRlcnMvMXVJS084a1FUWGRSWTZzS1hUNG5xSnFTN2RWXzJTcXJQ'); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #0ea5e9, #06b6d4)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #0ea5e9, #06b6d4)">
-                    <i data-lucide="folder"></i>
-                </div>
-                <h3>Report SDWAN</h3>
-                <p>Folder laporan dan dokumentasi SD-WAN</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="folder-open"></i> Drive Folder</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly9sb29rZXJzdHVkaW8uZ29vZ2xlLmNvbS91LzAvcmVwb3J0aW5nLzFkZjI5YTk5LWFiNzUtNGEzMy04ZjJlLTQ5OWU1NjkzNGQzOC9wYWdlLzV3cHFE'); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #10b981, #34d399)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #10b981, #34d399)">
-                    <i data-lucide="bar-chart-3"></i>
-                </div>
-                <h3>Dashboard Delivery SD-WAN KFA</h3>
-                <p>Dashboard Looker Studio untuk monitoring delivery</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="layout-dashboard"></i> Dashboard</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMW5hZDFUNHZURWZTZGgxVW1RejRNTU04V0JQbHR6cEppM3pRUi1ENEU2X0kvZWRpdD9naWQ9MzQ3MzAwOTY5I2dpZD0zNDczMDA5Njk='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #8b5cf6, #a855f7)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #8b5cf6, #a855f7)">
-                    <i data-lucide="network"></i>
-                </div>
-                <h3>LIST IP NEUCENTRIX</h3>
-                <p>Daftar IP address Neucentrix</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="file-spreadsheet"></i> Spreadsheet</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMVAzZnFmRWlHNFl6UUpZcjd6X3hEd3BnSVhoa3RadGtjN1pJd1hEVFdrc0EvZWRpdD91c3A9c2hhcmluZw=='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #f59e0b, #eab308)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #f59e0b, #eab308)">
-                    <i data-lucide="server"></i>
-                </div>
-                <h3>LIST IP TCACS NEUCENTRIX</h3>
-                <p>Daftar IP TCACS Neucentrix (Migrasi)</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="file-spreadsheet"></i> Spreadsheet</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-        </div>
-    </section>
-
-
-    <!-- Resources Section -->
-    <section class="section" id="resources">
-        <div class="section-header animate-on-scroll">
-            <span class="section-tag">Resources</span>
-            <h2 class="section-title">Learning Resources</h2>
-            <p class="section-desc">Akses berbagai materi pembelajaran dari dasar hingga advanced</p>
+            </div>
         </div>
 
-        <div class="resource-grid">
-            <!-- NEUCENTRIX CATEGORY -->
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly9naXN0LmdpdGh1Yi5jb20vZWRnbm4vODZhNDAxZmRkNTc0ODY4OWM4ODBjNzRiMmRmNGI5NTg='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #f97316, #ec4899)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #f97316, #ec4899)">
-                    <i data-lucide="terminal"></i>
+        <!-- ====== CERTIFICATIONS ====== -->
+        <div class="section-block" id="certifications">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-header-left">
+                    <div class="section-icon icon-cert"><i data-lucide="award"></i></div>
+                    <span class="section-title">Certification Paths</span>
+                    <span class="section-count">1</span>
                 </div>
-                <h3>CHECK Cisco C6807-XL SWITCH</h3>
-                <p>Script untuk check status Cisco C6807-XL Switch</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="code"></i> GitHub Gist</span>
-                    <span><i data-lucide="server"></i> NEUCENTRIX</span>
+                <div class="section-chevron"><i data-lucide="chevron-down"></i></div>
+            </div>
+            <div class="section-body">
+                <div class="link-grid">
+                    <a href="#"
+                        onclick="openLink('aHR0cHM6Ly9kcml2ZS5nb29nbGUuY29tL2RyaXZlL2ZvbGRlcnMvMXRwNjY5VlRNR2JUUHhoaGdFMnRHZnR3TGoxODVkd2NPP3VzcD1kcml2ZV9saW5r');return false;"
+                        class="link-item">
+                        <div class="link-icon li-cert"><i data-lucide="award"></i></div>
+                        <div class="link-info">
+                            <div class="link-name">CCNP ENTERPRISE - CISCO SDWAN</div>
+                            <div class="link-desc">Materi sertifikasi Cisco SD-WAN Specialist</div>
+                        </div>
+                        <span class="link-badge badge-cert">Cert</span>
+                        <div class="link-arrow"><i data-lucide="arrow-up-right"></i></div>
+                    </a>
                 </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly9naXN0LmdpdGh1Yi5jb20vZWRnbm4vNTU0NGI4OTBkZjAzNzI0NDBhZjRlOWNhNDZmNDA1NjA='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #f97316, #ec4899)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #f97316, #ec4899)">
-                    <i data-lucide="terminal"></i>
-                </div>
-                <h3>CHECK SWITCH EDGECORE AS4610_54T</h3>
-                <p>Script untuk check status Edgecore AS4610_54T Switch</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="code"></i> GitHub Gist</span>
-                    <span><i data-lucide="server"></i> NEUCENTRIX</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly9naXN0LmdpdGh1Yi5jb20vZWRnbm4vOWYwMjBkOGFmNmQ5ZWMzNTUzYjg2Nzg5MTZlYjRiYTU='); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #f97316, #ec4899)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #f97316, #ec4899)">
-                    <i data-lucide="terminal"></i>
-                </div>
-                <h3>CHECK SWITCH ARISTA VIA CONTROLLER</h3>
-                <p>Script untuk check status Arista Switch via Controller</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="code"></i> GitHub Gist</span>
-                    <span><i data-lucide="server"></i> NEUCENTRIX</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <!-- SD-WAN CATEGORY -->
-
-            <a href="materi/preconfig-sdwan.html" class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #10b981, #059669)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #10b981, #059669)">
-                    <i data-lucide="terminal"></i>
-                </div>
-                <h3>Pre Config SD-WAN Devices</h3>
-                <p>Panduan Day 0 configuration untuk Cisco C8300, C8200, ISR series</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="book-open"></i> Guide</span>
-                    <span><i data-lucide="router"></i> SD-WAN</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly95b3V0dS5iZS9CNlA2VXA3ZEtMTT9zaT1oMW1ZZDBhTEZBRG16TldK'); return false;"
-                class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #6366f1, #8b5cf6)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #ff0000, #cc0000)">
-                    <i data-lucide="youtube"></i>
-                </div>
-                <h3>CREATE CISCO VIPTELA TEMPLATE</h3>
-                <p>Video tutorial pembuatan template Cisco Viptela</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="video"></i> YouTube</span>
-                    <span><i data-lucide="network"></i> SD-WAN</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <!-- TUTORIALS CATEGORY -->
-
-            <a href="materi/visual-certexam-vce.html" class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #10b981, #06b6d4)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #10b981, #06b6d4)">
-                    <i data-lucide="file-code"></i>
-                </div>
-                <h3>Visual CertExam & VCE</h3>
-                <p>Panduan install dan setup Visual CertExam Manager</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="book-open"></i> Tutorial</span>
-                    <span><i data-lucide="play-circle"></i> Interaktif</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="materi/git-github-tutorial.html" class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #f97316, #ef4444)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #f97316, #ef4444)">
-                    <i data-lucide="git-branch"></i>
-                </div>
-                <h3>Git & GitHub Tutorial</h3>
-                <p>Cara menghubungkan repository lokal ke GitHub</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="book-open"></i> Tutorial</span>
-                    <span><i data-lucide="terminal"></i> Commands</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="materi/foxyproxy-tutorial.html" class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #8b5cf6, #6366f1)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #8b5cf6, #6366f1)">
-                    <i data-lucide="globe"></i>
-                </div>
-                <h3>FoxyProxy & SSH Tunnel</h3>
-                <p>Setup proxy browser untuk akses remote server</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="book-open"></i> Tutorial</span>
-                    <span><i data-lucide="shield"></i> Networking</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="materi/local-dns.html" class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #06b6d4, #a855f7)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #06b6d4, #a855f7)">
-                    <i data-lucide="server"></i>
-                </div>
-                <h3>Local DNS Setup</h3>
-                <p>Setup DNS lokal dengan file hosts (Windows & macOS)</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="book-open"></i> Tutorial</span>
-                    <span><i data-lucide="monitor"></i> Windows & macOS</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-
-            <a href="materi/cisco-sdwan-tutorial.html" class="resource-card animate-on-scroll"
-                style="--card-accent: linear-gradient(135deg, #049fd9, #0277bd)">
-                <div class="resource-icon" style="background: linear-gradient(135deg, #049fd9, #0277bd)">
-                    <i data-lucide="network"></i>
-                </div>
-                <h3>Cisco Catalyst SD-WAN</h3>
-                <p>Design, Deploy, and Secure Your WAN</p>
-                <div class="resource-meta">
-                    <span><i data-lucide="award"></i> Certification</span>
-                    <span><i data-lucide="book-open"></i> CCNP</span>
-                </div>
-                <div class="resource-arrow">
-                    <i data-lucide="arrow-up-right"></i>
-                </div>
-            </a>
-        </div>
-    </section>
-
-    <!-- Certifications Section -->
-    <section class="section" id="certifications">
-        <div class="section-header animate-on-scroll">
-            <span class="section-tag">Certifications</span>
-            <h2 class="section-title">Certification Paths</h2>
-            <p class="section-desc">Persiapan materi untuk berbagai sertifikasi profesional</p>
+            </div>
         </div>
 
-        <div class="feature-grid">
-            <!-- CISCO CERTIFICATION -->
-            <a href="#"
-                onclick="openLink('aHR0cHM6Ly9kcml2ZS5nb29nbGUuY29tL2RyaXZlL2ZvbGRlcnMvMXRwNjY5VlRNR2JUUHhoaGdFMnRHZnR3TGoxODVkd2NPP3VzcD1kcml2ZV9saW5r'); return false;"
-                class="feature-card animate-on-scroll">
-                <div class="feature-icon">
-                    <i data-lucide="award"></i>
-                </div>
-                <div class="feature-content">
-                    <h4>CCNP ENTERPRISE-CISCO SDWAN</h4>
-                    <p>Materi lengkap untuk sertifikasi Cisco SD-WAN Specialist</p>
-                </div>
-            </a>
-        </div>
-    </section>
+    </div>
 
-    <!-- Footer -->
+    <!-- ===== FOOTER ===== -->
     <footer class="footer">
-        <div class="footer-content">
-            <a href="#" class="logo">
-                <div class="logo-icon">
-                    <i data-lucide="rocket"></i>
-                </div>
-                <span class="logo-text">Nextgen Center</span>
-            </a>
-
-            <div class="footer-links">
-                <a href="https://edgnn.github.io/nextgen-center/" target="_blank">Home</a>
-                <a href="#resources">Resources</a>
-                <a href="#certifications">Certifications</a>
-                <a href="#tools">Tools</a>
-                <a href="JadwalNextgen/">Jadwal Kerja</a>
-            </div>
-
-            <div class="footer-social">
-                <a href="#" class="social-btn" aria-label="Email">
-                    <i data-lucide="mail"></i>
-                </a>
-                <a href="#" class="social-btn" aria-label="LinkedIn">
-                    <i data-lucide="linkedin"></i>
-                </a>
-                <a href="#" class="social-btn" aria-label="GitHub">
-                    <i data-lucide="github"></i>
-                </a>
-            </div>
-
-            <div class="footer-copyright">
-                <p>© 2025 Nextgen Center</p>
-            </div>
-        </div>
+        <p>&copy; 2025 Nextgen Center &middot; Learning Hub</p>
     </footer>
 
     <script>
-        // Initialize Lucide icons
         lucide.createIcons();
 
-        // Open obfuscated links
         function openLink(encoded) {
             window.open(atob(encoded), '_blank');
         }
 
-        // Logout function
         function logout() {
             localStorage.removeItem('nextgenAuth');
             window.location.href = 'login.html';
         }
 
-        // Theme Toggle
         function toggleTheme() {
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme');
@@ -1726,72 +1212,11 @@
                 document.documentElement.setAttribute('data-theme', savedTheme);
             }
         }
-
         loadTheme();
 
-        // Scroll Animation
-        function handleScrollAnimation() {
-            const elements = document.querySelectorAll('.animate-on-scroll');
-
-            elements.forEach(el => {
-                const rect = el.getBoundingClientRect();
-                const isVisible = rect.top < window.innerHeight - 100;
-
-                if (isVisible) {
-                    el.classList.add('visible');
-                }
-            });
-        }
-
-        window.addEventListener('scroll', handleScrollAnimation);
-        window.addEventListener('load', handleScrollAnimation);
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Navbar background on scroll
-        window.addEventListener('scroll', () => {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // Mobile Menu Toggle
-        function toggleMobileMenu() {
-            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-            const mobileNav = document.querySelector('.mobile-nav');
-            const mobileNavOverlay = document.querySelector('.mobile-nav-overlay');
-
-            mobileMenuBtn.classList.toggle('active');
-            mobileNav.classList.toggle('active');
-            mobileNavOverlay.classList.toggle('active');
-            document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
-            lucide.createIcons();
-        }
-
-        function closeMobileMenu() {
-            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-            const mobileNav = document.querySelector('.mobile-nav');
-            const mobileNavOverlay = document.querySelector('.mobile-nav-overlay');
-
-            mobileMenuBtn.classList.remove('active');
-            mobileNav.classList.remove('active');
-            mobileNavOverlay.classList.remove('active');
-            document.body.style.overflow = '';
+        function toggleSection(header) {
+            const block = header.parentElement;
+            block.classList.toggle('collapsed');
         }
     </script>
 </body>
