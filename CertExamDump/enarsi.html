@@ -408,6 +408,185 @@
             font-style: italic;
         }
 
+        /* Drag and Drop Config Styles */
+        .drag-drop-config-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .config-blocks-area {
+            flex: 2;
+            min-width: 340px;
+        }
+
+        .config-source-area {
+            flex: 1;
+            min-width: 200px;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+        }
+
+        .config-block {
+            background: #1e1e2e;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.8;
+            color: #cdd6f4;
+            border: 1px solid #313244;
+        }
+
+        .config-block-title {
+            color: #89b4fa;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #313244;
+        }
+
+        .config-line {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            padding: 2px 0;
+        }
+
+        .config-line .config-text {
+            color: #cdd6f4;
+            white-space: pre;
+        }
+
+        .config-line .config-keyword {
+            color: #cba6f7;
+        }
+
+        .config-line .config-comment {
+            color: #6c7086;
+        }
+
+        .config-blank {
+            display: inline-flex;
+            align-items: center;
+            min-width: 180px;
+            min-height: 32px;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed #585b70;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            cursor: default;
+        }
+
+        .config-blank.drag-over {
+            background: rgba(137, 180, 250, 0.15);
+            border-color: #89b4fa;
+            box-shadow: 0 0 8px rgba(137, 180, 250, 0.3);
+        }
+
+        .config-blank.has-item {
+            background: rgba(166, 227, 161, 0.15);
+            border: 2px solid #a6e3a1;
+            border-style: solid;
+        }
+
+        .config-blank .blank-value {
+            color: #a6e3a1;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .config-blank .blank-value:hover {
+            color: #f38ba8;
+            text-decoration: line-through;
+        }
+
+        .config-blank .blank-placeholder {
+            color: #585b70;
+            font-style: italic;
+            font-size: 0.8rem;
+        }
+
+        .config-blank.correct-answer {
+            border-color: #a6e3a1 !important;
+            background: rgba(166, 227, 161, 0.2) !important;
+        }
+
+        .config-blank.correct-answer .blank-value {
+            color: #a6e3a1 !important;
+            cursor: default;
+        }
+
+        .config-blank.correct-answer .blank-value:hover {
+            text-decoration: none;
+        }
+
+        .config-blank.incorrect-answer {
+            border-color: #f38ba8 !important;
+            background: rgba(243, 139, 168, 0.15) !important;
+        }
+
+        .config-blank.incorrect-answer .blank-value {
+            color: #f38ba8 !important;
+            cursor: default;
+        }
+
+        .config-blank.incorrect-answer .blank-value:hover {
+            text-decoration: none;
+        }
+
+        .config-blank .correct-hint {
+            display: block;
+            font-size: 0.7rem;
+            color: #a6e3a1;
+            margin-top: 2px;
+        }
+
+        .config-source-item {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #90caf9;
+            border-radius: 8px;
+            padding: 10px 14px;
+            cursor: grab;
+            font-size: 0.85rem;
+            color: #1565c0;
+            transition: all 0.2s ease;
+            user-select: none;
+            margin-bottom: 8px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+        .config-source-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+            border-color: #42a5f5;
+        }
+
+        .config-source-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .pre-config-block {
+            background: #1e1e2e;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            color: #a6adc8;
+            border: 1px solid #313244;
+            white-space: pre-wrap;
+        }
+
         .question-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -8855,6 +9034,240 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                         "t4": "s2"   // blocks DHCP replies or advertisements not originating from a DHCP server or relay -> DHCP guard
                     },
                     explanation: "IPv6 RA guard validates RA and redirect messages. IPv6 snooping is a prerequisite to other FHS features. IPv6 Source Guard populates the binding table. DHCP guard blocks unauthorized DHCP replies."
+                },
+                {
+                    id: 2,
+                    exam: "B",
+                    type: "drag-drop",
+                    text: "Drag and drop the ICMPv6 neighbor discovery messages from the left onto the correct packet types on the right.",
+                    sourceItems: [
+                        { id: "s1", text: "Neighbor Solicitation" },
+                        { id: "s2", text: "Neighbor Advertisement" },
+                        { id: "s3", text: "Router Advertisement" },
+                        { id: "s4", text: "Redirect Message" },
+                        { id: "s5", text: "Router Solicitation" }
+                    ],
+                    targetZones: [
+                        { id: "t1", label: "ICMPv6 Type 134" },
+                        { id: "t2", label: "ICMPv6 Type 137" },
+                        { id: "t3", label: "ICMPv6 Type 135" },
+                        { id: "t4", label: "ICMPv6 Type 133" },
+                        { id: "t5", label: "ICMPv6 Type 136" }
+                    ],
+                    correct: {
+                        "t1": "s3",  // Router Advertisement -> ICMPv6 Type 134
+                        "t2": "s4",  // Redirect Message -> ICMPv6 Type 137
+                        "t3": "s1",  // Neighbor Solicitation -> ICMPv6 Type 135
+                        "t4": "s5",  // Router Solicitation -> ICMPv6 Type 133
+                        "t5": "s2"   // Neighbor Advertisement -> ICMPv6 Type 136
+                    },
+                    explanation: "ICMPv6 Type 133: Router Solicitation, Type 134: Router Advertisement, Type 135: Neighbor Solicitation, Type 136: Neighbor Advertisement, Type 137: Redirect Message."
+                },
+                {
+                    id: 3,
+                    exam: "B",
+                    type: "drag-drop",
+                    text: "Drag and drop the MPLS concepts from the left onto the descriptions on the right.",
+                    sourceItems: [
+                        { id: "s1", text: "label edge router" },
+                        { id: "s2", text: "label switch router" },
+                        { id: "s3", text: "forwarding equivalence class" },
+                        { id: "s4", text: "penultimate hop popping" }
+                    ],
+                    targetZones: [
+                        { id: "t1", label: "allows an LSR to remove the label before forwarding the packet" },
+                        { id: "t2", label: "accepts unlabeled packets and imposes labels" },
+                        { id: "t3", label: "group of packets that are forwarded in the same manner" },
+                        { id: "t4", label: "receives labeled packets and swaps labels" }
+                    ],
+                    correct: {
+                        "t1": "s4",  // penultimate hop popping
+                        "t2": "s1",  // label edge router
+                        "t3": "s3",  // forwarding equivalence class
+                        "t4": "s2"   // label switch router
+                    },
+                    explanation: "Penultimate hop popping (PHP) allows an LSR to remove the label before forwarding. Label Edge Router (LER) accepts unlabeled packets and imposes labels. Forwarding Equivalence Class (FEC) is a group of packets forwarded the same way. Label Switch Router (LSR) receives labeled packets and swaps labels."
+                },
+                {
+                    id: 4,
+                    exam: "B",
+                    type: "drag-drop",
+                    text: "Drag and drop the MPLS VPN concepts from the left onto the correct descriptions on the right.",
+                    sourceItems: [
+                        { id: "s1", text: "route distinguisher" },
+                        { id: "s2", text: "route target" },
+                        { id: "s3", text: "Resource Reservation Protocol" },
+                        { id: "s4", text: "multiprotocol BGP" }
+                    ],
+                    targetZones: [
+                        { id: "t1", label: "propagates VPN reachability information" },
+                        { id: "t2", label: "distributes labels for traffic engineering" },
+                        { id: "t3", label: "uniquely identifies a customer prefix" },
+                        { id: "t4", label: "controls the import/export of customer prefixes" }
+                    ],
+                    correct: {
+                        "t1": "s4",  // multiprotocol BGP
+                        "t2": "s3",  // Resource Reservation Protocol
+                        "t3": "s1",  // route distinguisher
+                        "t4": "s2"   // route target
+                    },
+                    explanation: "Multiprotocol BGP (MP-BGP) propagates VPN reachability information. RSVP distributes labels for traffic engineering. Route Distinguisher (RD) uniquely identifies a customer prefix. Route Target (RT) controls import/export of customer prefixes."
+                },
+                {
+                    id: 5,
+                    exam: "B",
+                    type: "drag-drop",
+                    text: "Drag and drop the MPLS VPN device types from the left onto the definitions on the right.",
+                    sourceItems: [
+                        { id: "s1", text: "Customer (C) device" },
+                        { id: "s2", text: "CE device" },
+                        { id: "s3", text: "PE device" },
+                        { id: "s4", text: "Provider (P) device" }
+                    ],
+                    targetZones: [
+                        { id: "t1", label: "device in the core of the provider network that switches MPLS packets" },
+                        { id: "t2", label: "device that attaches and detaches the VPN labels to the packets in the provider network" },
+                        { id: "t3", label: "device in the enterprise network that connects to other customer devices" },
+                        { id: "t4", label: "device at the edge of the enterprise network that connects to the service provider network" }
+                    ],
+                    correct: {
+                        "t1": "s4",  // Provider (P) device
+                        "t2": "s3",  // PE device
+                        "t3": "s1",  // Customer (C) device
+                        "t4": "s2"   // CE device
+                    },
+                    explanation: "Provider (P) device is in the core and switches MPLS packets. PE device attaches/detaches VPN labels. Customer (C) device connects to other customer devices. CE device is at the enterprise edge connecting to the provider."
+                },
+                {
+                    id: 6,
+                    exam: "B",
+                    type: "drag-drop",
+                    text: "Drag and drop the MPLS terms from the left onto the correct definitions on the right.",
+                    sourceItems: [
+                        { id: "s1", text: "PE" },
+                        { id: "s2", text: "P" },
+                        { id: "s3", text: "CE" },
+                        { id: "s4", text: "LSP" }
+                    ],
+                    targetZones: [
+                        { id: "t1", label: "device that forwards traffic based on labels" },
+                        { id: "t2", label: "path that the labeled packet takes" },
+                        { id: "t3", label: "device that is unaware of MPLS labeling" },
+                        { id: "t4", label: "device that removes and adds the MPLS labeling" }
+                    ],
+                    correct: {
+                        "t1": "s2",  // P
+                        "t2": "s4",  // LSP
+                        "t3": "s3",  // CE
+                        "t4": "s1"   // PE
+                    },
+                    explanation: "P (Provider) device forwards traffic based on labels. LSP (Label Switched Path) is the path that labeled packets take. CE (Customer Edge) is unaware of MPLS labeling. PE (Provider Edge) removes and adds MPLS labeling."
+                },
+                {
+                    id: 7,
+                    exam: "B",
+                    type: "drag-drop",
+                    text: "Drag and drop the actions from the left into the correct order on the right to configure a policy to avoid following packet forwarding based on the normal routing path.",
+                    sourceItems: [
+                        { id: "s1", text: "Configure route map instances." },
+                        { id: "s2", text: "Configure set commands." },
+                        { id: "s3", text: "Configure fast switching for PBR." },
+                        { id: "s4", text: "Configure ACLs." },
+                        { id: "s5", text: "Configure match commands." },
+                        { id: "s6", text: "Configure PBR on the interface." }
+                    ],
+                    targetZones: [
+                        { id: "t1", label: "Step 1" },
+                        { id: "t2", label: "Step 2" },
+                        { id: "t3", label: "Step 3" },
+                        { id: "t4", label: "Step 4" },
+                        { id: "t5", label: "Step 5" },
+                        { id: "t6", label: "Step 6" }
+                    ],
+                    correct: {
+                        "t1": "s4",  // Configure ACLs
+                        "t2": "s1",  // Configure route map instances
+                        "t3": "s5",  // Configure match commands
+                        "t4": "s2",  // Configure set commands
+                        "t5": "s6",  // Configure PBR on the interface
+                        "t6": "s3"   // Configure fast switching for PBR
+                    },
+                    explanation: "PBR configuration order: 1) Configure ACLs to define traffic, 2) Create route map instances, 3) Configure match commands to match ACLs, 4) Configure set commands to define actions, 5) Apply PBR on the interface, 6) Enable fast switching for PBR."
+                },
+                {
+                    id: 8,
+                    exam: "B",
+                    type: "drag-drop",
+                    text: "Drag and drop the IPv6 first hop security device roles from the left onto the corresponding descriptions on the right.",
+                    sourceItems: [
+                        { id: "s1", text: "host" },
+                        { id: "s2", text: "router" },
+                        { id: "s3", text: "monitor" },
+                        { id: "s4", text: "switch" }
+                    ],
+                    targetZones: [
+                        { id: "t1", label: "Receives router advertisements from valid routers, and no router solicitations are received." },
+                        { id: "t2", label: "Receives router solicitations and sends router advertisements." },
+                        { id: "t3", label: "Receives valid and rogue router advertisements and all router solicitations." },
+                        { id: "t4", label: "Received router advertisements are trusted and are flooded to synchronize states." }
+                    ],
+                    correct: {
+                        "t1": "s1",  // host
+                        "t2": "s2",  // router
+                        "t3": "s3",  // monitor
+                        "t4": "s4"   // switch
+                    },
+                    explanation: "Host receives RA from valid routers only. Router receives RS and sends RA. Monitor receives all valid and rogue RA/RS. Switch trusts received RA and floods them to synchronize states."
+                },
+                {
+                    id: 9,
+                    exam: "B",
+                    type: "drag-drop-config",
+                    text: "Drag and drop the code snippets from the right onto the boxes in the configuration to establish the needed connection. Snippets may be used more than once.",
+                    preConfig: " ip vrf customer_a\n  rd 1:1\n  route-target both 1:1\n\n ip vrf customer_b\n  rd 2:2\n  route-target both 2:2",
+                    configBlocks: [
+                        {
+                            title: "CE1",
+                            lines: [
+                                { text: "interface Gig0/0" },
+                                { text: " ip vrf forwarding ", blank: "b1" },
+                                { text: " ip address ", blank: "b2" },
+                                { text: "!" },
+                                { text: "interface Gig0/1" },
+                                { text: " ip vrf forwarding ", blank: "b3" },
+                                { text: " ip address ", blank: "b4" }
+                            ]
+                        },
+                        {
+                            title: "CE2",
+                            lines: [
+                                { text: "interface Gig0/0" },
+                                { text: " ip vrf forwarding ", blank: "b5" },
+                                { text: " ip address ", blank: "b6" },
+                                { text: "!" },
+                                { text: "interface Gig0/1" },
+                                { text: " ip vrf forwarding ", blank: "b7" },
+                                { text: " ip address ", blank: "b8" }
+                            ]
+                        }
+                    ],
+                    sourceItems: [
+                        { id: "s1", text: "customer_a" },
+                        { id: "s2", text: "customer_b" },
+                        { id: "s3", text: "192.168.1.1 255.255.255.0" },
+                        { id: "s4", text: "192.168.1.2 255.255.255.0" }
+                    ],
+                    correct: {
+                        "b1": "s1",  // customer_a
+                        "b2": "s3",  // 192.168.1.1 255.255.255.0
+                        "b3": "s2",  // customer_b
+                        "b4": "s3",  // 192.168.1.1 255.255.255.0
+                        "b5": "s1",  // customer_a
+                        "b6": "s4",  // 192.168.1.2 255.255.255.0
+                        "b7": "s2",  // customer_b
+                        "b8": "s4"   // 192.168.1.2 255.255.255.0
+                    },
+                    explanation: "Customer_a uses VRF customer_a on Gig0/0 for both CE1 and CE2. Customer_b uses VRF customer_b on Gig0/1. CE1 gets IP 192.168.1.1 on both interfaces, CE2 gets 192.168.1.2. Overlapping addresses are allowed because VRFs provide separate routing tables."
                 }
             ]
         };
@@ -8877,7 +9290,7 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
         function init() {
             // Read URL parameters
             const urlParams = new URLSearchParams(window.location.search);
-            const questionCount = parseInt(urlParams.get('count')) || 384;
+            const questionCount = parseInt(urlParams.get('count')) || 393;
             const useRecent = urlParams.get('recent') === 'true';
             const showChronological = urlParams.get('chronological') === 'true';
             const examParam = urlParams.get('exam') || 'A';
@@ -8920,7 +9333,7 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
             // Set exam info
             document.getElementById('examTitle').textContent = examData.title;
             document.getElementById('examCategory').textContent = examData.category;
-            document.getElementById('totalQ').textContent = examData.questions.length;
+            document.getElementById('totalQ').textContent = allQuestions.length;
 
             // Generate question grid
             generateQuestionGrid();
@@ -8949,17 +9362,35 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
         function switchExam(exam) {
             if (exam === currentExam) return;
 
-            // Confirm before switching if exam is in progress
-            if (Object.keys(userAnswers).length > 0 && !examSubmitted) {
-                if (!confirm('Anda akan berpindah ke Exam ' + exam + '. Progress saat ini akan hilang. Lanjutkan?')) {
-                    return;
-                }
-            }
+            currentExam = exam;
 
-            // Redirect to same page with exam parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            urlParams.set('exam', exam);
-            window.location.search = urlParams.toString();
+            // Filter questions for the selected exam
+            const filteredQuestions = allQuestions.filter(q => {
+                if (exam === 'A') {
+                    return !q.exam || q.exam === 'A';
+                } else {
+                    return q.exam === exam;
+                }
+            });
+
+            examData.questions = filteredQuestions;
+
+            // Update tab active state
+            document.querySelectorAll('.exam-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.exam === currentExam);
+            });
+
+            // Reset to first question of this exam
+            currentQuestion = 0;
+
+            // Update total questions display
+            document.getElementById('totalQ').textContent = allQuestions.length;
+
+            // Regenerate grid with current exam questions only
+            generateQuestionGrid();
+
+            // Load first question
+            loadQuestion(0);
         }
 
         // Generate Question Grid
@@ -8967,45 +9398,16 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
             const grid = document.getElementById('questionGrid');
             grid.innerHTML = '';
 
-            // Get Exam A and Exam B questions
-            const examAQuestions = allQuestions.filter(q => !q.exam || q.exam === 'A');
-            const examBQuestions = allQuestions.filter(q => q.exam === 'B');
-
-            // Add Exam A label
-            const examALabel = document.createElement('div');
-            examALabel.className = 'exam-section-label';
-            examALabel.textContent = 'Exam A';
-            grid.appendChild(examALabel);
-
-            // Add Exam A question buttons
-            examAQuestions.forEach((q, i) => {
+            // Show only current exam's questions
+            examData.questions.forEach((q, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'q-btn';
-                btn.dataset.exam = 'A';
+                btn.dataset.exam = currentExam;
                 btn.dataset.qIndex = i;
                 btn.textContent = i + 1;
-                btn.onclick = () => goToQuestionByExam('A', i);
+                btn.onclick = () => goToQuestion(i);
                 grid.appendChild(btn);
             });
-
-            // Add Exam B label if there are Exam B questions
-            if (examBQuestions.length > 0) {
-                const examBLabel = document.createElement('div');
-                examBLabel.className = 'exam-section-label';
-                examBLabel.textContent = 'Exam B';
-                grid.appendChild(examBLabel);
-
-                // Add Exam B question buttons (numbering starts from 1)
-                examBQuestions.forEach((q, i) => {
-                    const btn = document.createElement('button');
-                    btn.className = 'q-btn';
-                    btn.dataset.exam = 'B';
-                    btn.dataset.qIndex = i;
-                    btn.textContent = i + 1;
-                    btn.onclick = () => goToQuestionByExam('B', i);
-                    grid.appendChild(btn);
-                });
-            }
 
             updateQuestionGrid();
         }
@@ -9013,25 +9415,19 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
         // Update Question Grid
         function updateQuestionGrid() {
             const buttons = document.querySelectorAll('.q-btn');
-            buttons.forEach((btn) => {
-                const btnExam = btn.dataset.exam;
-                const btnIndex = parseInt(btn.dataset.qIndex);
-
+            buttons.forEach((btn, i) => {
                 btn.classList.remove('current', 'answered', 'flagged', 'review-correct', 'review-incorrect');
 
-                // Find the actual index in current examData.questions
-                const actualIndex = findActualIndex(btnExam, btnIndex);
-
-                if (actualIndex === currentQuestion && btnExam === currentExam) {
+                if (i === currentQuestion) {
                     btn.classList.add('current');
                 }
 
                 // Build answer key with exam prefix
-                const answerKey = btnExam + '_' + btnIndex;
+                const answerKey = currentExam + '_' + i;
 
                 // In review mode, show correct/incorrect colors
-                if (isReviewMode && examSubmitted && btnExam === currentExam) {
-                    const question = getQuestionByExam(btnExam, btnIndex);
+                if (isReviewMode && examSubmitted) {
+                    const question = examData.questions[i];
                     if (question) {
                         const isCorrect = checkQuestionCorrectByKey(answerKey, question);
                         if (isCorrect) {
@@ -9110,7 +9506,7 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                 return userAns === correctAns;
             } else if (question.type === 'true-false') {
                 return answer === question.correct;
-            } else if (question.type === 'drag-drop') {
+            } else if (question.type === 'drag-drop' || question.type === 'drag-drop-config') {
                 // For drag-drop, check if all mappings match
                 const correct = question.correct;
                 for (const targetId in correct) {
@@ -9149,7 +9545,7 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                 return answer === question.correct;
             } else if (question.type === 'short-answer') {
                 return question.correct.some(ans => ans.toLowerCase() === (answer || '').toLowerCase());
-            } else if (question.type === 'drag-drop') {
+            } else if (question.type === 'drag-drop' || question.type === 'drag-drop-config') {
                 const correct = question.correct;
                 for (const targetId in correct) {
                     if (answer[targetId] !== correct[targetId]) {
@@ -9184,7 +9580,8 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                 'multiple-choice': question.isMultiple ? 'Multiple Select' : 'Single Choice',
                 'true-false': 'Benar/Salah',
                 'short-answer': 'Isian Singkat',
-                'drag-drop': 'Drag & Drop'
+                'drag-drop': 'Drag & Drop',
+                'drag-drop-config': 'Drag & Drop'
             };
 
             typeBadge.textContent = typeLabels[question.type] || question.type;
@@ -9322,6 +9719,8 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                 `;
             } else if (question.type === 'drag-drop') {
                 renderDragDrop(question, userAnswer);
+            } else if (question.type === 'drag-drop-config') {
+                renderDragDropConfig(question, userAnswer);
             }
 
             lucide.createIcons();
@@ -9483,6 +9882,169 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
             const currentMappings = userAnswers[answerKey] || {};
 
             delete currentMappings[targetId];
+            userAnswers[answerKey] = Object.keys(currentMappings).length > 0 ? currentMappings : undefined;
+
+            // Re-render
+            loadQuestion(currentQuestion);
+        }
+
+        // Render Drag and Drop Config Question
+        function renderDragDropConfig(question, userAnswer) {
+            const container = document.getElementById('optionsContainer');
+            const answerKey = getCurrentAnswerKey();
+            const currentMappings = userAnswers[answerKey] || {};
+            const showingAnswers = examSubmitted || showAnswerVisible;
+
+            // Pre-config block
+            let preConfigHtml = '';
+            if (question.preConfig) {
+                preConfigHtml = `<div class="pre-config-block">${question.preConfig}</div>`;
+            }
+
+            // Build config blocks HTML
+            let configBlocksHtml = '';
+            question.configBlocks.forEach(block => {
+                let linesHtml = '';
+                block.lines.forEach(line => {
+                    if (line.blank) {
+                        const blankId = line.blank;
+                        const mappedSourceId = currentMappings[blankId];
+                        const mappedSource = mappedSourceId ? question.sourceItems.find(s => s.id === mappedSourceId) : null;
+                        const correctSourceId = question.correct[blankId];
+                        const correctSource = question.sourceItems.find(s => s.id === correctSourceId);
+
+                        let blankClass = 'config-blank';
+                        let blankContent = '';
+                        let hintHtml = '';
+
+                        if (mappedSource) {
+                            blankClass += ' has-item';
+                            if (showingAnswers) {
+                                const isCorrect = mappedSourceId === correctSourceId;
+                                blankClass += isCorrect ? ' correct-answer' : ' incorrect-answer';
+                                const icon = isCorrect ? '✅' : '❌';
+                                blankContent = `<span class="blank-value">${icon} ${mappedSource.text}</span>`;
+                                if (!isCorrect) {
+                                    hintHtml = `<span class="correct-hint">✓ ${correctSource ? correctSource.text : ''}</span>`;
+                                }
+                            } else {
+                                blankContent = `<span class="blank-value" onclick="removeFromConfigBlank('${blankId}')">${mappedSource.text}</span>`;
+                            }
+                        } else {
+                            if (showingAnswers) {
+                                blankClass += ' correct-answer';
+                                blankContent = `<span class="blank-value">✓ ${correctSource ? correctSource.text : ''}</span>`;
+                            } else {
+                                blankContent = `<span class="blank-placeholder">drop here</span>`;
+                            }
+                        }
+
+                        linesHtml += `
+                            <div class="config-line">
+                                <span class="config-text">${line.text}</span>
+                                <span class="${blankClass}" 
+                                      data-blank-id="${blankId}"
+                                      ondragover="handleConfigDragOver(event)"
+                                      ondragleave="handleConfigDragLeave(event)"
+                                      ondrop="handleConfigDrop(event, '${blankId}')">
+                                    ${blankContent}${hintHtml}
+                                </span>
+                            </div>
+                        `;
+                    } else {
+                        linesHtml += `<div class="config-line"><span class="config-text">${line.text}</span></div>`;
+                    }
+                });
+
+                configBlocksHtml += `
+                    <div class="config-block">
+                        <div class="config-block-title">${block.title}</div>
+                        ${linesHtml}
+                    </div>
+                `;
+            });
+
+            // Build source items HTML
+            let sourceItemsHtml = '';
+            question.sourceItems.forEach(item => {
+                sourceItemsHtml += `
+                    <div class="config-source-item" 
+                         draggable="${!examSubmitted && !showingAnswers}" 
+                         data-source-id="${item.id}"
+                         ondragstart="handleConfigDragStart(event, '${item.id}')"
+                         ondragend="handleConfigDragEnd(event)">
+                        ${item.text}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = `
+                ${preConfigHtml}
+                <div class="drag-drop-config-container">
+                    <div class="config-blocks-area">
+                        ${configBlocksHtml}
+                    </div>
+                    <div class="config-source-area">
+                        <div class="drag-drop-label">📋 Snippets (Drag to blanks)</div>
+                        ${sourceItemsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Drag and Drop Config Event Handlers
+        let draggedConfigSourceId = null;
+
+        function handleConfigDragStart(event, sourceId) {
+            if (examSubmitted) return;
+            draggedConfigSourceId = sourceId;
+            event.target.classList.add('dragging');
+            event.dataTransfer.effectAllowed = 'copy';
+        }
+
+        function handleConfigDragEnd(event) {
+            event.target.classList.remove('dragging');
+            draggedConfigSourceId = null;
+        }
+
+        function handleConfigDragOver(event) {
+            if (examSubmitted) return;
+            event.preventDefault();
+            const blank = event.target.closest('.config-blank');
+            if (blank) blank.classList.add('drag-over');
+        }
+
+        function handleConfigDragLeave(event) {
+            const blank = event.target.closest('.config-blank');
+            if (blank) blank.classList.remove('drag-over');
+        }
+
+        function handleConfigDrop(event, blankId) {
+            if (examSubmitted) return;
+            event.preventDefault();
+            const blank = event.target.closest('.config-blank');
+            if (blank) blank.classList.remove('drag-over');
+
+            if (!draggedConfigSourceId) return;
+
+            const answerKey = getCurrentAnswerKey();
+            const currentMappings = userAnswers[answerKey] || {};
+
+            // Set the blank value (source items are reusable, no need to remove from previous)
+            currentMappings[blankId] = draggedConfigSourceId;
+            userAnswers[answerKey] = currentMappings;
+
+            // Re-render
+            loadQuestion(currentQuestion);
+        }
+
+        function removeFromConfigBlank(blankId) {
+            if (examSubmitted) return;
+
+            const answerKey = getCurrentAnswerKey();
+            const currentMappings = userAnswers[answerKey] || {};
+
+            delete currentMappings[blankId];
             userAnswers[answerKey] = Object.keys(currentMappings).length > 0 ? currentMappings : undefined;
 
             // Re-render
@@ -9790,6 +10352,16 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                         });
                         yourAns = pairs.join('<br>');
                     }
+                } else if (question.type === 'drag-drop-config') {
+                    if (userAnswer && typeof userAnswer === 'object') {
+                        const allBlanks = question.configBlocks.flatMap(b => b.lines.filter(l => l.blank).map(l => l.blank));
+                        const pairs = allBlanks.map(blankId => {
+                            const sourceId = userAnswer[blankId];
+                            const source = sourceId ? question.sourceItems.find(s => s.id === sourceId) : null;
+                            return `<b>${blankId}</b> : ${source ? source.text : '-'}`;
+                        });
+                        yourAns = pairs.join('<br>');
+                    }
                 }
                 document.getElementById('yourAnswerText').innerHTML = yourAns;
 
@@ -9808,6 +10380,14 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                         return `<b>${zone.label}</b> : ${source ? source.text : ''}`;
                     });
                     correctAns = pairs.join('<br>');
+                } else if (question.type === 'drag-drop-config') {
+                    const allBlanks = question.configBlocks.flatMap(b => b.lines.filter(l => l.blank).map(l => l.blank));
+                    const pairs = allBlanks.map(blankId => {
+                        const sourceId = question.correct[blankId];
+                        const source = question.sourceItems.find(s => s.id === sourceId);
+                        return `<b>${blankId}</b> : ${source ? source.text : ''}`;
+                    });
+                    correctAns = pairs.join('<br>');
                 }
                 document.getElementById('correctAnswerText').innerHTML = correctAns;
 
@@ -9822,6 +10402,8 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                 // Re-render drag-drop to show correct/incorrect indicators
                 if (question.type === 'drag-drop') {
                     renderDragDrop(question, userAnswer);
+                } else if (question.type === 'drag-drop-config') {
+                    renderDragDropConfig(question, userAnswer);
                 }
             } else {
                 // Hide answer
@@ -9832,6 +10414,8 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                 // Re-render drag-drop to hide indicators
                 if (question.type === 'drag-drop') {
                     renderDragDrop(question, userAnswer);
+                } else if (question.type === 'drag-drop-config') {
+                    renderDragDropConfig(question, userAnswer);
                 }
             }
             lucide.createIcons();
