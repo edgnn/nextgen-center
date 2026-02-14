@@ -708,23 +708,44 @@ function updateDashboard() {
     employees.forEach(emp => {
         const empData = monthData[emp.id] || {};
         let shift = empData[day] || "";
+        let isFromPrevDay = false;
 
-        // For overnight shifts, also check previous day's schedule
+        // For LIBUR/empty, check if previous day's overnight shift is still active
         if (!shift || shift === "LIBUR") {
-            // Check if previous day's overnight shift is still active
             const prevDay = day - 1 > 0 ? day - 1 : null;
             if (prevDay) {
                 const prevShift = empData[prevDay];
                 if (prevShift && ["O2", "S2", "A2"].includes(prevShift)) {
-                    // Check if still in overnight shift
+                    // Check if still in overnight shift (morning portion)
                     if (hours < shiftTimes[prevShift].end) {
                         shift = prevShift;
+                        isFromPrevDay = true;
                     }
                 }
             }
         }
 
-        if (shift && shift !== "LIBUR" && isInShift(shift, hours)) {
+        // Determine if employee is currently working
+        let isWorking = false;
+        if (isFromPrevDay) {
+            // Already validated: previous day's overnight shift still active
+            isWorking = true;
+        } else if (shift && shift !== "LIBUR") {
+            const shiftInfo = shiftTimes[shift];
+            if (shiftInfo) {
+                if (shiftInfo.end > shiftInfo.start) {
+                    // Same-day shift (e.g. O1 08-17, H1 08-17): normal range check
+                    isWorking = hours >= shiftInfo.start && hours < shiftInfo.end;
+                } else {
+                    // Overnight shift scheduled TODAY (e.g. S2 20-08, O2 20-05)
+                    // Only match the evening portion (hours >= start)
+                    // Morning portion is handled by previous day's check above
+                    isWorking = hours >= shiftInfo.start;
+                }
+            }
+        }
+
+        if (isWorking) {
             if (!shiftGroups[shift]) {
                 shiftGroups[shift] = [];
             }
