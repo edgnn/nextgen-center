@@ -89,6 +89,7 @@ const nationalHolidays = {
     "2026-06-16": "Tahun Baru Islam 1448 H",
     "2026-08-17": "Hari Kemerdekaan RI",
     "2026-08-25": "Maulid Nabi Muhammad SAW",
+    "2026-02-16": "Cuti Bersama",
     "2026-12-25": "Hari Raya Natal"
 };
 
