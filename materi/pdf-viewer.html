@@ -735,7 +735,7 @@
 
             try {
                 // Set title
-                const displayName = pdfFile.replace(/_/g, ' ').replace('.pdf', '');
+                const displayName = pdfFile.split('/').pop().replace(/_/g, ' ').replace('.pdf', '');
                 document.getElementById('pdfTitle').textContent = displayName;
                 document.title = displayName + ' - Nextgen Center';
 
