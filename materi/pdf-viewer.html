@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CISCO SD WAN Configure From Scratch - Nextgen Center</title>
+
+    <meta name="description" content="Baca materi PDF langsung di browser tanpa perlu download - Nextgen Center">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-primary: #049fd9;
+            --accent-secondary: #0277bd;
+            --accent-gradient: linear-gradient(135deg, #049fd9 0%, #0277bd 50%, #01579b 100%);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --glow-1: rgba(4, 159, 217, 0.4);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --bg-card: rgba(0, 0, 0, 0.02);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Header / Toolbar */
+        .toolbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            gap: 12px;
+        }
+
+        [data-theme="light"] .toolbar {
+            background: rgba(255, 255, 255, 0.97);
+        }
+
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .toolbar-center {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .back-btn svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        .pdf-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Navigation Controls */
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            color: var(--text-primary);
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .page-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .page-input {
+            width: 48px;
+            height: 30px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .page-input:focus {
+            border-color: var(--accent-primary);
+        }
+
+        /* Zoom Controls */
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .zoom-level {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            min-width: 42px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .toolbar-separator {
+            width: 1px;
+            height: 24px;
+            background: var(--border-color);
+            margin: 0 4px;
+        }
+
+        .theme-toggle {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .theme-toggle:hover svg {
+            color: white;
+        }
+
+        .theme-toggle svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .sun-icon {
+            display: block;
+        }
+
+        /* PDF Viewer Container */
+        .viewer-container {
+            position: fixed;
+            top: 56px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow-y: auto;
+            overflow-x: auto;
+            background: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 10px;
+            gap: 16px;
+        }
+
+        .page-wrapper {
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .page-wrapper canvas {
+            display: block;
+        }
+
+        /* Loading */
+        .loading-container {
+            position: fixed;
+            top: 56px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            background: var(--bg-primary);
+            z-index: 500;
+        }
+
+        .loading-container.hidden {
+            display: none;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .loading-progress {
+            width: 240px;
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loading-progress-bar {
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        /* Error State */
+        .error-container {
+            display: none;
+            position: fixed;
+            top: 56px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            background: var(--bg-primary);
+            z-index: 500;
+        }
+
+        .error-container.visible {
+            display: flex;
+        }
+
+        .error-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error-icon svg {
+            width: 32px;
+            height: 32px;
+            color: #ef4444;
+        }
+
+        .error-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .error-message {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .retry-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px var(--glow-1);
+        }
+
+        /* Sidebar / Thumbnail Panel */
+        .sidebar-panel {
+            position: fixed;
+            top: 56px;
+            left: 0;
+            bottom: 0;
+            width: 220px;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 400;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            padding: 12px 8px;
+        }
+
+        .sidebar-panel.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-panel.open~.viewer-container {
+            margin-left: 220px;
+        }
+
+        .sidebar-toggle {
+            display: flex;
+        }
+
+        .thumb-item {
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 8px;
+            border: 2px solid transparent;
+        }
+
+        .thumb-item:hover {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+        }
+
+        .thumb-item.active {
+            border-color: var(--accent-primary);
+            background: rgba(4, 159, 217, 0.1);
+        }
+
+        .thumb-item canvas {
+            width: 100%;
+            display: block;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .thumb-page-num {
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .pdf-title {
+                display: none;
+            }
+
+            .toolbar-separator {
+                display: none;
+            }
+
+            .zoom-level {
+                display: none;
+            }
+
+            .sidebar-panel {
+                width: 160px;
+            }
+
+            .sidebar-panel.open~.viewer-container {
+                margin-left: 0;
+            }
+
+            .back-btn span {
+                display: none;
+            }
+
+            .back-btn {
+                padding: 7px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .toolbar {
+                padding: 0 8px;
+                gap: 6px;
+            }
+
+            .nav-btn,
+            .theme-toggle {
+                width: 30px;
+                height: 30px;
+            }
+
+            .page-input {
+                width: 38px;
+                height: 26px;
+                font-size: 0.75rem;
+            }
+
+            .page-info {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toolbar -->
+    <header class="toolbar">
+        <div class="toolbar-left">
+            <a href="cisco-sdwan-tutorial.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali</span>
+            </a>
+
+            <button class="nav-btn sidebar-toggle" onclick="toggleSidebar()" title="Toggle Thumbnails">
+                <i data-lucide="panel-left"></i>
+            </button>
+
+            <span class="pdf-title" id="pdfTitle">Loading...</span>
+        </div>
+
+        <div class="toolbar-center">
+            <div class="nav-controls">
+                <button class="nav-btn" id="prevPage" onclick="goToPage(currentPage - 1)" title="Halaman Sebelumnya">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+
+                <div class="page-info">
+                    <input type="number" class="page-input" id="pageInput" min="1" value="1">
+                    <span>/ <span id="totalPages">-</span></span>
+                </div>
+
+                <button class="nav-btn" id="nextPage" onclick="goToPage(currentPage + 1)" title="Halaman Selanjutnya">
+                    <i data-lucide="chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="toolbar-separator"></div>
+
+            <div class="zoom-controls">
+                <button class="nav-btn" onclick="changeZoom(-0.1)" title="Zoom Out">
+                    <i data-lucide="zoom-out"></i>
+                </button>
+                <span class="zoom-level" id="zoomLevel">100%</span>
+                <button class="nav-btn" onclick="changeZoom(0.1)" title="Zoom In">
+                    <i data-lucide="zoom-in"></i>
+                </button>
+                <button class="nav-btn" onclick="fitToWidth()" title="Fit to Width">
+                    <i data-lucide="maximize-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="toolbar-right">
+            <button class="nav-btn" onclick="downloadPDF()" title="Download PDF">
+                <i data-lucide="download"></i>
+            </button>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar Thumbnails -->
+    <aside class="sidebar-panel" id="sidebarPanel">
+        <div id="thumbnailContainer"></div>
+    </aside>
+
+    <!-- Loading State -->
+    <div class="loading-container" id="loadingContainer">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loadingText">Memuat PDF...</div>
+        <div class="loading-progress">
+            <div class="loading-progress-bar" id="loadingProgress"></div>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-container" id="errorContainer">
+        <div class="error-icon">
+            <i data-lucide="alert-triangle"></i>
+        </div>
+        <div class="error-title">Gagal Memuat PDF</div>
+        <div class="error-message" id="errorMessage">Terjadi kesalahan saat memuat file PDF.</div>
+        <button class="retry-btn" onclick="loadPDF()">
+            <i data-lucide="refresh-cw" style="width:16px;height:16px;"></i>
+            Coba Lagi
+        </button>
+    </div>
+
+    <!-- PDF Viewer -->
+    <div class="viewer-container" id="viewerContainer">
+    </div>
+
+    <script>
+        // PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        // Get PDF filename from URL params or use default
+        const urlParams = new URLSearchParams(window.location.search);
+        const pdfFile = urlParams.get('file') || 'CISCO_SD_WAN_Configure_From_Scratch_1761289905.pdf';
+
+        // State
+        let pdfDoc = null;
+        let currentPage = 1;
+        let totalPages = 0;
+        let scale = 1.0;
+        let rendering = false;
+        let sidebarOpen = false;
+        let thumbnailsGenerated = false;
+        const renderedPages = new Set();
+        const pageCanvases = new Map();
+
+        // Theme
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.getAttribute('data-theme') === 'light') {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+            lucide.createIcons();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            loadPDF();
+
+            // Page input handler
+            document.getElementById('pageInput').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const page = parseInt(e.target.value);
+                    if (page >= 1 && page <= totalPages) {
+                        goToPage(page);
+                    }
+                }
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT') return;
+
+                switch (e.key) {
+                    case 'ArrowLeft':
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        goToPage(currentPage - 1);
+                        break;
+                    case 'ArrowRight':
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        goToPage(currentPage + 1);
+                        break;
+                    case '+':
+                    case '=':
+                        e.preventDefault();
+                        changeZoom(0.1);
+                        break;
+                    case '-':
+                        e.preventDefault();
+                        changeZoom(-0.1);
+                        break;
+                    case 'Home':
+                        e.preventDefault();
+                        goToPage(1);
+                        break;
+                    case 'End':
+                        e.preventDefault();
+                        goToPage(totalPages);
+                        break;
+                }
+            });
+
+            // Scroll-based page tracking
+            const viewer = document.getElementById('viewerContainer');
+            viewer.addEventListener('scroll', () => {
+                updateCurrentPageFromScroll();
+            });
+        });
+
+        async function loadPDF() {
+            const loadingContainer = document.getElementById('loadingContainer');
+            const errorContainer = document.getElementById('errorContainer');
+            const loadingText = document.getElementById('loadingText');
+            const loadingProgress = document.getElementById('loadingProgress');
+
+            loadingContainer.classList.remove('hidden');
+            errorContainer.classList.remove('visible');
+
+            try {
+                // Set title
+                const displayName = pdfFile.replace(/_/g, ' ').replace('.pdf', '');
+                document.getElementById('pdfTitle').textContent = displayName;
+                document.title = displayName + ' - Nextgen Center';
+
+                loadingText.textContent = 'Memuat PDF...';
+
+                const loadingTask = pdfjsLib.getDocument(pdfFile);
+
+                loadingTask.onProgress = (progress) => {
+                    if (progress.total) {
+                        const percent = Math.round((progress.loaded / progress.total) * 100);
+                        loadingProgress.style.width = percent + '%';
+                        const sizeMB = (progress.loaded / (1024 * 1024)).toFixed(1);
+                        const totalMB = (progress.total / (1024 * 1024)).toFixed(1);
+                        loadingText.textContent = `Memuat PDF... ${sizeMB}MB / ${totalMB}MB`;
+                    }
+                };
+
+                pdfDoc = await loadingTask.promise;
+                totalPages = pdfDoc.numPages;
+
+                document.getElementById('totalPages').textContent = totalPages;
+                document.getElementById('pageInput').max = totalPages;
+
+                loadingText.textContent = 'Rendering halaman...';
+                loadingProgress.style.width = '100%';
+
+                // Calculate initial scale to fit width
+                await calculateFitWidth();
+
+                // Render all pages
+                await renderAllPages();
+
+                loadingContainer.classList.add('hidden');
+
+                // Generate thumbnails lazily
+                setTimeout(() => generateThumbnails(), 500);
+
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+                loadingContainer.classList.add('hidden');
+                errorContainer.classList.add('visible');
+                document.getElementById('errorMessage').textContent =
+                    `Gagal memuat "${pdfFile}". Pastikan file PDF ada di folder yang benar.`;
+            }
+        }
+
+        async function calculateFitWidth() {
+            const page = await pdfDoc.getPage(1);
+            const viewport = page.getViewport({ scale: 1 });
+            const container = document.getElementById('viewerContainer');
+            const containerWidth = container.clientWidth - 40; // Padding
+            scale = containerWidth / viewport.width;
+            scale = Math.min(Math.max(scale, 0.3), 3.0);
+            updateZoomDisplay();
+        }
+
+        async function renderAllPages() {
+            const viewer = document.getElementById('viewerContainer');
+            viewer.innerHTML = '';
+            renderedPages.clear();
+            pageCanvases.clear();
+
+            for (let i = 1; i <= totalPages; i++) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'page-wrapper';
+                wrapper.id = `page-${i}`;
+                wrapper.dataset.page = i;
+
+                const canvas = document.createElement('canvas');
+                wrapper.appendChild(canvas);
+                viewer.appendChild(wrapper);
+                pageCanvases.set(i, canvas);
+            }
+
+            // Render visible pages first
+            await renderVisiblePages();
+
+            // Then render remaining pages in batches
+            renderRemainingPages();
+        }
+
+        async function renderVisiblePages() {
+            const viewer = document.getElementById('viewerContainer');
+            const viewerRect = viewer.getBoundingClientRect();
+
+            for (let i = 1; i <= totalPages; i++) {
+                const wrapper = document.getElementById(`page-${i}`);
+                const rect = wrapper.getBoundingClientRect();
+
+                // Check if page is visible or near viewport
+                const isNearViewport = rect.bottom > viewerRect.top - 1000 &&
+                    rect.top < viewerRect.bottom + 1000;
+
+                if (isNearViewport && !renderedPages.has(i)) {
+                    await renderPage(i);
+                }
+            }
+        }
+
+        async function renderRemainingPages() {
+            for (let i = 1; i <= totalPages; i++) {
+                if (!renderedPages.has(i)) {
+                    await renderPage(i);
+                    // Yield to main thread
+                    await new Promise(resolve => setTimeout(resolve, 10));
+                }
+            }
+        }
+
+        async function renderPage(pageNum) {
+            if (renderedPages.has(pageNum)) return;
+            renderedPages.add(pageNum);
+
+            try {
+                const page = await pdfDoc.getPage(pageNum);
+                const viewport = page.getViewport({ scale: scale * window.devicePixelRatio });
+                const displayViewport = page.getViewport({ scale: scale });
+
+                const canvas = pageCanvases.get(pageNum);
+                if (!canvas) return;
+
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                canvas.style.width = displayViewport.width + 'px';
+                canvas.style.height = displayViewport.height + 'px';
+
+                const ctx = canvas.getContext('2d');
+                await page.render({
+                    canvasContext: ctx,
+                    viewport: viewport
+                }).promise;
+            } catch (e) {
+                console.error(`Error rendering page ${pageNum}:`, e);
+            }
+        }
+
+        async function reRenderAllPages() {
+            renderedPages.clear();
+            for (let i = 1; i <= totalPages; i++) {
+                await renderPage(i);
+                await new Promise(resolve => setTimeout(resolve, 5));
+            }
+        }
+
+        function goToPage(pageNum) {
+            if (pageNum < 1 || pageNum > totalPages) return;
+
+            currentPage = pageNum;
+            document.getElementById('pageInput').value = currentPage;
+            updateNavButtons();
+
+            // Scroll to page
+            const wrapper = document.getElementById(`page-${pageNum}`);
+            if (wrapper) {
+                wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            // Update sidebar
+            updateActiveThumbnail();
+        }
+
+        function updateCurrentPageFromScroll() {
+            const viewer = document.getElementById('viewerContainer');
+            const viewerRect = viewer.getBoundingClientRect();
+            const viewerCenter = viewerRect.top + viewerRect.height / 3;
+
+            let closestPage = 1;
+            let closestDistance = Infinity;
+
+            for (let i = 1; i <= totalPages; i++) {
+                const wrapper = document.getElementById(`page-${i}`);
+                if (!wrapper) continue;
+                const rect = wrapper.getBoundingClientRect();
+                const pageCenter = rect.top + rect.height / 2;
+                const distance = Math.abs(pageCenter - viewerCenter);
+
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestPage = i;
+                }
+            }
+
+            if (closestPage !== currentPage) {
+                currentPage = closestPage;
+                document.getElementById('pageInput').value = currentPage;
+                updateNavButtons();
+                updateActiveThumbnail();
+            }
+        }
+
+        function updateNavButtons() {
+            document.getElementById('prevPage').disabled = currentPage <= 1;
+            document.getElementById('nextPage').disabled = currentPage >= totalPages;
+        }
+
+        function changeZoom(delta) {
+            const newScale = Math.round((scale + delta) * 10) / 10;
+            if (newScale >= 0.3 && newScale <= 3.0) {
+                scale = newScale;
+                updateZoomDisplay();
+                reRenderAllPages();
+            }
+        }
+
+        async function fitToWidth() {
+            await calculateFitWidth();
+            reRenderAllPages();
+        }
+
+        function updateZoomDisplay() {
+            document.getElementById('zoomLevel').textContent = Math.round(scale * 100) + '%';
+        }
+
+        function downloadPDF() {
+            const link = document.createElement('a');
+            link.href = pdfFile;
+            link.download = pdfFile;
+            link.click();
+        }
+
+        // Sidebar
+        function toggleSidebar() {
+            sidebarOpen = !sidebarOpen;
+            document.getElementById('sidebarPanel').classList.toggle('open', sidebarOpen);
+
+            if (sidebarOpen && !thumbnailsGenerated) {
+                generateThumbnails();
+            }
+        }
+
+        async function generateThumbnails() {
+            if (thumbnailsGenerated || !pdfDoc) return;
+            thumbnailsGenerated = true;
+
+            const container = document.getElementById('thumbnailContainer');
+            container.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const thumbItem = document.createElement('div');
+                thumbItem.className = 'thumb-item' + (i === currentPage ? ' active' : '');
+                thumbItem.dataset.page = i;
+                thumbItem.onclick = () => goToPage(i);
+
+                const canvas = document.createElement('canvas');
+                const pageNum = document.createElement('div');
+                pageNum.className = 'thumb-page-num';
+                pageNum.textContent = `Halaman ${i}`;
+
+                thumbItem.appendChild(canvas);
+                thumbItem.appendChild(pageNum);
+                container.appendChild(thumbItem);
+
+                // Render thumbnail
+                try {
+                    const page = await pdfDoc.getPage(i);
+                    const viewport = page.getViewport({ scale: 0.3 });
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+                    const ctx = canvas.getContext('2d');
+                    await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+                } catch (e) {
+                    console.error(`Thumbnail error page ${i}:`, e);
+                }
+
+                // Yield
+                if (i % 5 === 0) {
+                    await new Promise(resolve => setTimeout(resolve, 10));
+                }
+            }
+        }
+
+        function updateActiveThumbnail() {
+            document.querySelectorAll('.thumb-item').forEach(el => {
+                el.classList.toggle('active', parseInt(el.dataset.page) === currentPage);
+            });
+
+            // Scroll thumbnail into view
+            const activeThumb = document.querySelector('.thumb-item.active');
+            if (activeThumb && sidebarOpen) {
+                activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+    </script>
+</body>
+
+</html>
