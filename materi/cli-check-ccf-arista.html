@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLI CHECK CCF ARISTA - Nextgen Center</title>
+
+    <meta name="description"
+        content="Panduan CLI untuk mengecek konfigurasi Converged Cloud Fabric (CCF) pada Arista Switch Controller.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-primary: #3b82f6;
+            --accent-secondary: #1d4ed8;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --glow-1: rgba(59, 130, 246, 0.4);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --bg-card: rgba(0, 0, 0, 0.02);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+
+        [data-theme="light"] .header {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .theme-toggle:hover svg {
+            color: white;
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle .sun-icon {
+            display: block;
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px 60px;
+        }
+
+        /* Title Section */
+        .title-section {
+            text-align: center;
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .title-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--accent-primary);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .title-badge svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .title-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Section */
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .section p {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .toc h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toc h3 svg {
+            width: 18px;
+            height: 18px;
+            color: var(--accent-primary);
+        }
+
+        .toc-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .toc-list li a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .toc-list li a:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-primary);
+        }
+
+        .toc-list li a .toc-num {
+            width: 24px;
+            height: 24px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            flex-shrink: 0;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #1e1e2e;
+            border-radius: 10px;
+            margin: 12px 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px;
+            background: #2d2d3a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-lang {
+            font-size: 0.7rem;
+            color: #a0a0b0;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .code-copy {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 5px;
+            color: #a0a0b0;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .code-copy:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .code-copy svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 14px;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            font-family: 'JetBrains Mono', Consolas, monospace;
+            font-size: 0.8rem;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .code-block .comment {
+            color: #6a9955;
+        }
+
+        .code-block .prompt {
+            color: #4ec9b0;
+        }
+
+        .code-block .command {
+            color: #dcdcaa;
+        }
+
+        .code-block .output {
+            color: #ce9178;
+        }
+
+        .code-block .highlight {
+            color: #569cd6;
+        }
+
+        .code-block .value {
+            color: #b5cea8;
+        }
+
+        .code-block .keyword {
+            color: #c586c0;
+        }
+
+        .code-block .separator {
+            color: #b0b0c0;
+        }
+
+        /* Alert */
+        .alert {
+            display: flex;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin: 12px 0;
+            border-left: 3px solid;
+            font-size: 0.85rem;
+        }
+
+        .alert svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-content strong {
+            display: block;
+            margin-bottom: 3px;
+            font-size: 0.85rem;
+        }
+
+        .alert-content p {
+            margin: 0 !important;
+            font-size: 0.8rem;
+        }
+
+        .alert.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: var(--warning);
+        }
+
+        .alert.warning svg {
+            color: var(--warning);
+        }
+
+        .alert.info {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--info);
+        }
+
+        .alert.info svg {
+            color: var(--info);
+        }
+
+        .alert.success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+        }
+
+        .alert.success svg {
+            color: var(--success);
+        }
+
+        /* Navigation */
+        .nav-bottom {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .nav-bottom a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-bottom a:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .nav-bottom a svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+        .mode-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--text-muted);
+            transform: translateY(-2px);
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .mode-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .mode-content {
+            display: none;
+        }
+
+        .mode-content.active {
+            display: block;
+        }
+
+        /* Full CLI block styling */
+        .full-cli-block {
+            background: #1e1e2e;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .full-cli-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 18px;
+            background: #2d2d3a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .full-cli-title {
+            font-size: 0.8rem;
+            color: #a0a0b0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .full-cli-block pre {
+            margin: 0;
+            padding: 18px;
+            overflow-x: auto;
+            max-height: none;
+        }
+
+        .full-cli-block code {
+            font-family: 'JetBrains Mono', Consolas, monospace;
+            font-size: 0.8rem;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .full-cli-block .section-divider {
+            color: #569cd6;
+            font-weight: bold;
+        }
+
+        .full-cli-block .prompt {
+            color: #4ec9b0;
+        }
+
+        .full-cli-block .command {
+            color: #dcdcaa;
+        }
+
+        .full-cli-block .output {
+            color: #ce9178;
+        }
+
+        .full-cli-block .separator {
+            color: #b0b0c0;
+        }
+
+        .full-cli-block .highlight {
+            color: #569cd6;
+        }
+
+        .full-cli-block .keyword {
+            color: #c586c0;
+        }
+
+        .full-cli-block .value {
+            color: #b5cea8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .toc-list {
+                grid-template-columns: 1fr;
+            }
+
+            .code-block code,
+            .full-cli-block code {
+                font-size: 0.7rem;
+            }
+
+            .section {
+                padding: 16px;
+            }
+
+            .mode-btn {
+                padding: 10px 16px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="../index.html" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali</span>
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i data-lucide="moon" class="moon-icon"></i>
+                <i data-lucide="sun" class="sun-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Title -->
+        <div class="title-section">
+            <div class="title-badge">
+                <i data-lucide="terminal"></i>
+                CLI Reference
+            </div>
+            <h1>CLI CHECK CCF ARISTA</h1>
+            <p class="title-desc">Check Sw Arista Via Controller Arista — Converged Cloud Fabric 6.0.5</p>
+        </div>
+
+        <!-- Mode Toggle -->
+        <div class="mode-toggle">
+            <button class="mode-btn" id="mode-cli" onclick="switchMode('cli')">
+                <i data-lucide="terminal"></i>
+                CLI Only
+            </button>
+            <button class="mode-btn active" id="mode-detail" onclick="switchMode('detail')">
+                <i data-lucide="book-open"></i>
+                CLI + Keterangan
+            </button>
+        </div>
+
+        <!-- ==================== MODE 1: CLI ONLY ==================== -->
+        <div class="mode-content" id="content-cli">
+            <div class="full-cli-block">
+                <div class="full-cli-header">
+                    <span class="full-cli-title">Full CLI Check CCF Arista — All Commands</span>
+                    <button class="code-copy" onclick="copyCode(this)">
+                        <i data-lucide="copy"></i> Copy All
+                    </button>
+                </div>
+                <pre><code><span class="section-divider">===Masuk ke PE Management===</span>
+<span class="prompt">ffm-keren@RTR5.KLM.PE-SN.2></span> <span class="command">ssh routing-instance MGT_NCIX admin.nobita@172.161.5.4</span>
+<span class="output">Converged Cloud Fabric 6.0.5 (ccf-6.0.5 #6)
+Log in as 'admin' to configure</span>
+
+<span class="highlight">admin.nobita@172.161.5.4's password:</span>
+<span class="output">Login: admin.nobita, on Mon 2026-02-16 23:00:13 WIB, from 172.161.5.1
+Last login:         on Mon 2026-02-09 14:54:24 WIB, from 172.161.5.1
+No history available from previous CLI sessions</span>
+
+<span class="section-divider">===Show VLAN===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">enable</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">show member-rule vlan 2710</span>
+<span class="separator"># EVPC Tenant Segment                                         Switch Interface Interface Group        VLAN Preserve vlan MAC member rule State  
+-|-----------|-----------------------------------------------|------|---------|----------------------|----|-------------|---------------|------|</span>
+<span class="output">1 tenant.tlkm seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710                  pg_trunk_to_ME99-D59-KLM 2710 False         False           Active</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span>
+
+<span class="section-divider">===Check Configure Tenant Segment===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">sho running-config evpc-tenant tenant.tlkm segment seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710</span>
+
+<span class="keyword">! evpc-tenant</span>
+<span class="highlight">evpc-tenant tenant.tlkm</span>
+  <span class="keyword">!</span>
+  <span class="highlight">segment seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710</span>
+    <span class="output">description 1-1234567890_ME_QINQ_MITRA_ANTI_KANDAS</span>
+    <span class="output">member interface-group pg_ME_QINQ_MITRA_ANTI_KANDAS preserve-vlan</span>
+    <span class="output">member interface-group pg_trunk_to_ME99-D59-KLMvlan 2710</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span>
+
+<span class="section-divider">===Check Mac-address===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">show evpc-tenant tenant.tlkm segment seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710 endpoint</span>
+<span class="separator"># EVPC Tenant Segment                                         Name Display name MAC               IP Address IP State Attachment Point                     Attach Point State VLAN     State  
+-|-----------|-----------------------------------------------|----|------------|-----------------|----------|--------|------------------------------------|------------------|--------|------|</span>
+<span class="output">1 tenant.tlkm seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710                   <span class="value">08:eb:f6:82:b2:72</span>                     pg_trunk_to_ME99-D59-KLM              learned            2710     Active</span>
+<span class="output">2 tenant.tlkm seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710                   <span class="value">fc:4d:a6:21:0c:e3</span>                     pg_ME_QINQ_MITRA_ANTI_KANDAS learned            untagged Active</span>
+
+<span class="section-divider">===Check Member-rule===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">show evpc-tenant tenant.tlkm segment seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710 member-rule</span>
+<span class="separator"># EVPC Tenant Segment                                         Switch Interface Interface Group                      VLAN     Preserve vlan MAC member rule State  
+-|-----------|-----------------------------------------------|------|---------|------------------------------------|--------|-------------|---------------|------|</span>
+<span class="output">1 tenant.tlkm seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710                  pg_trunk_to_ME99-D59-KLM              2710     False         False           Active</span>
+<span class="output">2 tenant.tlkm seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710                  pg_ME_QINQ_MITRA_ANTI_KANDAS untagged True          False           Active</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span>
+
+<span class="section-divider">===Check Configure interface-group===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">show running-config interface-group pg_ME_QINQ_MITRA_ANTI_KANDAS</span>
+
+<span class="keyword">! interface-group</span>
+<span class="highlight">interface-group pg_ME_QINQ_MITRA_ANTI_KANDAS</span>
+  <span class="output">description 2-2356887128-ME-qinq-Mitra_telemedia-manunggal</span>
+  <span class="output">member switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">show interface-group pg_ME_QINQ_MITRA_ANTI_KANDAS</span>
+<span class="separator"># Name                                 Mode   Discovery Leaf Group Min-links State 
+-|------------------------------------|------|---------|----------|---------|-----|</span>
+<span class="output">1 pg_ME_QINQ_MITRA_ANTI_KANDAS static           lg0        0         <span class="value">up</span></span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span>
+
+<span class="section-divider">===Check Member Group===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">show interface-group pg_ME_QINQ_MITRA_ANTI_KANDAS members</span>
+<span class="separator"># Name                                 Mode   Discovery Member Name                Interface  Associated Switch Associated Interface Member Type Phy. State Op. State Leaf Group Member Down Reason Phy. Up/Down Phy. Flap 
+-|------------------------------------|------|---------|------|-------------------|----------|-----------------|--------------------|-----------|----------|---------|----------|------------------|------------|---------|</span>
+<span class="output">1 pg_ME_QINQ_MITRA_ANTI_KANDAS static           switch RTR5.KLM.LEAF-CNBC.01 ethernet35                                                    <span class="value">up</span>         <span class="value">up</span>        lg0        None               11d23h       7</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span>
+
+<span class="section-divider">===Check Mac-address to Port End Customer===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show interface-group pg_ME_QINQ_MITRA_ANTI_KANDAS endpoint</span>
+<span class="separator"># EVPC Tenant Segment                                         Name Display name MAC               IP Address IP State Attachment Point                     Attach Point State VLAN     State  
+-|-----------|-----------------------------------------------|----|------------|-----------------|----------|--------|------------------------------------|------------------|--------|------|</span>
+<span class="output">1 tenant.tlkm seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710                   <span class="value">fc:4d:a6:21:0c:e3</span>                     pg_ME_QINQ_MITRA_ANTI_KANDAS learned            untagged Active</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span>
+
+<span class="section-divider">===Check Interface Switch===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35</span>
+<span class="separator"># Switch              IF Name    IF Type Phy. State Op. State  IF Down Reason Phy. Up/Down Phy. Flap LACP State BPDU-Guard State Curr Features 
+-|-------------------|----------|-------|----------|----------|--------------|------------|---------|----------|----------------|-------------|</span>
+<span class="output">1 RTR5.KLM.LEAF-CNBC.01 ethernet35 edge    <span class="value">up</span>         <span class="value">up</span>         None           12d8m        7         inactive   disabled         fiber, 10g</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span>
+
+<span class="section-divider">===Check Level Power Optic (CEK REDAMAN)===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35 dom</span>
+<span class="separator">~~~~~~~~~~~~ Doms ~~~~~~~~~~~~</span>
+<span class="separator">Module  Voltage Temperature   
+-------|-------|-------------|</span>
+<span class="output">SFF8472  <span class="value">3.32V</span>  <span class="value">32.0C (89.6F)</span></span>
+
+<span class="separator">~~~~~~~~~~~~~~~~~~~~~~~~~~~ Channels  ~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="separator"># Bias current Tx power          Rx power           Rx power oma 
+-|------------|-----------------|------------------|------------|</span>
+<span class="output">1 30.044mA     <span class="value">0.6133mW -2.12dBm</span> <span class="value">0.0895mW -10.48dBm</span> unsupported</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span>
+
+<span class="section-divider">===Check Interface counters===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35 counters</span>
+<span class="separator">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface Rx Counters  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="separator"># Switch Name         Name       Rx byte          Rx unicast packet Rx multicast packet Rx broadcast packet 
+-|-------------------|----------|----------------|-----------------|-------------------|-------------------|</span>
+<span class="output">1 RTR5.KLM.LEAF-CNBC.01 ethernet35 <span class="value">9769518856811481</span> <span class="value">8135785272258</span>     <span class="value">16197864</span>            <span class="value">622</span></span>
+
+<span class="separator">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface Tx Counters  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="separator"># Switch Name         IF Name    Tx Byte          Tx Ucast Pkt  Tx Mcast Pkt Tx Bcast Pkt 
+-|-------------------|----------|----------------|-------------|------------|------------|</span>
+<span class="output">1 RTR5.KLM.LEAF-CNBC.01 ethernet35 <span class="value">1523443988519171</span> <span class="value">3916592797583</span> <span class="value">22699770</span>     <span class="value">581</span></span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span>
+
+<span class="section-divider">===Check Interface CRC Error===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35 counters errors</span>
+<span class="separator">~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface Error Counters ~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="separator"># Switch Name         IF Name    Rx Bad Vlan Pkt Rx CRC Error Rx Error Tx Error 
+-|-------------------|----------|---------------|------------|--------|--------|</span>
+<span class="output">1 RTR5.KLM.LEAF-CNBC.01 ethernet35 <span class="value">2</span>               <span class="value">1702</span>         <span class="value">1707</span>     <span class="value">0</span></span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span>
+
+<span class="section-divider">===Check Interface Utilization===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35 utilization</span>
+<span class="separator"># Switch Name         IF Name    Interval sec Tx Utilization Rx Utilization 
+-|-------------------|----------|------------|--------------|--------------| </span>
+<span class="output">1 RTR5.KLM.LEAF-CNBC.01 ethernet35 45           <span class="value">10.536</span>         <span class="value">35.899</span></span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span>
+
+<span class="section-divider">===Check Interface Rate/Bandwidth===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35 rates</span>
+<span class="separator">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface Rx Rates  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="separator"># Switch Name         IF Name    Interval sec Rx Bit/s Rx Ucast Pkt/s Rx Mcast Pkt/s Rx Bcast Pkt/s Timestamp                      
+-|-------------------|----------|------------|--------|--------------|--------------|--------------|------------------------------|</span>
+<span class="output">1 RTR5.KLM.LEAF-CNBC.01 ethernet35 45           <span class="value">3.48Gbps</span> 376150         0              0              2026-02-17 00:13:32.550000 WIB</span>
+
+<span class="separator">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface Tx Rates  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="separator"># Switch Name         IF Name    Interval sec Tx Bit/s Tx Ucast Pkt/s Tx Mcast Pkt/s Tx Bcast Pkt/s Timestamp                      
+-|-------------------|----------|------------|--------|--------------|--------------|--------------|------------------------------|</span>
+<span class="output">1 RTR5.KLM.LEAF-CNBC.01 ethernet35 45           <span class="value">1.14Gbps</span> 239118         0              0              2026-02-17 00:13:32.550000 WIB</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span>
+
+<span class="section-divider">===Check LOG Interface===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35 flap-stats</span>
+<span class="separator">~~~~~~~~~~~~~~ Physical Flap Statistics  ~~~~~~~~~~~~~~</span>
+<span class="output">Up/Down Time : <span class="value">12d14m</span>
+Total Flaps  : <span class="value">7</span> (Since 2025-01-24 09:51:54.143000 WIB)</span>
+
+<span class="separator">~ Recent Physical State Change Events (Max Size: 10)  ~</span>
+<span class="separator">#  Event Type Timestamp                      Reason    
+--|----------|------------------------------|---------| </span>
+<span class="output">1  up         2026-02-04 23:59:40.671000 WIB None
+2  down       2026-02-04 23:59:39.909000 WIB Link down
+3  up         2025-12-15 23:30:47.033000 WIB None
+4  down       2025-12-15 23:30:46.374000 WIB Link down
+5  up         2025-12-15 23:30:46.054000 WIB None
+6  down       2025-12-15 23:29:52.929000 WIB Link down
+7  up         2025-03-08 11:44:21.268000 WIB None
+8  down       2025-03-08 11:40:30.413000 WIB Link down
+9  up         2025-03-08 11:27:26.362000 WIB None
+10 down       2025-03-08 09:06:02.794000 WIB Link down</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span>
+
+<span class="section-divider">===Clear CRC Error===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">enable</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">clear switch R5.KLM.LEAF-CNDC.01 interface ethernet35 counters</span>
+
+<span class="section-divider">===Reset Interface===</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">clear error-disabled switch R5.KLM.LEAF-CNDC.01 interface ethernet35</span></code></pre>
+            </div>
+        </div>
+
+        <!-- ==================== MODE 2: CLI + KETERANGAN ==================== -->
+        <div class="mode-content active" id="content-detail">
+
+            <!-- Table of Contents -->
+            <div class="toc">
+                <h3><i data-lucide="list"></i> Daftar Pengecekan</h3>
+                <ul class="toc-list">
+                    <li><a href="#login"><span class="toc-num">1</span> Login PE Management</a></li>
+                    <li><a href="#show-vlan"><span class="toc-num">2</span> Show VLAN</a></li>
+                    <li><a href="#tenant-segment"><span class="toc-num">3</span> Configure Tenant Segment</a></li>
+                    <li><a href="#mac-address"><span class="toc-num">4</span> Check Mac-address</a></li>
+                    <li><a href="#member-rule"><span class="toc-num">5</span> Check Member-rule</a></li>
+                    <li><a href="#interface-group"><span class="toc-num">6</span> Configure Interface-group</a></li>
+                    <li><a href="#member-group"><span class="toc-num">7</span> Check Member Group</a></li>
+                    <li><a href="#mac-port"><span class="toc-num">8</span> Mac-address to Port</a></li>
+                    <li><a href="#interface-switch"><span class="toc-num">9</span> Check Interface Switch</a></li>
+                    <li><a href="#power-optic"><span class="toc-num">10</span> Level Power Optic (Redaman)</a></li>
+                    <li><a href="#counters"><span class="toc-num">11</span> Interface Counters</a></li>
+                    <li><a href="#crc-error"><span class="toc-num">12</span> CRC Error</a></li>
+                    <li><a href="#utilization"><span class="toc-num">13</span> Interface Utilization</a></li>
+                    <li><a href="#rate-bandwidth"><span class="toc-num">14</span> Rate / Bandwidth</a></li>
+                    <li><a href="#log-interface"><span class="toc-num">15</span> LOG Interface (Flap Stats)</a></li>
+                    <li><a href="#clear-crc"><span class="toc-num">16</span> Clear CRC Error</a></li>
+                    <li><a href="#reset-interface"><span class="toc-num">17</span> Reset Interface</a></li>
+                </ul>
+            </div>
+
+            <!-- 1. Login PE Management -->
+            <div class="section" id="login">
+                <div class="section-header">
+                    <div class="section-icon">🔐</div>
+                    <h2>Masuk ke PE Management</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Mengakses CLI Controller Arista CCF melalui PE Management menggunakan SSH
+                    dengan
+                    routing-instance <code>MGT_NCIX</code>. Ini adalah langkah pertama sebelum melakukan pengecekan
+                    apapun
+                    di CCF.</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Login via PE Management</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">ffm-keren@RTR5.KLM.PE-SN.2></span> <span class="command">ssh routing-instance MGT_NCIX admin.nobita@172.161.5.4</span>
+<span class="output">Converged Cloud Fabric 6.0.5 (ccf-6.0.5 #6)
+Log in as 'admin' to configure</span>
+
+<span class="highlight">admin.nobita@172.161.5.4's password:</span>
+<span class="output">Login: admin.nobita, on Mon 2026-02-16 23:00:13 WIB, from 172.161.5.1
+Last login:         on Mon 2026-02-09 14:54:24 WIB, from 172.161.5.1
+No history available from previous CLI sessions</span></code></pre>
+                </div>
+                <div class="alert success">
+                    <i data-lucide="check-circle"></i>
+                    <div class="alert-content">
+                        <strong>Hasil:</strong>
+                        <p>Login berhasil ditandai dengan munculnya informasi CCF versi <strong>6.0.5</strong>, username
+                            login, waktu login, dan IP asal. Jika gagal, periksa kembali password atau koneksi jaringan
+                            ke
+                            IP <strong>172.161.5.4</strong>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Show VLAN -->
+            <div class="section" id="show-vlan">
+                <div class="section-header">
+                    <div class="section-icon">📋</div>
+                    <h2>Show VLAN</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Menampilkan member-rule berdasarkan VLAN ID tertentu (contoh: VLAN 2710).
+                    Digunakan untuk memverifikasi apakah VLAN sudah terdaftar dan terhubung ke tenant segment yang
+                    benar.
+                </p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Show Member-rule VLAN</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">enable</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">show member-rule vlan 2710</span>
+<span class="separator"># EVPC Tenant Segment                                         Switch Interface Interface Group        VLAN Preserve vlan MAC member rule State  
+-|-----------|-----------------------------------------------|------|---------|----------------------|----|-------------|---------------|------|</span>
+<span class="output">1 tenant.tlkm seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710                  pg_trunk_to_ME99-D59-KLM 2710 False         False           Active</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span></code></pre>
+                </div>
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Hasil:</strong>
+                        <p>VLAN <strong>2710</strong> terdaftar pada tenant <strong>tenant.tlkm</strong> dengan segment
+                            <strong>ME_QINQ_MITRA_ANTI_KANDAS_2710</strong>, terhubung ke interface-group
+                            <strong>pg_trunk_to_ME99-D59-KLM</strong> dan statusnya <strong>Active</strong>. Preserve
+                            VLAN =
+                            False berarti VLAN tag tidak dipertahankan ke sisi customer.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Check Configure Tenant Segment -->
+            <div class="section" id="tenant-segment">
+                <div class="section-header">
+                    <div class="section-icon">⚙️</div>
+                    <h2>Check Configure Tenant Segment</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Menampilkan running-config dari spesifik tenant segment untuk memverifikasi
+                    konfigurasi description, member interface-group, dan VLAN assignment yang sudah diterapkan.</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Running-config EVPC Tenant Segment</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">sho running-config evpc-tenant tenant.tlkm segment seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710</span>
+
+<span class="keyword">! evpc-tenant</span>
+<span class="highlight">evpc-tenant tenant.tlkm</span>
+  <span class="keyword">!</span>
+  <span class="highlight">segment seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710</span>
+    <span class="output">description 1-1234567890_ME_QINQ_MITRA_ANTI_KANDAS</span>
+    <span class="output">member interface-group pg_ME_QINQ_MITRA_ANTI_KANDAS preserve-vlan</span>
+    <span class="output">member interface-group pg_trunk_to_ME99-D59-KLMvlan 2710</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span></code></pre>
+                </div>
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Hasil:</strong>
+                        <p>Segment ini memiliki 2 member interface-group: <strong>pg_ME_QINQ_MITRA_ANTI_KANDAS</strong>
+                            (preserve-vlan, sisi customer) dan <strong>pg_trunk_to_ME99-D59-KLM</strong> (VLAN 2710,
+                            sisi
+                            trunk/uplink). Description menunjukkan ID layanan <strong>1-1234567890</strong>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Check Mac-address -->
+            <div class="section" id="mac-address">
+                <div class="section-header">
+                    <div class="section-icon">🔍</div>
+                    <h2>Check Mac-address</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Menampilkan endpoint (MAC address) yang sudah dipelajari (learned) pada
+                    segment
+                    tertentu. Berguna untuk memastikan perangkat customer sudah terdeteksi dan terhubung dengan benar.
+                </p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Show Endpoint (MAC Address)</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">show evpc-tenant tenant.tlkm segment seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710 endpoint</span>
+<span class="separator"># EVPC Tenant Segment                                         Name Display name MAC               IP Address IP State Attachment Point                     Attach Point State VLAN     State  
+-|-----------|-----------------------------------------------|----|------------|-----------------|----------|--------|------------------------------------|------------------|--------|------|</span>
+<span class="output">1 tenant.tlkm seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710                   <span class="value">08:eb:f6:82:b2:72</span>                     pg_trunk_to_ME99-D59-KLM              learned            2710     Active</span>
+<span class="output">2 tenant.tlkm seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710                   <span class="value">fc:4d:a6:21:0c:e3</span>                     pg_ME_QINQ_MITRA_ANTI_KANDAS learned            untagged Active</span></code></pre>
+                </div>
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Hasil:</strong>
+                        <p>Terdeteksi <strong>2 MAC address</strong>: (1) <strong>08:eb:f6:82:b2:72</strong> di sisi
+                            trunk
+                            (VLAN 2710) — ini adalah MAC dari perangkat ME/uplink. (2)
+                            <strong>fc:4d:a6:21:0c:e3</strong> di
+                            sisi customer (untagged) — ini adalah MAC dari perangkat end-customer. Keduanya berstatus
+                            <strong>Active</strong> dan <strong>learned</strong>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Check Member-rule -->
+            <div class="section" id="member-rule">
+                <div class="section-header">
+                    <div class="section-icon">📑</div>
+                    <h2>Check Member-rule</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Menampilkan detail member-rule pada segment, termasuk informasi VLAN,
+                    preserve-vlan, dan status. Digunakan untuk memverifikasi apakah rule sudah benar antara sisi trunk
+                    dan
+                    sisi customer.</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Show Member-rule</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">show evpc-tenant tenant.tlkm segment seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710 member-rule</span>
+<span class="separator"># EVPC Tenant Segment                                         Switch Interface Interface Group                      VLAN     Preserve vlan MAC member rule State  
+-|-----------|-----------------------------------------------|------|---------|------------------------------------|--------|-------------|---------------|------|</span>
+<span class="output">1 tenant.tlkm seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710                  pg_trunk_to_ME99-D59-KLM              2710     False         False           Active</span>
+<span class="output">2 tenant.tlkm seg.tlkm.seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710                  pg_ME_QINQ_MITRA_ANTI_KANDAS untagged True          False           Active</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span></code></pre>
+                </div>
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Hasil:</strong>
+                        <p>Terdapat <strong>2 member-rule</strong> yang aktif: (1)
+                            <strong>pg_trunk_to_ME99-D59-KLM</strong>
+                            dengan VLAN 2710 (Preserve VLAN = False) — sisi trunk. (2)
+                            <strong>pg_ME_QINQ_MITRA_ANTI_KANDAS</strong> untagged (Preserve VLAN = True) — sisi
+                            customer.
+                            Kedua rule berstatus <strong>Active</strong>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Check Configure Interface-group -->
+            <div class="section" id="interface-group">
+                <div class="section-header">
+                    <div class="section-icon">🔗</div>
+                    <h2>Check Configure Interface-group</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Menampilkan running-config dan status dari interface-group sisi customer.
+                    Berguna untuk mengetahui switch dan interface mana yang menjadi member, serta memastikan statusnya
+                    <strong>up</strong>.
+                </p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Running-config Interface-group</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">show running-config interface-group pg_ME_QINQ_MITRA_ANTI_KANDAS</span>
+
+<span class="keyword">! interface-group</span>
+<span class="highlight">interface-group pg_ME_QINQ_MITRA_ANTI_KANDAS</span>
+  <span class="output">description 2-2356887128-ME-qinq-Mitra_telemedia-manunggal</span>
+  <span class="output">member switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span></code></pre>
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Show Interface-group Status</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">show interface-group pg_ME_QINQ_MITRA_ANTI_KANDAS</span>
+<span class="separator"># Name                                 Mode   Discovery Leaf Group Min-links State 
+-|------------------------------------|------|---------|----------|---------|-----|</span>
+<span class="output">1 pg_ME_QINQ_MITRA_ANTI_KANDAS static           lg0        0         <span class="value">up</span></span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span></code></pre>
+                </div>
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Hasil:</strong>
+                        <p>Interface-group <strong>pg_ME_QINQ_MITRA_ANTI_KANDAS</strong> dikonfigurasi dengan member
+                            switch
+                            <strong>RTR5.KLM.LEAF-CNBC.01</strong> pada port <strong>ethernet35</strong>. Mode
+                            <strong>static</strong>, leaf group <strong>lg0</strong>, dan status <strong>up</strong>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. Check Member Group -->
+            <div class="section" id="member-group">
+                <div class="section-header">
+                    <div class="section-icon">👥</div>
+                    <h2>Check Member Group</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Menampilkan detail member pada interface-group, termasuk status physical
+                    (Phy.
+                    State), operational (Op. State), uptime, dan jumlah flap. Digunakan untuk monitoring kesehatan link
+                    fisik.</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Show Interface-group Members</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">show interface-group pg_ME_QINQ_MITRA_ANTI_KANDAS members</span>
+<span class="separator"># Name                                 Mode   Discovery Member Name                Interface  Associated Switch Associated Interface Member Type Phy. State Op. State Leaf Group Member Down Reason Phy. Up/Down Phy. Flap 
+-|------------------------------------|------|---------|------|-------------------|----------|-----------------|--------------------|-----------|----------|---------|----------|------------------|------------|---------|</span>
+<span class="output">1 pg_ME_QINQ_MITRA_ANTI_KANDAS static           switch RTR5.KLM.LEAF-CNBC.01 ethernet35                                                    <span class="value">up</span>         <span class="value">up</span>        lg0        None               11d23h       7</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span></code></pre>
+                </div>
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Hasil:</strong>
+                        <p>Member pada switch <strong>RTR5.KLM.LEAF-CNBC.01 ethernet35</strong> dalam kondisi Phy. State
+                            =
+                            <strong>up</strong>, Op. State = <strong>up</strong>. Interface sudah aktif selama
+                            <strong>11d23h</strong> dengan total <strong>7 flap</strong>. Member Down Reason =
+                            <strong>None</strong> (tidak ada masalah).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. Check Mac-address to Port End Customer -->
+            <div class="section" id="mac-port">
+                <div class="section-header">
+                    <div class="section-icon">🖥️</div>
+                    <h2>Check Mac-address to Port End Customer</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Menampilkan MAC address yang dipelajari pada port sisi customer. Digunakan
+                    untuk
+                    memverifikasi bahwa perangkat end-customer sudah terkoneksi dan MAC-nya terdeteksi di port yang
+                    benar.
+                </p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Show Interface-group Endpoint</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show interface-group pg_ME_QINQ_MITRA_ANTI_KANDAS endpoint</span>
+<span class="separator"># EVPC Tenant Segment                                         Name Display name MAC               IP Address IP State Attachment Point                     Attach Point State VLAN     State  
+-|-----------|-----------------------------------------------|----|------------|-----------------|----------|--------|------------------------------------|------------------|--------|------|</span>
+<span class="output">1 tenant.tlkm seg.tlkm.ME_QINQ_MITRA_ANTI_KANDAS_2710                   <span class="value">fc:4d:a6:21:0c:e3</span>                     pg_ME_QINQ_MITRA_ANTI_KANDAS learned            untagged Active</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span></code></pre>
+                </div>
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Hasil:</strong>
+                        <p>MAC <strong>fc:4d:a6:21:0c:e3</strong> terdeteksi pada interface-group
+                            <strong>pg_ME_QINQ_MITRA_ANTI_KANDAS</strong> dengan status <strong>learned</strong> dan
+                            <strong>Active</strong>. VLAN = untagged, artinya traffic dari customer tidak memiliki VLAN
+                            tag
+                            (access mode).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. Check Interface Switch -->
+            <div class="section" id="interface-switch">
+                <div class="section-header">
+                    <div class="section-icon">🔌</div>
+                    <h2>Check Interface Switch</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Menampilkan detail interface pada switch leaf, termasuk tipe interface,
+                    status
+                    fisik & operasional, LACP state, BPDU-Guard, dan fitur yang aktif (fiber/copper, speed).</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Show Switch Interface</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35</span>
+<span class="separator"># Switch              IF Name    IF Type Phy. State Op. State  IF Down Reason Phy. Up/Down Phy. Flap LACP State BPDU-Guard State Curr Features 
+-|-------------------|----------|-------|----------|----------|--------------|------------|---------|----------|----------------|-------------|</span>
+<span class="output">1 RTR5.KLM.LEAF-CNBC.01 ethernet35 edge    <span class="value">up</span>         <span class="value">up</span>         None           12d8m        7         inactive   disabled         fiber, 10g</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span></code></pre>
+                </div>
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Hasil:</strong>
+                        <p>Interface <strong>ethernet35</strong> bertipe <strong>edge</strong> (port customer), Phy.
+                            State &
+                            Op. State = <strong>up</strong>, menggunakan <strong>fiber 10G</strong>. LACP = inactive
+                            (bukan
+                            LAG), BPDU-Guard = disabled. Uptime <strong>12d8m</strong> dengan <strong>7 flap</strong>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10. Check Level Power Optic -->
+            <div class="section" id="power-optic">
+                <div class="section-header">
+                    <div class="section-icon">💡</div>
+                    <h2>Check Level Power Optic (CEK REDAMAN)</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Mengecek level daya optic (redaman) pada transceiver SFP/SFP+ menggunakan
+                    Digital Optical Monitoring (DOM). Penting untuk mengetahui apakah sinyal optik masih dalam batas
+                    normal.
+                </p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Show DOM (Digital Optical Monitoring)</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35 dom</span>
+<span class="separator">~~~~~~~~~~~~ Doms ~~~~~~~~~~~~</span>
+<span class="separator">Module  Voltage Temperature   
+-------|-------|-------------|</span>
+<span class="output">SFF8472  <span class="value">3.32V</span>  <span class="value">32.0C (89.6F)</span></span>
+
+<span class="separator">~~~~~~~~~~~~~~~~~~~~~~~~~~~ Channels  ~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="separator"># Bias current Tx power          Rx power           Rx power oma 
+-|------------|-----------------|------------------|------------|</span>
+<span class="output">1 30.044mA     <span class="value">0.6133mW -2.12dBm</span> <span class="value">0.0895mW -10.48dBm</span> unsupported</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span></code></pre>
+                </div>
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Hasil:</strong>
+                        <p>Module <strong>SFF8472</strong>, Voltage = <strong>3.32V</strong> (normal), Temperature =
+                            <strong>32.0°C</strong> (normal). Tx Power = <strong>-2.12 dBm</strong> (daya kirim,
+                            normal). Rx
+                            Power = <strong>-10.48 dBm</strong> (daya terima). Jika Rx Power dibawah <strong>-20
+                                dBm</strong> biasanya menandakan masalah redaman tinggi pada kabel fiber.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11. Check Interface Counters -->
+            <div class="section" id="counters">
+                <div class="section-header">
+                    <div class="section-icon">📊</div>
+                    <h2>Check Interface Counters</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Menampilkan statistik counter Rx (receive) dan Tx (transmit) pada interface.
+                    Digunakan untuk memonitor volume traffic yang melewati port, termasuk unicast, multicast, dan
+                    broadcast.
+                </p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Show Interface Counters</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35 counters</span>
+<span class="separator">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface Rx Counters  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="separator"># Switch Name         Name       Rx byte          Rx unicast packet Rx multicast packet Rx broadcast packet 
+-|-------------------|----------|----------------|-----------------|-------------------|-------------------|</span>
+<span class="output">1 RTR5.KLM.LEAF-CNBC.01 ethernet35 <span class="value">9769518856811481</span> <span class="value">8135785272258</span>     <span class="value">16197864</span>            <span class="value">622</span></span>
+
+<span class="separator">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface Tx Counters  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="separator"># Switch Name         IF Name    Tx Byte          Tx Ucast Pkt  Tx Mcast Pkt Tx Bcast Pkt 
+-|-------------------|----------|----------------|-------------|------------|------------|</span>
+<span class="output">1 RTR5.KLM.LEAF-CNBC.01 ethernet35 <span class="value">1523443988519171</span> <span class="value">3916592797583</span> <span class="value">22699770</span>     <span class="value">581</span></span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span></code></pre>
+                </div>
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Hasil:</strong>
+                        <p><strong>Rx:</strong> Total byte diterima = 9.77 PB, Unicast = 8.13T paket, Multicast = 16.2M
+                            paket, Broadcast = 622 paket. <strong>Tx:</strong> Total byte dikirim = 1.52 PB, Unicast =
+                            3.92T
+                            paket, Multicast = 22.7M paket, Broadcast = 581 paket. Traffic berjalan dengan baik (counter
+                            terus bertambah).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 12. Check Interface CRC Error -->
+            <div class="section" id="crc-error">
+                <div class="section-header">
+                    <div class="section-icon">⚠️</div>
+                    <h2>Check Interface CRC Error</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Mengecek error counter pada interface, terutama CRC Error yang menandakan
+                    kerusakan frame data. CRC Error biasanya disebabkan oleh masalah kabel fiber, konektor kotor, atau
+                    transceiver rusak.</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Show Interface Counters Errors</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35 counters errors</span>
+<span class="separator">~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface Error Counters ~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="separator"># Switch Name         IF Name    Rx Bad Vlan Pkt Rx CRC Error Rx Error Tx Error 
+-|-------------------|----------|---------------|------------|--------|--------|</span>
+<span class="output">1 RTR5.KLM.LEAF-CNBC.01 ethernet35 <span class="value">2</span>               <span class="value">1702</span>         <span class="value">1707</span>     <span class="value">0</span></span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span></code></pre>
+                </div>
+                <div class="alert warning">
+                    <i data-lucide="alert-triangle"></i>
+                    <div class="alert-content">
+                        <strong>Hasil:</strong>
+                        <p>Ditemukan <strong>Rx CRC Error = 1702</strong>, <strong>Rx Error = 1707</strong>, dan
+                            <strong>Rx
+                                Bad VLAN Pkt = 2</strong>. CRC Error yang tinggi menandakan kemungkinan masalah pada
+                            media
+                            fisik (kabel fiber, konektor, atau SFP). Tx Error = 0 (tidak ada error saat mengirim). Perlu
+                            dilakukan cleaning konektor atau penggantian kabel/SFP.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 13. Check Interface Utilization -->
+            <div class="section" id="utilization">
+                <div class="section-header">
+                    <div class="section-icon">📈</div>
+                    <h2>Check Interface Utilization</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Menampilkan persentase utilisasi bandwidth pada interface dalam interval
+                    tertentu. Berguna untuk mengetahui seberapa besar kapasitas port yang sedang digunakan.</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Show Interface Utilization</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35 utilization</span>
+<span class="separator"># Switch Name         IF Name    Interval sec Tx Utilization Rx Utilization 
+-|-------------------|----------|------------|--------------|--------------|</span>
+<span class="output">1 RTR5.KLM.LEAF-CNBC.01 ethernet35 45           <span class="value">10.536</span>         <span class="value">35.899</span></span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span></code></pre>
+                </div>
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Hasil:</strong>
+                        <p>Dalam interval <strong>45 detik</strong>: Tx Utilization = <strong>10.536%</strong> (upload),
+                            Rx
+                            Utilization = <strong>35.899%</strong> (download). Port 10G ini sedang menggunakan sekitar
+                            35.9%
+                            kapasitas untuk download — masih dalam batas normal. Jika utilisasi diatas 80%, perlu
+                            dipertimbangkan upgrade bandwidth.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 14. Check Interface Rate/Bandwidth -->
+            <div class="section" id="rate-bandwidth">
+                <div class="section-header">
+                    <div class="section-icon">🚀</div>
+                    <h2>Check Interface Rate / Bandwidth</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Menampilkan rate (bit/s) dan jumlah paket per detik pada interface secara
+                    real-time. Digunakan untuk monitoring bandwidth aktual yang sedang digunakan.</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Show Interface Rates</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35 rates</span>
+<span class="separator">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface Rx Rates  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="separator"># Switch Name         IF Name    Interval sec Rx Bit/s Rx Ucast Pkt/s Rx Mcast Pkt/s Rx Bcast Pkt/s Timestamp                      
+-|-------------------|----------|------------|--------|--------------|--------------|--------------|------------------------------|</span>
+<span class="output">1 RTR5.KLM.LEAF-CNBC.01 ethernet35 45           <span class="value">3.48Gbps</span> 376150         0              0              2026-02-17 00:13:32.550000 WIB</span>
+
+<span class="separator">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface Tx Rates  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="separator"># Switch Name         IF Name    Interval sec Tx Bit/s Tx Ucast Pkt/s Tx Mcast Pkt/s Tx Bcast Pkt/s Timestamp                      
+-|-------------------|----------|------------|--------|--------------|--------------|--------------|------------------------------|</span>
+<span class="output">1 RTR5.KLM.LEAF-CNBC.01 ethernet35 45           <span class="value">1.14Gbps</span> 239118         0              0              2026-02-17 00:13:32.550000 WIB</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span></code></pre>
+                </div>
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Hasil:</strong>
+                        <p><strong>Rx Rate = 3.48 Gbps</strong> (download) dengan 376.150 paket unicast/detik.
+                            <strong>Tx
+                                Rate = 1.14 Gbps</strong> (upload) dengan 239.118 paket unicast/detik. Traffic berjalan
+                            normal, dominan unicast (multicast & broadcast = 0/s). Timestamp menunjukkan waktu
+                            pengambilan
+                            data.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 15. Check LOG Interface -->
+            <div class="section" id="log-interface">
+                <div class="section-header">
+                    <div class="section-icon">📜</div>
+                    <h2>Check LOG Interface (Flap Stats)</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Menampilkan statistik flapping (up/down) pada interface beserta riwayatnya.
+                    Digunakan untuk mendeteksi ketidakstabilan link, misalnya akibat kabel longgar, SFP bermasalah, atau
+                    gangguan di sisi far-end.</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Show Interface Flap Statistics</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">show switch RTR5.KLM.LEAF-CNBC.01 interface ethernet35 flap-stats</span>
+<span class="separator">~~~~~~~~~~~~~~ Physical Flap Statistics  ~~~~~~~~~~~~~~</span>
+<span class="output">Up/Down Time : <span class="value">12d14m</span>
+Total Flaps  : <span class="value">7</span> (Since 2025-01-24 09:51:54.143000 WIB)</span>
+
+<span class="separator">~ Recent Physical State Change Events (Max Size: 10)  ~</span>
+<span class="separator">#  Event Type Timestamp                      Reason    
+--|----------|------------------------------|---------|</span>
+<span class="output">1  up         2026-02-04 23:59:40.671000 WIB None
+2  down       2026-02-04 23:59:39.909000 WIB Link down
+3  up         2025-12-15 23:30:47.033000 WIB None
+4  down       2025-12-15 23:30:46.374000 WIB Link down
+5  up         2025-12-15 23:30:46.054000 WIB None
+6  down       2025-12-15 23:29:52.929000 WIB Link down
+7  up         2025-03-08 11:44:21.268000 WIB None
+8  down       2025-03-08 11:40:30.413000 WIB Link down
+9  up         2025-03-08 11:27:26.362000 WIB None
+10 down       2025-03-08 09:06:02.794000 WIB Link down</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01></span></code></pre>
+                </div>
+                <div class="alert info">
+                    <i data-lucide="info"></i>
+                    <div class="alert-content">
+                        <strong>Hasil:</strong>
+                        <p>Interface sudah <strong>up selama 12d14m</strong> dengan total <strong>7 flap</strong> sejak
+                            24
+                            Jan 2025. Flap terakhir terjadi pada <strong>4 Feb 2026</strong> (down lalu up dalam 1
+                            detik).
+                            Beberapa flap juga tercatat pada 15 Des 2025 dan 8 Mar 2025. Pola flap yang pendek (down/up
+                            dalam hitungan detik) biasanya menandakan masalah fisik intermittent.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 16. Clear CRC Error -->
+            <div class="section" id="clear-crc">
+                <div class="section-header">
+                    <div class="section-icon">🧹</div>
+                    <h2>Clear CRC Error</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Mereset semua counter error (termasuk CRC Error) pada interface ke nol.
+                    Biasanya
+                    dilakukan setelah perbaikan fisik (cleaning konektor, ganti kabel/SFP) untuk memastikan error tidak
+                    muncul lagi setelah perbaikan.</p>
+                <div class="alert warning">
+                    <i data-lucide="alert-triangle"></i>
+                    <div class="alert-content">
+                        <strong>Perhatian!</strong>
+                        <p>Perintah ini akan mereset counter error pada interface. Pastikan sudah mencatat data error
+                            sebelum melakukan clear.</p>
+                    </div>
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Clear Interface Counters</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01></span> <span class="command">enable</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span>
+<span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">clear switch R5.KLM.LEAF-CNDC.01 interface ethernet35 counters</span></code></pre>
+                </div>
+            </div>
+
+            <!-- 17. Reset Interface -->
+            <div class="section" id="reset-interface">
+                <div class="section-header">
+                    <div class="section-icon">🔄</div>
+                    <h2>Reset Interface</h2>
+                </div>
+                <p><strong>Tujuan:</strong> Mengembalikan interface yang berstatus <strong>error-disabled</strong> ke
+                    kondisi normal. Interface bisa masuk status error-disabled karena BPDU guard, storm control, atau
+                    error
+                    yang berlebihan. Perintah ini akan mengaktifkan kembali interface tersebut.</p>
+                <div class="alert warning">
+                    <i data-lucide="alert-triangle"></i>
+                    <div class="alert-content">
+                        <strong>Perhatian!</strong>
+                        <p>Perintah ini akan mereset interface yang dalam status error-disabled. Pastikan sudah mengecek
+                            penyebab error sebelum melakukan reset.</p>
+                    </div>
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">CLI — Clear Error-Disabled Interface</span>
+                        <button class="code-copy" onclick="copyCode(this)">
+                            <i data-lucide="copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code><span class="prompt">RTR5-KLM-CTRL-CNBC-01#</span> <span class="command">clear error-disabled switch R5.KLM.LEAF-CNDC.01 interface ethernet35</span></code></pre>
+                </div>
+            </div>
+
+        </div><!-- End Mode 2 content-detail -->
+
+        <!-- Bottom Navigation -->
+        <div class="nav-bottom">
+            <a href="../index.html">
+                <i data-lucide="home"></i>
+                Kembali ke Home
+            </a>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Theme toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            lucide.createIcons();
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        // Copy code function
+        function copyCode(btn) {
+            const codeBlock = btn.closest('.code-block');
+            const code = codeBlock.querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!';
+                btn.style.color = '#10b981';
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.color = '';
+                    lucide.createIcons();
+                }, 2000);
+            });
+        }
+
+        // Mode switching
+        function switchMode(mode) {
+            // Update buttons
+            document.getElementById('mode-cli').classList.toggle('active', mode === 'cli');
+            document.getElementById('mode-detail').classList.toggle('active', mode === 'detail');
+
+            // Update content
+            document.getElementById('content-cli').classList.toggle('active', mode === 'cli');
+            document.getElementById('content-detail').classList.toggle('active', mode === 'detail');
+
+            // Save preference
+            localStorage.setItem('ccf-view-mode', mode);
+
+            // Re-init icons for newly visible content
+            lucide.createIcons();
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Load saved mode
+        const savedMode = localStorage.getItem('ccf-view-mode');
+        if (savedMode) {
+            switchMode(savedMode);
+        }
+
+        // Smooth scroll for TOC links
+        document.querySelectorAll('.toc-list a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
