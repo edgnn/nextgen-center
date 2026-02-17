@@ -711,17 +711,17 @@ function updateDashboard() {
         let shift = empData[day] || "";
         let isFromPrevDay = false;
 
-        // For LIBUR/empty, check if previous day's overnight shift is still active
-        if (!shift || shift === "LIBUR") {
-            const prevDay = day - 1 > 0 ? day - 1 : null;
-            if (prevDay) {
-                const prevShift = empData[prevDay];
-                if (prevShift && ["O2", "S2", "A2"].includes(prevShift)) {
-                    // Check if still in overnight shift (morning portion)
-                    if (hours < shiftTimes[prevShift].end) {
-                        shift = prevShift;
-                        isFromPrevDay = true;
-                    }
+        // Check if previous day's overnight shift is still active (morning portion)
+        // This applies regardless of today's shift - e.g., employee has A2 yesterday
+        // and O2 today, at 01:00 they're still in yesterday's A2 shift
+        const prevDay = day - 1 > 0 ? day - 1 : null;
+        if (prevDay) {
+            const prevShift = empData[prevDay];
+            if (prevShift && ["O2", "S2", "A2"].includes(prevShift)) {
+                // Check if still in overnight shift (morning portion)
+                if (hours < shiftTimes[prevShift].end) {
+                    shift = prevShift;
+                    isFromPrevDay = true;
                 }
             }
         }
