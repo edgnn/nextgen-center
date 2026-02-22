@@ -10162,7 +10162,8 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
             // Calculate score
             let correct = 0;
             examData.questions.forEach((q, i) => {
-                const answer = userAnswers[i];
+                const answerKey = currentExam + '_' + i;
+                const answer = userAnswers[answerKey];
                 if (q.type === 'multiple-choice') {
                     const userAns = Array.isArray(answer) ? answer.sort().join(',') : answer || '';
                     const correctAns = q.correct.sort().join(',');
@@ -10172,6 +10173,18 @@ router rip redistribute ospf 1 route-map O2R metric 1</pre>` },
                 } else if (q.type === 'short-answer') {
                     if (q.correct.some(ans => ans.toLowerCase() === (answer || '').toLowerCase())) {
                         correct++;
+                    }
+                } else if (q.type === 'drag-drop' || q.type === 'drag-drop-config') {
+                    if (answer && typeof answer === 'object') {
+                        const correctMap = q.correct;
+                        let allCorrect = true;
+                        for (const targetId in correctMap) {
+                            if (answer[targetId] !== correctMap[targetId]) {
+                                allCorrect = false;
+                                break;
+                            }
+                        }
+                        if (allCorrect) correct++;
                     }
                 }
             });
