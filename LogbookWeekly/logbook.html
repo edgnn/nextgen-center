@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logbook Activity Nextgen</title>
-    <meta name="description" content="Logbook digital untuk mencatat meeting dan pekerjaan harian">
+    <meta name="description" content="Logbook digital untuk mencatat aktivitas harian Nextgen">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <style>
@@ -82,22 +82,28 @@
             background: #ffffff;
         }
 
-        [data-theme='light'] .badge-meeting {
+        [data-theme='light'] .badge-weeklymeeting {
             background: rgba(99, 102, 241, 0.1);
             color: #4f46e5;
             border-color: rgba(99, 102, 241, 0.2);
         }
 
-        [data-theme='light'] .badge-pekerjaan {
+        [data-theme='light'] .badge-dailyactivity {
             background: rgba(16, 185, 129, 0.1);
             color: #059669;
             border-color: rgba(16, 185, 129, 0.2);
         }
 
-        [data-theme='light'] .badge-followup {
+        [data-theme='light'] .badge-urgentactivity {
             background: rgba(245, 158, 11, 0.1);
             color: #d97706;
             border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        [data-theme='light'] .badge-dailyactivityoperational {
+            background: rgba(139, 92, 246, 0.1);
+            color: #7c3aed;
+            border-color: rgba(139, 92, 246, 0.2);
         }
 
         [data-theme='light'] .status-planned {
@@ -468,7 +474,7 @@
             border: 1px solid var(--border);
             border-radius: var(--radius-xl);
             width: 100%;
-            max-width: 600px;
+            max-width: 900px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: var(--shadow-lg);
@@ -577,7 +583,7 @@
         .desc-item-row {
             display: flex;
             gap: 6px;
-            align-items: center;
+            align-items: flex-start;
             animation: slideUp 0.2s ease;
         }
 
@@ -593,11 +599,17 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            margin-top: 6px;
         }
 
         .desc-item-row .desc-input {
             flex: 3;
             min-width: 0;
+            min-height: 60px;
+            resize: vertical;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            line-height: 1.5;
         }
 
         .desc-item-row .pic-input {
@@ -871,22 +883,28 @@
             white-space: nowrap;
         }
 
-        .badge-meeting {
+        .badge-weeklymeeting {
             background: rgba(99, 102, 241, 0.15);
             color: #a5b4fc;
             border: 1px solid rgba(99, 102, 241, 0.25);
         }
 
-        .badge-pekerjaan {
+        .badge-dailyactivity {
             background: rgba(16, 185, 129, 0.15);
             color: #6ee7b7;
             border: 1px solid rgba(16, 185, 129, 0.25);
         }
 
-        .badge-followup {
+        .badge-urgentactivity {
             background: rgba(245, 158, 11, 0.15);
             color: #fcd34d;
             border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .badge-dailyactivityoperational {
+            background: rgba(139, 92, 246, 0.15);
+            color: #c4b5fd;
+            border: 1px solid rgba(139, 92, 246, 0.25);
         }
 
         .status-badge {
@@ -1359,15 +1377,16 @@
                     <div class="form-group">
                         <label>Tipe</label>
                         <select id="entryType">
-                            <option value="Meeting">📅 Meeting</option>
-                            <option value="Pekerjaan">💼 Pekerjaan</option>
-                            <option value="Follow-up">🔄 Follow-up</option>
+                            <option value="Weekly Meeting">📅 Weekly Meeting</option>
+                            <option value="Daily Activity">💼 Daily Activity</option>
+                            <option value="Urgent Activity">🔄 Urgent Activity</option>
+                            <option value="Daily Activity Operational">� Daily Activity Operational</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Judul</label>
-                    <input type="text" id="entryTitle" placeholder="Judul meeting / pekerjaan">
+                    <input type="text" id="entryTitle" placeholder="Judul aktivitas...">
                 </div>
                 <div class="form-group">
                     <label>Deskripsi / Poin Pembahasan</label>
@@ -1432,8 +1451,8 @@
             <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Ganti Tema">
                 🌙
             </button>
-            <h1>📋 Logbook Meeting Weekly</h1>
-            <p>Catat dan kelola semua meeting serta pekerjaan dalam satu tempat</p>
+            <h1>📋 Logbook Activity Nextgen</h1>
+            <p>Catat dan kelola semua aktivitas harian dalam satu tempat</p>
             <div class="header-actions">
                 <button class="btn btn-primary" onclick="app.openModal()">
                     ➕ Tambah Entri
@@ -1479,12 +1498,12 @@
             <div class="stat-card meeting">
                 <div class="stat-icon">📅</div>
                 <div class="stat-value" id="statMeeting">0</div>
-                <div class="stat-label">Meeting</div>
+                <div class="stat-label">Weekly Meeting</div>
             </div>
             <div class="stat-card task">
                 <div class="stat-icon">💼</div>
                 <div class="stat-value" id="statTask">0</div>
-                <div class="stat-label">Pekerjaan</div>
+                <div class="stat-label">Daily Activity</div>
             </div>
             <div class="stat-card done">
                 <div class="stat-icon">✅</div>
@@ -1503,9 +1522,10 @@
             <div class="filter-group">
                 <select id="filterType" onchange="app.filterEntries()">
                     <option value="">Semua Tipe</option>
-                    <option value="Meeting">📅 Meeting</option>
-                    <option value="Pekerjaan">💼 Pekerjaan</option>
-                    <option value="Follow-up">🔄 Follow-up</option>
+                    <option value="Weekly Meeting">📅 Weekly Meeting</option>
+                    <option value="Daily Activity">💼 Daily Activity</option>
+                    <option value="Urgent Activity">🔄 Urgent Activity</option>
+                    <option value="Daily Activity Operational">� Daily Activity Operational</option>
                 </select>
                 <select id="filterStatus" onchange="app.filterEntries()">
                     <option value="">Semua Status</option>
@@ -1752,7 +1772,7 @@
                 try {
                     const data = await this.db.fetchAll();
                     if (data && data.length > 0) {
-                        this.entries = data;
+                        this.entries = data.map(e => ({ ...e, date: this.normalizeDate(e.date) }));
                         this.saveToStorage();
                         this.render();
                     }
@@ -1770,7 +1790,7 @@
                 this.setSyncState('syncing', '🔄 Mengunduh data dari Sheets...');
                 try {
                     const data = await this.db.fetchAll();
-                    this.entries = data || [];
+                    this.entries = (data || []).map(e => ({ ...e, date: this.normalizeDate(e.date) }));
                     this.saveToStorage();
                     this.render();
                     this.updateSyncUI();
@@ -1923,7 +1943,7 @@
                 const prioOpts = ['Low', 'Medium', 'High', 'Critical'].map(p => `<option value="${p}"${p === priorityVal ? ' selected' : ''}>${p}</option>`).join('');
                 row.innerHTML = `
                 <span class="desc-number">${idx}</span>
-                <input type="text" class="desc-input" value="${this.escapeAttr(descVal)}" placeholder="Deskripsi poin ke-${idx}...">
+                <textarea class="desc-input" placeholder="Deskripsi poin ke-${idx}...">${this.escapeHtml(descVal)}</textarea>
                 <input type="text" class="pic-input" value="${this.escapeAttr(picVal)}" placeholder="PIC">
                 <input type="text" class="cat-input" value="${this.escapeAttr(catVal)}" placeholder="Kategori">
                 <select class="row-select status-select">${statusOpts}</select>
@@ -2152,8 +2172,8 @@
             renderStats() {
                 const all = this.entries;
                 document.getElementById('statTotal').textContent = all.length;
-                document.getElementById('statMeeting').textContent = all.filter(e => e.type === 'Meeting').length;
-                document.getElementById('statTask').textContent = all.filter(e => e.type === 'Pekerjaan').length;
+                document.getElementById('statMeeting').textContent = all.filter(e => e.type === 'Weekly Meeting').length;
+                document.getElementById('statTask').textContent = all.filter(e => e.type === 'Daily Activity').length;
                 const done = all.filter(e => e.status === 'Done').length;
                 const rate = all.length > 0 ? Math.round((done / all.length) * 100) : 0;
                 document.getElementById('statDone').textContent = rate + '%';
@@ -2194,7 +2214,7 @@
                     return `
                 <tr>
                     <td style="white-space:nowrap">${this.formatDate(e.date)}</td>
-                    <td><span class="badge badge-${e.type.toLowerCase().replace('-', '')}">${this.typeIcon(e.type)} ${e.type}</span></td>
+                    <td><span class="badge badge-${e.type.toLowerCase().replace(/[\s-]/g, '')}">${this.typeIcon(e.type)} ${e.type}</span></td>
                     <td class="title-cell">${this.escapeHtml(e.title)}</td>
                     <td class="desc-cell">${descHtml}</td>
                     <td>${picHtml}</td>
@@ -2316,15 +2336,55 @@
                 return 'lb_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 6);
             }
 
+            parseDate(dateStr) {
+                if (!dateStr) return null;
+                // Already YYYY-MM-DD
+                if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+                    return new Date(dateStr + 'T00:00:00');
+                }
+                // Google Sheets serial number (numeric)
+                if (!isNaN(dateStr) && Number(dateStr) > 10000) {
+                    const serial = Number(dateStr);
+                    const epoch = new Date(1899, 11, 30);
+                    return new Date(epoch.getTime() + serial * 86400000);
+                }
+                // Try DD/MM/YYYY or DD-MM-YYYY
+                const dmy = String(dateStr).match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+                if (dmy) {
+                    const day = parseInt(dmy[1], 10);
+                    const month = parseInt(dmy[2], 10);
+                    const year = parseInt(dmy[3], 10);
+                    // If day > 12, it must be DD/MM/YYYY
+                    if (day > 12) return new Date(year, month - 1, day);
+                    // If month > 12, it must be MM/DD/YYYY
+                    if (month > 12) return new Date(year, day - 1, month);
+                    // Ambiguous — assume DD/MM/YYYY (Indonesian locale)
+                    return new Date(year, month - 1, day);
+                }
+                // Fallback: let JS parse it
+                const d = new Date(dateStr);
+                return isNaN(d.getTime()) ? null : d;
+            }
+
             formatDate(dateStr) {
                 if (!dateStr) return '-';
-                const d = new Date(dateStr + 'T00:00:00');
+                const d = this.parseDate(dateStr);
+                if (!d || isNaN(d.getTime())) return '-';
                 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
                 return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
             }
 
+            normalizeDate(dateStr) {
+                const d = this.parseDate(dateStr);
+                if (!d || isNaN(d.getTime())) return dateStr || '';
+                const yyyy = d.getFullYear();
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const dd = String(d.getDate()).padStart(2, '0');
+                return `${yyyy}-${mm}-${dd}`;
+            }
+
             typeIcon(type) {
-                return { 'Meeting': '📅', 'Pekerjaan': '💼', 'Follow-up': '🔄' }[type] || '📝';
+                return { 'Weekly Meeting': '📅', 'Daily Activity': '💼', 'Urgent Activity': '�', 'Daily Activity Operational': '�' }[type] || '📝';
             }
 
             escapeHtml(str) {
