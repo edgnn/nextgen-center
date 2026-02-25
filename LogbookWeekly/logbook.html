@@ -1368,7 +1368,7 @@
                         ＋ Tambah Poin
                     </button>
                 </div>
-                <div class="form-row" style="grid-template-columns: 1fr 1fr 1fr">
+                <div class="form-row" style="grid-template-columns: 1fr 1fr 1fr 1fr">
                     <div class="form-group">
                         <label>Kategori</label>
                         <select id="entryCategory">
@@ -1389,14 +1389,12 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Prioritas</label>
-                        <select id="entryPriority">
-                            <option value="">-- Pilih Prioritas --</option>
-                            <option value="Low">Low</option>
-                            <option value="Medium">Medium</option>
-                            <option value="High">High</option>
-                            <option value="Critical">Critical</option>
-                        </select>
+                        <label>Waktu Mulai</label>
+                        <input type="time" id="entryTimeStart">
+                    </div>
+                    <div class="form-group">
+                        <label>Waktu Selesai</label>
+                        <input type="time" id="entryTimeEnd">
                     </div>
                 </div>
                 <div class="form-group">
@@ -1527,13 +1525,7 @@
                     <option value="Done">Done</option>
                     <option value="On Hold">On Hold</option>
                 </select>
-                <select id="filterPriority" onchange="app.filterEntries()">
-                    <option value="">Semua Prioritas</option>
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                    <option value="Critical">Critical</option>
-                </select>
+
                 <input type="date" id="filterDateFrom" class="date-input" onchange="app.filterEntries()"
                     title="Dari tanggal">
                 <input type="date" id="filterDateTo" class="date-input" onchange="app.filterEntries()"
@@ -1555,7 +1547,7 @@
                             <th>PIC</th>
                             <th onclick="app.sort('category')">Kategori <span class="sort-indicator">▼</span></th>
                             <th onclick="app.sort('status')">Status <span class="sort-indicator">▼</span></th>
-                            <th onclick="app.sort('priority')">Prioritas <span class="sort-indicator">▼</span></th>
+                            <th>Durasi</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -1900,8 +1892,9 @@
                         }
                         // Load entry-level fields
                         document.getElementById('entryCategory').value = entry.category || '';
-                        document.getElementById('entryStatus').value = entry.status || 'Planned';
-                        document.getElementById('entryPriority').value = entry.priority || 'Medium';
+                        document.getElementById('entryStatus').value = entry.status || '';
+                        document.getElementById('entryTimeStart').value = entry.timeStart || '';
+                        document.getElementById('entryTimeEnd').value = entry.timeEnd || '';
                         document.getElementById('entryNotes').value = entry.notes || '';
                     }
                 } else {
@@ -1927,7 +1920,8 @@
                         else el.value = '';
                     });
                 document.getElementById('entryStatus').value = '';
-                document.getElementById('entryPriority').value = '';
+                document.getElementById('entryTimeStart').value = '';
+                document.getElementById('entryTimeEnd').value = '';
                 this.clearDescItems();
                 this.addDescItem(); // always start with one empty row
             }
@@ -2027,7 +2021,8 @@
                 const notes = document.getElementById('entryNotes').value.trim();
                 const category = document.getElementById('entryCategory').value.trim();
                 const status = document.getElementById('entryStatus').value;
-                const priority = document.getElementById('entryPriority').value;
+                const timeStart = document.getElementById('entryTimeStart').value;
+                const timeEnd = document.getElementById('entryTimeEnd').value;
                 // Backward compat: derive flat strings
                 const pic = [...new Set(descriptions.map(d => d.pic).filter(p => p))].join(', ');
                 const description = descriptions.map(d => d.text).join('; ');
@@ -2040,7 +2035,7 @@
                 if (this.editingId) {
                     const idx = this.entries.findIndex(e => e.id === this.editingId);
                     if (idx !== -1) {
-                        this.entries[idx] = { ...this.entries[idx], date, type, title, descriptions, description, pic, category, status, priority, notes, updatedAt: new Date().toISOString() };
+                        this.entries[idx] = { ...this.entries[idx], date, type, title, descriptions, description, pic, category, status, timeStart, timeEnd, notes, updatedAt: new Date().toISOString() };
                         this.saveToStorage();
                         this.syncSaveEntry(this.entries[idx]);
                     }
@@ -2048,7 +2043,7 @@
                 } else {
                     const newEntry = {
                         id: this.generateId(),
-                        date, type, title, descriptions, description, pic, category, status, priority, notes,
+                        date, type, title, descriptions, description, pic, category, status, timeStart, timeEnd, notes,
                         createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString()
                     };
@@ -2095,7 +2090,7 @@
                 const search = document.getElementById('searchInput').value.toLowerCase();
                 const type = document.getElementById('filterType').value;
                 const status = document.getElementById('filterStatus').value;
-                const priority = document.getElementById('filterPriority').value;
+
                 const dateFrom = document.getElementById('filterDateFrom').value;
                 const dateTo = document.getElementById('filterDateTo').value;
 
@@ -2117,21 +2112,14 @@
                 }
                 if (type) data = data.filter(e => e.type === type);
                 if (status) data = data.filter(e => e.status === status);
-                if (priority) data = data.filter(e => e.priority === priority);
+
                 if (dateFrom) data = data.filter(e => e.date >= dateFrom);
                 if (dateTo) data = data.filter(e => e.date <= dateTo);
 
                 // Sort
-                const priorityOrder = { Critical: 0, High: 1, Medium: 2, Low: 3 };
                 data.sort((a, b) => {
-                    let vA, vB;
-                    if (this.sortField === 'priority') {
-                        vA = priorityOrder[a.priority] ?? 9;
-                        vB = priorityOrder[b.priority] ?? 9;
-                    } else {
-                        vA = (a[this.sortField] || '').toLowerCase();
-                        vB = (b[this.sortField] || '').toLowerCase();
-                    }
+                    const vA = (a[this.sortField] || '').toLowerCase();
+                    const vB = (b[this.sortField] || '').toLowerCase();
                     if (vA < vB) return this.sortDir === 'asc' ? -1 : 1;
                     if (vA > vB) return this.sortDir === 'asc' ? 1 : -1;
                     return 0;
@@ -2199,10 +2187,20 @@
                         descHtml = dash; picHtml = dash;
                     }
                     const catHtml = e.category ? this.escapeHtml(e.category) : dash;
-                    const statusVal = e.status || 'Planned';
-                    const statusHtml = `<span class="status-badge status-${statusVal.toLowerCase().replace(/\s/g, '')}">${statusVal}</span>`;
-                    const prioVal = e.priority || 'Medium';
-                    const prioHtml = `<span class="priority-dot priority-${prioVal.toLowerCase()}"></span>${prioVal}`;
+                    const statusVal = e.status || '';
+                    const statusHtml = statusVal ? `<span class="status-badge status-${statusVal.toLowerCase().replace(/\s/g, '')}">${statusVal}</span>` : dash;
+                    let durasiHtml = dash;
+                    if (e.timeStart && e.timeEnd) {
+                        const [sh, sm] = e.timeStart.split(':').map(Number);
+                        const [eh, em] = e.timeEnd.split(':').map(Number);
+                        let diffMin = (eh * 60 + em) - (sh * 60 + sm);
+                        if (diffMin < 0) diffMin += 24 * 60;
+                        const hours = Math.floor(diffMin / 60);
+                        const mins = diffMin % 60;
+                        durasiHtml = `<span style="white-space:nowrap">🕐 ${e.timeStart} - ${e.timeEnd}</span><br><span style="font-size:0.72rem;color:var(--text-muted)">(${hours}j ${mins}m)</span>`;
+                    } else if (e.timeStart) {
+                        durasiHtml = `<span style="white-space:nowrap">🕐 ${e.timeStart} - ...</span>`;
+                    }
                     return `
                 <tr>
                     <td style="white-space:nowrap">${this.formatDate(e.date)}</td>
@@ -2212,7 +2210,7 @@
                     <td>${picHtml}</td>
                     <td>${catHtml}</td>
                     <td>${statusHtml}</td>
-                    <td>${prioHtml}</td>
+                    <td>${durasiHtml}</td>
                     <td>
                         <div class="actions-cell">
                             <button class="btn btn-secondary btn-sm btn-icon" onclick="app.openModal('${e.id}')" title="Edit">✏️</button>
@@ -2259,18 +2257,15 @@
                     this.toast('Tidak ada data untuk diexport.', 'error');
                     return;
                 }
-                const headers = ['Tanggal', 'Tipe', 'Judul', 'Deskripsi', 'PIC', 'Kategori', 'Status', 'Prioritas', 'Catatan'];
+                const headers = ['Tanggal', 'Tipe', 'Judul', 'Deskripsi', 'PIC', 'Kategori', 'Status', 'Waktu Mulai', 'Waktu Selesai', 'Catatan'];
                 const rows = this.filtered.map(e => {
                     const descs = this.normalizeDescriptions(e);
                     const descText = descs.map(d => d.text).join('; ');
                     const picText = descs.map(d => d.pic).filter(p => p).join('; ');
-                    const catText = descs.map(d => d.category).filter(c => c).join('; ');
-                    const statusText = descs.map(d => d.status).join('; ');
-                    const prioText = descs.map(d => d.priority).join('; ');
                     return [
                         e.date, e.type, `"${(e.title || '').replace(/"/g, '""')}"`, `"${descText.replace(/"/g, '""')}"`,
-                        `"${picText.replace(/"/g, '""')}"`, `"${catText.replace(/"/g, '""')}"`,
-                        `"${statusText}"`, `"${prioText}"`, `"${(e.notes || '').replace(/"/g, '""')}"`
+                        `"${picText.replace(/"/g, '""')}"`, `"${(e.category || '').replace(/"/g, '""')}"`,
+                        `"${e.status || ''}"`, `"${e.timeStart || ''}"`, `"${e.timeEnd || ''}"`, `"${(e.notes || '').replace(/"/g, '""')}"`
                     ];
                 });
                 const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
