@@ -617,29 +617,7 @@
             min-width: 70px;
         }
 
-        .desc-item-row .cat-input {
-            flex: 1;
-            min-width: 70px;
-        }
 
-        .desc-item-row .row-select {
-            flex: 0 0 auto;
-            width: 100px;
-            padding: 8px 6px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.78rem;
-            transition: var(--transition);
-        }
-
-        .desc-item-row .row-select:focus {
-            border-color: var(--accent-3);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-        }
 
         .desc-item-row .btn-remove-desc {
             background: rgba(239, 68, 68, 0.1);
@@ -687,19 +665,6 @@
         .desc-header-row .dh-pic {
             flex: 1;
             min-width: 70px;
-        }
-
-        .desc-header-row .dh-cat {
-            flex: 1;
-            min-width: 70px;
-        }
-
-        .desc-header-row .dh-status {
-            width: 100px;
-        }
-
-        .desc-header-row .dh-priority {
-            width: 100px;
         }
 
         .desc-header-row .dh-act {
@@ -1394,9 +1359,6 @@
                         <span class="dh-num">#</span>
                         <span class="dh-desc">Deskripsi</span>
                         <span class="dh-pic">PIC</span>
-                        <span class="dh-cat">Kategori</span>
-                        <span class="dh-status">Status</span>
-                        <span class="dh-priority">Prioritas</span>
                         <span class="dh-act"></span>
                     </div>
                     <div class="desc-items-container" id="descItemsContainer">
@@ -1405,6 +1367,37 @@
                     <button type="button" class="btn-add-desc" onclick="app.addDescItem()">
                         ＋ Tambah Poin
                     </button>
+                </div>
+                <div class="form-row" style="grid-template-columns: 1fr 1fr 1fr">
+                    <div class="form-group">
+                        <label>Kategori</label>
+                        <select id="entryCategory">
+                            <option value="">-- Pilih Kategori --</option>
+                            <option value="SDWAN">SDWAN</option>
+                            <option value="NEUCENTRIX">NEUCENTRIX</option>
+                            <option value="OTHER">OTHER</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="entryStatus">
+                            <option value="">-- Pilih Status --</option>
+                            <option value="Planned">Planned</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Done">Done</option>
+                            <option value="On Hold">On Hold</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Prioritas</label>
+                        <select id="entryPriority">
+                            <option value="">-- Pilih Prioritas --</option>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Critical">Critical</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Catatan Tambahan</label>
@@ -1897,14 +1890,18 @@
                         document.getElementById('entryDate').value = entry.date;
                         document.getElementById('entryType').value = entry.type;
                         document.getElementById('entryTitle').value = entry.title;
-                        // Load descriptions with all per-item fields (backward compat)
+                        // Load descriptions
                         this.clearDescItems();
                         const descs = this.normalizeDescriptions(entry);
                         if (descs.length === 0) {
                             this.addDescItem();
                         } else {
-                            descs.forEach(d => this.addDescItem(d.text, d.pic, d.category, d.status, d.priority));
+                            descs.forEach(d => this.addDescItem(d.text, d.pic));
                         }
+                        // Load entry-level fields
+                        document.getElementById('entryCategory').value = entry.category || '';
+                        document.getElementById('entryStatus').value = entry.status || 'Planned';
+                        document.getElementById('entryPriority').value = entry.priority || 'Medium';
                         document.getElementById('entryNotes').value = entry.notes || '';
                     }
                 } else {
@@ -1923,31 +1920,28 @@
             }
 
             clearForm() {
-                ['entryDate', 'entryType', 'entryTitle', 'entryNotes']
+                ['entryDate', 'entryType', 'entryTitle', 'entryCategory', 'entryNotes']
                     .forEach(id => {
                         const el = document.getElementById(id);
                         if (el.tagName === 'SELECT') el.selectedIndex = 0;
                         else el.value = '';
                     });
+                document.getElementById('entryStatus').value = '';
+                document.getElementById('entryPriority').value = '';
                 this.clearDescItems();
                 this.addDescItem(); // always start with one empty row
             }
 
             // ===== MULTI-DESC HELPERS =====
-            addDescItem(descVal = '', picVal = '', catVal = '', statusVal = 'Planned', priorityVal = 'Medium') {
+            addDescItem(descVal = '', picVal = '') {
                 const container = document.getElementById('descItemsContainer');
                 const idx = container.children.length + 1;
                 const row = document.createElement('div');
                 row.className = 'desc-item-row';
-                const statusOpts = ['Planned', 'In Progress', 'Done', 'On Hold'].map(s => `<option value="${s}"${s === statusVal ? ' selected' : ''}>${s}</option>`).join('');
-                const prioOpts = ['Low', 'Medium', 'High', 'Critical'].map(p => `<option value="${p}"${p === priorityVal ? ' selected' : ''}>${p}</option>`).join('');
                 row.innerHTML = `
                 <span class="desc-number">${idx}</span>
                 <textarea class="desc-input" placeholder="Deskripsi poin ke-${idx}...">${this.escapeHtml(descVal)}</textarea>
                 <input type="text" class="pic-input" value="${this.escapeAttr(picVal)}" placeholder="PIC">
-                <input type="text" class="cat-input" value="${this.escapeAttr(catVal)}" placeholder="Kategori">
-                <select class="row-select status-select">${statusOpts}</select>
-                <select class="row-select priority-select">${prioOpts}</select>
                 <button type="button" class="btn-remove-desc" onclick="app.removeDescItem(this)" title="Hapus">✕</button>
             `;
                 container.appendChild(row);
@@ -1981,10 +1975,7 @@
                 rows.forEach(row => {
                     const text = row.querySelector('.desc-input').value.trim();
                     const pic = row.querySelector('.pic-input').value.trim();
-                    const category = row.querySelector('.cat-input').value.trim();
-                    const status = row.querySelector('.status-select').value;
-                    const priority = row.querySelector('.priority-select').value;
-                    if (text.length > 0) result.push({ text, pic, category, status, priority });
+                    if (text.length > 0) result.push({ text, pic });
                 });
                 return result;
             }
@@ -2034,12 +2025,12 @@
                 const title = document.getElementById('entryTitle').value.trim();
                 const descriptions = this.getDescriptions();
                 const notes = document.getElementById('entryNotes').value.trim();
+                const category = document.getElementById('entryCategory').value.trim();
+                const status = document.getElementById('entryStatus').value;
+                const priority = document.getElementById('entryPriority').value;
                 // Backward compat: derive flat strings
                 const pic = [...new Set(descriptions.map(d => d.pic).filter(p => p))].join(', ');
                 const description = descriptions.map(d => d.text).join('; ');
-                const category = [...new Set(descriptions.map(d => d.category).filter(c => c))].join(', ');
-                const status = descriptions.length > 0 ? descriptions[0].status : 'Planned';
-                const priority = descriptions.length > 0 ? descriptions[0].priority : 'Medium';
 
                 if (!date || !title) {
                     this.toast('Tanggal dan Judul wajib diisi!', 'error');
@@ -2200,17 +2191,18 @@
                 tbody.innerHTML = page.map(e => {
                     const descs = this.normalizeDescriptions(e);
                     const dash = '<span style="color:var(--text-muted)">-</span>';
-                    let descHtml, picHtml, catHtml, statusHtml, prioHtml;
+                    let descHtml, picHtml;
                     if (descs.length > 0) {
                         descHtml = `<ul class="desc-list-table">${descs.map(d => `<li>${this.escapeHtml(d.text)}</li>`).join('')}</ul>`;
                         picHtml = `<ul class="pic-list-table">${descs.map(d => `<li>${d.pic ? `<span class="desc-pic-tag">👤 ${this.escapeHtml(d.pic)}</span>` : dash}</li>`).join('')}</ul>`;
-                        catHtml = `<ul class="pic-list-table">${descs.map(d => `<li>${d.category ? this.escapeHtml(d.category) : dash}</li>`).join('')}</ul>`;
-                        statusHtml = `<ul class="pic-list-table">${descs.map(d => `<li><span class="status-badge status-${(d.status || 'Planned').toLowerCase().replace(/\s/g, '')}">${d.status || 'Planned'}</span></li>`).join('')}</ul>`;
-                        prioHtml = `<ul class="pic-list-table">${descs.map(d => `<li><span class="priority-dot priority-${(d.priority || 'Medium').toLowerCase()}"></span>${d.priority || 'Medium'}</li>`).join('')}</ul>`;
                     } else {
-                        descHtml = dash; picHtml = dash; catHtml = dash;
-                        statusHtml = dash; prioHtml = dash;
+                        descHtml = dash; picHtml = dash;
                     }
+                    const catHtml = e.category ? this.escapeHtml(e.category) : dash;
+                    const statusVal = e.status || 'Planned';
+                    const statusHtml = `<span class="status-badge status-${statusVal.toLowerCase().replace(/\s/g, '')}">${statusVal}</span>`;
+                    const prioVal = e.priority || 'Medium';
+                    const prioHtml = `<span class="priority-dot priority-${prioVal.toLowerCase()}"></span>${prioVal}`;
                     return `
                 <tr>
                     <td style="white-space:nowrap">${this.formatDate(e.date)}</td>
