@@ -1569,13 +1569,18 @@
 
         class GoogleSheetsDB {
             constructor() {
+                this.defaultUrl = 'https://script.google.com/macros/s/AKfycbwQ-8Be2DPDTXPPMALjhUq1pleQ5ydxuNCMOV5wmwMN2TPrphA1ZpA4ZyXXTvntdq9OCQ/exec';
                 this.urlKey = 'logbook_webapp_url';
                 this.lastSyncKey = 'logbook_last_sync';
                 this._cbCounter = 0;
+                // Auto-set default URL jika belum ada di localStorage
+                if (!localStorage.getItem(this.urlKey) && this.defaultUrl) {
+                    localStorage.setItem(this.urlKey, this.defaultUrl);
+                }
             }
 
             getWebAppUrl() {
-                return localStorage.getItem(this.urlKey) || '';
+                return localStorage.getItem(this.urlKey) || this.defaultUrl;
             }
 
             setWebAppUrl(url) {
