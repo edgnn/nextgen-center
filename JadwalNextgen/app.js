@@ -90,6 +90,9 @@ const nationalHolidays = {
     "2026-08-17": "Hari Kemerdekaan RI",
     "2026-08-25": "Maulid Nabi Muhammad SAW",
     "2026-02-16": "Cuti Bersama",
+    "2026-03-18": "Cuti Bersama",
+    "2026-03-23": "Cuti Bersama",
+    "2026-03-24": "Cuti Bersama",
     "2026-12-25": "Hari Raya Natal"
 };
 
@@ -179,6 +182,29 @@ const scheduleData = {
         9: { 1: "LIBUR", 2: "O1", 3: "O1", 4: "O1", 5: "O1", 6: "O1", 7: "H1", 8: "H2", 9: "O1", 10: "O1", 11: "O1", 12: "O1", 13: "O1", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "A1", 18: "O1", 19: "O1", 20: "O1", 21: "LIBUR", 22: "LIBUR", 23: "O1", 24: "O1", 25: "O1", 26: "O1", 27: "O1", 28: "LIBUR" },
         // Juwarti
         10: { 1: "LIBUR", 2: "O1", 3: "O1", 4: "O1", 5: "O1", 6: "O1", 7: "LIBUR", 8: "H1", 9: "O1", 10: "O1", 11: "O1", 12: "O1", 13: "O1", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "O1", 19: "O1", 20: "O1", 21: "LIBUR", 22: "H1", 23: "O1", 24: "O1", 25: "O1", 26: "O1", 27: "O1", 28: "H1" }
+    },
+    // MARCH 2026
+    "2026-03": {
+        // Youngky Ramadhan
+        1: { 1: "S2", 2: "LIBUR", 3: "LIBUR", 4: "O1", 5: "O1", 6: "O2", 7: "O2", 8: "LIBUR", 9: "LIBUR", 10: "O1", 11: "S1", 12: "O2", 13: "O2", 14: "LIBUR", 15: "O1", 16: "O1", 17: "O1", 18: "A2", 19: "LIBUR", 20: "LIBUR", 21: "A1", 22: "LIBUR", 23: "A1", 24: "LIBUR", 25: "O2", 26: "LIBUR", 27: "LIBUR", 28: "O1", 29: "O1", 30: "O2", 31: "O2" },
+        // Ali Ridho Salatin
+        2: { 1: "O2", 2: "LIBUR", 3: "LIBUR", 4: "O1", 5: "O1", 6: "O2", 7: "S2", 8: "O2", 9: "LIBUR", 10: "S1", 11: "O1", 12: "O2", 13: "O2", 14: "LIBUR", 15: "LIBUR", 16: "O1", 17: "O1", 18: "LIBUR", 19: "A2", 20: "LIBUR", 21: "LIBUR", 22: "A1", 23: "LIBUR", 24: "A2", 25: "O2", 26: "LIBUR", 27: "LIBUR", 28: "O1", 29: "O1", 30: "O2", 31: "O2" },
+        // Fachri Ilmawandi
+        3: { 1: "O1", 2: "S2", 3: "O2", 4: "LIBUR", 5: "LIBUR", 6: "O1", 7: "S1", 8: "O2", 9: "O2", 10: "LIBUR", 11: "LIBUR", 12: "O1", 13: "O1", 14: "O2", 15: "O2", 16: "LIBUR", 17: "LIBUR", 18: "A2", 19: "LIBUR", 20: "A1", 21: "LIBUR", 22: "LIBUR", 23: "A2", 24: "LIBUR", 25: "O1", 26: "O2", 27: "O2", 28: "LIBUR", 29: "O1", 30: "O1", 31: "O1" },
+        // Andry Wahyudi
+        4: { 1: "O1", 2: "S2", 3: "S2", 4: "LIBUR", 5: "LIBUR", 6: "O1", 7: "O1", 8: "O2", 9: "O2", 10: "LIBUR", 11: "LIBUR", 12: "O1", 13: "S1", 14: "O2", 15: "O2", 16: "LIBUR", 17: "LIBUR", 18: "A1", 19: "LIBUR", 20: "LIBUR", 21: "LIBUR", 22: "A2", 23: "LIBUR", 24: "A1", 25: "O1", 26: "O2", 27: "O2", 28: "O2", 29: "LIBUR", 30: "O1", 31: "O1" },
+        // Muhammad Taufik
+        5: { 1: "LIBUR", 2: "O1", 3: "S1", 4: "S2", 5: "O2", 6: "LIBUR", 7: "LIBUR", 8: "O1", 9: "O1", 10: "O2", 11: "O2", 12: "LIBUR", 13: "LIBUR", 14: "O1", 15: "O1", 16: "O2", 17: "O2", 18: "LIBUR", 19: "A1", 20: "A2", 21: "A2", 22: "LIBUR", 23: "LIBUR", 24: "LIBUR", 25: "LIBUR", 26: "O1", 27: "O1", 28: "O2", 29: "O2", 30: "LIBUR", 31: "LIBUR" },
+        // M Yarham
+        6: { 1: "LIBUR", 2: "O1", 3: "O1", 4: "O2", 5: "O2", 6: "O2", 7: "LIBUR", 8: "O1", 9: "S1", 10: "O2", 11: "O2", 12: "LIBUR", 13: "LIBUR", 14: "O1", 15: "O1", 16: "O2", 17: "S2", 18: "LIBUR", 19: "LIBUR", 20: "A1", 21: "A2", 22: "LIBUR", 23: "LIBUR", 24: "A2", 25: "LIBUR", 26: "O1", 27: "O1", 28: "O2", 29: "O2", 30: "LIBUR", 31: "LIBUR" },
+        // Edi Gunawan
+        7: { 1: "LIBUR", 2: "O1", 3: "O1", 4: "O1", 5: "O1", 6: "O1", 7: "LIBUR", 8: "LIBUR", 9: "O1", 10: "O1", 11: "O1", 12: "O1", 13: "O1", 14: "LIBUR", 15: "LIBUR", 16: "O1", 17: "O1", 18: "LIBUR", 19: "A2", 20: "LIBUR", 21: "A1", 22: "LIBUR", 23: "A1", 24: "LIBUR", 25: "O1", 26: "O1", 27: "O1", 28: "LIBUR", 29: "LIBUR", 30: "O1", 31: "O1" },
+        // Milan Trista
+        8: { 1: "LIBUR", 2: "O1", 3: "O1", 4: "O1", 5: "O1", 6: "O1", 7: "LIBUR", 8: "LIBUR", 9: "O1", 10: "O1", 11: "O1", 12: "O1", 13: "O1", 14: "LIBUR", 15: "LIBUR", 16: "O1", 17: "O1", 18: "A1", 19: "LIBUR", 20: "LIBUR", 21: "LIBUR", 22: "A1", 23: "LIBUR", 24: "A1", 25: "O1", 26: "O1", 27: "O1", 28: "LIBUR", 29: "LIBUR", 30: "O1", 31: "O1" },
+        // Jajang Haris Hidayat
+        9: { 1: "LIBUR", 2: "O1", 3: "O1", 4: "O1", 5: "O1", 6: "O1", 7: "LIBUR", 8: "LIBUR", 9: "O1", 10: "O1", 11: "O1", 12: "O1", 13: "O1", 14: "LIBUR", 15: "LIBUR", 16: "O1", 17: "O1", 18: "LIBUR", 19: "A1", 20: "A2", 21: "LIBUR", 22: "A2", 23: "A2", 24: "LIBUR", 25: "O1", 26: "O1", 27: "O1", 28: "LIBUR", 29: "LIBUR", 30: "O1", 31: "O1" },
+        // Juwarti
+        10: { 1: "H1", 2: "O1", 3: "O1", 4: "O1", 5: "O1", 6: "O1", 7: "LIBUR", 8: "H1", 9: "O1", 10: "O1", 11: "O1", 12: "O1", 13: "O1", 14: "LIBUR", 15: "LIBUR", 16: "O1", 17: "O1", 18: "LIBUR", 19: "LIBUR", 20: "LIBUR", 21: "LIBUR", 22: "LIBUR", 23: "LIBUR", 24: "LIBUR", 25: "O1", 26: "O1", 27: "O1", 28: "LIBUR", 29: "H1", 30: "O1", 31: "O1" }
     }
 };
 
