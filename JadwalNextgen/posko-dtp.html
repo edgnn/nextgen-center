@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Posko Idul Fitri 2026 DTP</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* POSKO IDUL FITRI DTP - GREEN THEME */
+
+        :root {
+            --accent-primary: #15803d;
+            --accent-secondary: #16a34a;
+            --accent-gradient: linear-gradient(135deg, #15803d, #22c55e);
+        }
+
+        /* DTP Shift Colors - Green Harmony */
+        .shift-p1 {
+            background: #22c55e !important;
+            color: white !important;
+        }
+
+        .shift-p2 {
+            background: #16a34a !important;
+            color: white !important;
+        }
+
+        .shift-piket {
+            background: #15803d !important;
+            color: white !important;
+        }
+
+        .shift-r1 {
+            background: #166534 !important;
+            color: white !important;
+        }
+
+        .shift-r2 {
+            background: #14532d !important;
+            color: white !important;
+        }
+
+        [data-theme="dark"] .shift-p1 {
+            background: #4ade80 !important;
+            color: #052e16 !important;
+        }
+
+        [data-theme="dark"] .shift-p2 {
+            background: #22c55e !important;
+            color: #052e16 !important;
+        }
+
+        [data-theme="dark"] .shift-piket {
+            background: #16a34a !important;
+            color: #052e16 !important;
+        }
+
+        [data-theme="dark"] .shift-r1 {
+            background: #15803d !important;
+            color: white !important;
+        }
+
+        [data-theme="dark"] .shift-r2 {
+            background: #166534 !important;
+            color: white !important;
+        }
+
+        .logo {
+            background: linear-gradient(135deg, #15803d, #22c55e) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+
+        .home-btn {
+            background: linear-gradient(135deg, #15803d, #16a34a) !important;
+            box-shadow: 0 4px 15px rgba(21, 128, 61, 0.3) !important;
+        }
+
+        .home-btn:hover {
+            box-shadow: 0 6px 20px rgba(21, 128, 61, 0.5) !important;
+        }
+
+        .select-input:focus {
+            border-color: #15803d !important;
+            box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.15) !important;
+        }
+
+        .posko-banner {
+            background: linear-gradient(135deg, #14532d 0%, #15803d 50%, #16a34a 100%);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            padding-top: calc(var(--spacing-xl) + 10px);
+            margin-bottom: var(--spacing-lg);
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(21, 128, 61, 0.3);
+        }
+
+        .posko-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 60%);
+            animation: shimmer 8s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+
+            0%,
+            100% {
+                transform: translateX(-30%) translateY(-30%);
+            }
+
+            50% {
+                transform: translateX(30%) translateY(30%);
+            }
+        }
+
+        .posko-banner h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .posko-banner .posko-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .posko-banner .posko-period {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 8px 24px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .banner-actions {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 2;
+        }
+
+        .banner-actions .home-btn {
+            background: rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: none !important;
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            border-radius: 20px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+
+        .banner-actions .home-btn:hover {
+            background: rgba(255, 255, 255, 0.35) !important;
+        }
+
+        .banner-actions .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            backdrop-filter: blur(10px);
+        }
+
+        .banner-actions .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        .posko-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--spacing-md);
+            flex-wrap: wrap;
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: 0 4px 20px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .posko-info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .posko-info-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--border-color);
+            border-top: 3px solid #15803d;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            text-align: center;
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .posko-info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--shadow-color);
+        }
+
+        .posko-info-card .card-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .posko-info-card .card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .posko-info-card .card-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .legend-color.shift-p1 {
+            background: #22c55e !important;
+        }
+
+        .legend-color.shift-p2 {
+            background: #16a34a !important;
+        }
+
+        .legend-color.shift-piket {
+            background: #15803d !important;
+        }
+
+        .legend-color.shift-r1 {
+            background: #166534 !important;
+        }
+
+        .legend-color.shift-r2 {
+            background: #14532d !important;
+        }
+
+        .calendar-table thead th {
+            border-bottom: 2px solid #15803d;
+        }
+
+        /* Live Dashboard */
+        .live-dashboard {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: 0 4px 20px var(--shadow-color);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid #15803d;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .dashboard-time {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .live-indicator {
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse-green 1.5s infinite;
+        }
+
+        @keyframes pulse-green {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+            }
+
+            50% {
+                box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+            }
+        }
+
+        .current-time {
+            font-family: 'Courier New', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #15803d;
+        }
+
+        [data-theme="dark"] .current-time {
+            color: #22c55e;
+        }
+
+        .dashboard-date {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .dashboard-section {
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .dashboard-section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 12px 0;
+        }
+
+        .shift-group {
+            margin-bottom: 8px;
+        }
+
+        .shift-group-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+            border-left: 3px solid #15803d;
+            padding-left: 10px;
+        }
+
+        .shift-group-time {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .shift-group-count {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin: 4px 0 6px 13px;
+            font-style: italic;
+        }
+
+        .employee-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 0 13px;
+        }
+
+        .employee-list li {
+            padding: 3px 0;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+
+        .dashboard-empty {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 8px 0;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+
+            .current-time {
+                font-size: 1.3rem;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+        }
+
+        .modal-header {
+            border-bottom: 2px solid #15803d;
+        }
+
+        @media (max-width: 768px) {
+            .posko-banner h2 {
+                font-size: 1.3rem;
+            }
+
+            .posko-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Posko Banner -->
+        <div class="posko-banner">
+            <div class="banner-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <span class="sun-icon">☀️</span>
+                    <span class="moon-icon">🌙</span>
+                </button>
+            </div>
+            <h2>🕌 JADWAL POSKO IDUL FITRI 2026 - DTP</h2>
+            <div class="posko-subtitle">Nextgen Service Management</div>
+            <div class="posko-period">📆 13 Maret - 29 Maret 2026</div>
+        </div>
+
+        <!-- Live Dashboard -->
+        <div class="live-dashboard" id="liveDashboard">
+            <div class="dashboard-header">
+                <div class="dashboard-time">
+                    <span class="live-indicator"></span>
+                    <span class="current-time" id="currentTime">--:--:--</span>
+                </div>
+                <div class="dashboard-date" id="currentDate">-- -- ----</div>
+            </div>
+            <div class="dashboard-content">
+                <div class="dashboard-section working-now">
+                    <h4 class="dashboard-section-title">👷 Sedang Bertugas Hari Ini</h4>
+                    <div class="dashboard-employees" id="workingNow">
+                        <!-- Will be populated by JS -->
+                    </div>
+                </div>
+                <div class="dashboard-section next-shift">
+                    <h4 class="dashboard-section-title next-shift-title" id="nextShiftTitle">⏰ Jadwal Berikutnya</h4>
+                    <div class="dashboard-employees" id="nextShift">
+                        <!-- Will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Controls -->
+        <div class="posko-controls">
+            <div class="filter-group">
+                <label for="employeeFilter">Karyawan:</label>
+                <select id="employeeFilter" class="select-input">
+                    <option value="all">Semua Karyawan</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="categoryFilter">Kategori:</label>
+                <select id="categoryFilter" class="select-input">
+                    <option value="all">Semua</option>
+                    <option value="P1">P1 - 08:00 - 12:00</option>
+                    <option value="P2">P2 - 13:00 - 17:00</option>
+                    <option value="Piket">Piket - Weekday 17:00 - 18:00</option>
+                    <option value="R1">R1 - Piket Lebaran 08:00 - 12:00</option>
+                    <option value="R2">R2 - Piket Lebaran 13:00 - 17:00</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Calendar Container -->
+        <div class="calendar-wrapper">
+            <div class="calendar-container" id="calendarContainer">
+                <!-- Calendar will be generated here -->
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <h3 class="legend-title">Keterangan Jam Kerja</h3>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <span class="legend-color shift-p1"></span>
+                    <span class="legend-text">P1 - 08:00 - 12:00</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color shift-p2"></span>
+                    <span class="legend-text">P2 - 13:00 - 17:00</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color shift-piket"></span>
+                    <span class="legend-text">Piket (Weekday) - 17:00 - 18:00</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color shift-r1"></span>
+                    <span class="legend-text">R1 (Piket Lebaran) - 08:00 - 12:00</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color shift-r2"></span>
+                    <span class="legend-text">R2 (Piket Lebaran) - 13:00 - 17:00</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color"
+                        style="background: var(--bg-secondary); border: 1px dashed var(--text-muted);"></span>
+                    <span class="legend-text">Kosong (Blank) - LIBUR</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modalTitle">Detail Jadwal</h3>
+                    <button class="modal-close" id="modalClose">✕</button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Content will be generated -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="posko-dtp.js"></script>
+</body>
+
+</html>
