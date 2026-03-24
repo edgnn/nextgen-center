@@ -78,7 +78,7 @@ const poskoScheduleData = {
     // Jajang Haris Hidayat
     13: { 13: "LIBUR", 14: "LIBUR", 15: "LIBUR", 16: "A1", 17: "A1", 18: "LIBUR", 19: "A2", 20: "A2", 21: "LIBUR", 22: "A2", 23: "LIBUR", 24: "LIBUR", 25: "A1", 26: "LIBUR", 27: "LIBUR", 28: "LIBUR", 29: "LIBUR" },
     // Muhammad Ali Wardhana
-    14: { 13: "LIBUR", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "LIBUR", 19: "LIBUR", 20: "A1", 21: "LIBUR", 22: "A1", 23: "LIBUR", 24: "LIBUR", 25: "LIBUR", 26: "LIBUR", 27: "A1", 28: "LIBUR", 29: "LIBUR" }
+    14: { 13: "LIBUR", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "LIBUR", 19: "LIBUR", 20: "A1", 21: "LIBUR", 22: "A1", 23: "LIBUR", 24: "LIBUR", 25: "A1", 26: "LIBUR", 27: "LIBUR", 28: "LIBUR", 29: "LIBUR" }
 };
 
 // ============================================
