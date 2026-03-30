@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Activity Report - Nextgen</title>
+    <title>Daily Activity Report (Format Baru) - Nextgen</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Daily Activity Specific Styles */
+        /* Daily Activity New Format Styles */
         .daily-activity-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -49,6 +49,20 @@
         .header-actions {
             display: flex;
             gap: var(--spacing-md);
+            align-items: center;
+        }
+
+        .format-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
         /* Selector Panel */
@@ -81,7 +95,7 @@
         .logo-header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: var(--spacing-lg);
             padding: var(--spacing-lg);
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
@@ -95,22 +109,38 @@
         }
 
         .logo-container img {
-            height: 60px;
+            height: 70px;
             width: auto;
         }
 
-        .header-title {
+        .company-info {
             flex: 1;
-            text-align: center;
-            font-size: 1.8rem;
+        }
+
+        .company-name {
+            font-size: 1.3rem;
             font-weight: 700;
             color: var(--text-primary);
             margin: 0;
         }
 
-        .header-spacer {
-            flex: 0 0 auto;
-            width: 200px;
+        .company-address {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 2px 0;
+        }
+
+        .report-title {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            padding: var(--spacing-md) 0;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: 0 4px 20px var(--shadow-color);
+            border: 1px solid var(--border-color);
         }
 
         /* Employee Info Card */
@@ -126,6 +156,12 @@
         }
 
         .employee-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .info-column {
             display: flex;
             flex-direction: column;
             gap: var(--spacing-sm);
@@ -138,10 +174,16 @@
         }
 
         .info-label {
-            font-size: 0.9rem;
-            color: var(--text-primary);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
             font-weight: 500;
-            min-width: 120px;
+            min-width: 160px;
+        }
+
+        .info-label-en {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-style: italic;
         }
 
         .info-colon {
@@ -174,7 +216,7 @@
         .activity-table th,
         .activity-table td {
             padding: var(--spacing-sm) var(--spacing-md);
-            text-align: left;
+            text-align: center;
             border: 1px solid var(--border-color);
         }
 
@@ -185,6 +227,10 @@
             position: sticky;
             top: 0;
             z-index: 10;
+        }
+
+        .activity-table thead th.col-group-header {
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(59, 130, 246, 0.1) 100%);
         }
 
         .activity-table tbody tr:hover {
@@ -204,35 +250,25 @@
         }
 
         /* Column widths */
-        .col-no {
+        .col-tgl {
             width: 40px;
-            text-align: center;
         }
 
-        .col-tanggal {
-            width: 120px;
-        }
-
-        .col-hadir {
-            width: 120px;
-        }
-
-        .col-start {
+        .col-hari {
             width: 80px;
-            text-align: center;
         }
 
-        .col-end {
-            width: 80px;
-            text-align: center;
-        }
-
-        .col-activity {
-            min-width: 300px;
+        .col-time {
+            width: 70px;
         }
 
         .col-keterangan {
-            min-width: 200px;
+            min-width: 300px;
+            text-align: left !important;
+        }
+
+        .col-status {
+            width: 100px;
         }
 
         /* Editable cells */
@@ -261,9 +297,8 @@
             border-color: var(--text-muted);
         }
 
-        .col-end.editable-cell input,
-        .col-start.editable-cell input {
-            width: 70px;
+        .col-time.editable-cell input {
+            width: 65px;
             text-align: center;
             font-family: 'Consolas', 'Monaco', monospace;
             font-size: 0.9rem;
@@ -276,31 +311,51 @@
             opacity: 0.6;
         }
 
-        /* Day name badge */
-        .day-badge {
-            display: inline-block;
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: var(--radius-sm);
-            margin-left: var(--spacing-xs);
+        /* Summary Section */
+        .summary-section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: 0 4px 20px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-lg);
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .summary-label-en {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .summary-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
             font-weight: 500;
         }
 
-        .day-badge.weekend {
-            background: var(--shift-libur);
-            color: white;
-        }
-
-        .day-badge.holiday {
-            background: var(--shift-a1);
-            color: white;
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
         }
 
         /* Signature Section */
         .signature-section {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--spacing-lg);
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
             padding: var(--spacing-xl);
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
@@ -329,6 +384,12 @@
         .signature-name {
             font-weight: 600;
             color: var(--text-primary);
+        }
+
+        .signature-role {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
         }
 
         .signature-nik {
@@ -369,15 +430,6 @@
             box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
         }
 
-        .btn-pdf {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-        }
-
-        .btn-pdf:hover {
-            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
-        }
-
         .btn-back {
             display: flex;
             align-items: center;
@@ -399,6 +451,28 @@
             background: var(--bg-secondary);
         }
 
+        .btn-old-format {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all var(--transition-normal);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-old-format:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .page-header {
@@ -410,12 +484,20 @@
                 flex-direction: column;
             }
 
+            .employee-info-grid {
+                grid-template-columns: 1fr;
+            }
+
             .signature-section {
                 grid-template-columns: 1fr;
             }
 
             .action-bar {
                 flex-direction: column;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -427,11 +509,12 @@
         <header class="page-header">
             <h1 class="page-title">
                 <span class="page-title-icon">📋</span>
-                Daily Activity Report
+                Daily Time Sheet
             </h1>
             <div class="header-actions">
-                <a href="daily-activity-new.html" class="btn-back" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none;">
-                    📄 Format Baru (Maret 2026+)
+                <span class="format-badge">📄 Format Baru (Lampiran Lembur)</span>
+                <a href="daily-activity.html" class="btn-old-format">
+                    📂 Format Lama
                 </a>
                 <a href="index.html" class="btn-back">
                     ← Kembali ke Jadwal
@@ -468,37 +551,69 @@
             </button>
         </div>
 
-        <!-- Logo Header -->
+        <!-- Logo & Company Header -->
         <div class="logo-header" id="logoHeader" style="display: none;">
             <div class="logo-container">
-                <img src="infomedia-logo.png" alt="Infomedia Logo">
+                <img src="new logo infomedia.png" alt="Infomedia Logo">
             </div>
-            <h2 class="header-title">Daily Activity</h2>
-            <div class="header-spacer"></div>
+            <div class="company-info">
+                <h2 class="company-name">PT. INFOMEDIA NUSANTARA</h2>
+                <p class="company-address">Kantor Pusat</p>
+                <p class="company-address">Jl. RS Fatmawati No. 77-81</p>
+                <p class="company-address">Telp. (021) 7201221, Fax (021) 7201226</p>
+                <p class="company-address">Jakarta 12150</p>
+            </div>
+        </div>
+
+        <!-- Report Title -->
+        <div class="report-title" id="reportTitle" style="display: none;">
+            EMPLOYEE'S DAILY TIME SHEET / ABSENSI
         </div>
 
         <!-- Employee Info Card -->
         <div class="employee-info-card" id="employeeInfoCard" style="display: none;">
             <div class="employee-info-grid">
-                <div class="info-item">
-                    <span class="info-label">NIK / Perner</span>
-                    <span class="info-colon">:</span>
-                    <span class="info-value" id="infoNik">-</span>
+                <div class="info-column">
+                    <div class="info-item">
+                        <span class="info-label">
+                            Nama Pegawai
+                            <span class="info-label-en">(Employee's name)</span>
+                        </span>
+                        <span class="info-colon">:</span>
+                        <span class="info-value" id="infoNama">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">
+                            ID HRIS / PERNER
+                        </span>
+                        <span class="info-colon">:</span>
+                        <span class="info-value" id="infoNik">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">
+                            Periode
+                        </span>
+                        <span class="info-colon">:</span>
+                        <span class="info-value" id="infoPeriode">-</span>
+                    </div>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">Nama</span>
-                    <span class="info-colon">:</span>
-                    <span class="info-value" id="infoNama">-</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Jabatan</span>
-                    <span class="info-colon">:</span>
-                    <span class="info-value" id="infoJabatan">-</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Dept / Divisi</span>
-                    <span class="info-colon">:</span>
-                    <span class="info-value" id="infoDept">-</span>
+                <div class="info-column">
+                    <div class="info-item">
+                        <span class="info-label">
+                            Nama Project
+                            <span class="info-label-en">(Project's Name)</span>
+                        </span>
+                        <span class="info-colon">:</span>
+                        <span class="info-value" id="infoProject">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">
+                            Lokasi Kerja
+                            <span class="info-label-en">(Work Location)</span>
+                        </span>
+                        <span class="info-colon">:</span>
+                        <span class="info-value" id="infoLokasi">-</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -508,13 +623,18 @@
             <table class="activity-table" id="activityTable">
                 <thead>
                     <tr>
-                        <th class="col-no">NO</th>
-                        <th class="col-tanggal">TANGGAL</th>
-                        <th class="col-hadir">HADIR</th>
-                        <th class="col-start">Start</th>
-                        <th class="col-end">End</th>
-                        <th class="col-activity">DAILY ACTIVITY</th>
-                        <th class="col-keterangan">KETERANGAN</th>
+                        <th rowspan="2" class="col-tgl">TGL</th>
+                        <th rowspan="2" class="col-hari">HARI</th>
+                        <th colspan="2" class="col-group-header">ABSENSI</th>
+                        <th colspan="2" class="col-group-header">LEMBUR</th>
+                        <th rowspan="2" class="col-keterangan">KETERANGAN</th>
+                        <th rowspan="2" class="col-status">STATUS<br>(JUMLAH JAM LEMBUR)</th>
+                    </tr>
+                    <tr>
+                        <th class="col-time">MASUK</th>
+                        <th class="col-time">KELUAR</th>
+                        <th class="col-time">MASUK</th>
+                        <th class="col-time">KELUAR</th>
                     </tr>
                 </thead>
                 <tbody id="activityTableBody">
@@ -523,33 +643,43 @@
             </table>
         </div>
 
+        <!-- Summary Section -->
+        <div class="summary-section" id="summarySection" style="display: none;">
+            <h3 style="margin-bottom: var(--spacing-md); color: var(--text-primary);">📊 TOTAL</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <span class="summary-label-en">WORK DAY'S</span>
+                    <span class="summary-label">HARI KERJA</span>
+                    <span class="summary-value" id="totalWorkDays">0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label-en">NIGHT SHIFT</span>
+                    <span class="summary-label">JUMLAH LEMBUR</span>
+                    <span class="summary-value" id="totalOvertime">0</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Signature Section -->
         <div class="signature-section" id="signatureSection" style="display: none;">
             <div class="signature-box">
-                <div class="signature-title">Pekerja</div>
+                <div class="signature-title">Dibuat Oleh</div>
                 <div class="signature-line"></div>
-                <div class="signature-name" id="sigPekerja">-</div>
-                <div class="signature-nik" id="sigPekerjaNik">NIK: -</div>
+                <div class="signature-name" id="sigKaryawan">(…..................................)</div>
+                <div class="signature-role">Karyawan</div>
+                <div class="signature-nik" id="sigKaryawanNik">&nbsp;</div>
             </div>
             <div class="signature-box">
-                <div class="signature-title">Atasan 1</div>
+                <div class="signature-title">Diperiksa Oleh</div>
                 <div class="signature-line"></div>
-                <div class="signature-name" id="sigAtasan1">HAFIDH AL AFIF</div>
-                <div class="signature-nik">NIK: 890641</div>
-            </div>
-            <div class="signature-box">
-                <div class="signature-title">Atasan 2</div>
-                <div class="signature-line"></div>
-                <div class="signature-name">(…..................................)</div>
-                <div class="signature-nik">&nbsp;</div>
+                <div class="signature-name" id="sigManager">DEOT SISWANTORO, M.M</div>
+                <div class="signature-role">Manager</div>
+                <div class="signature-nik">NIK: 720305</div>
             </div>
         </div>
 
         <!-- Action Bar -->
         <div class="action-bar" id="actionBar" style="display: none;">
-            <button class="btn-download btn-pdf" id="downloadPdfBtn" style="display: none;">
-                📄 Download PDF
-            </button>
             <button class="btn-download" id="downloadBtn">
                 📥 Download Excel
             </button>
@@ -558,9 +688,7 @@
 
     <!-- ExcelJS for Excel Export with Image Support -->
     <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
-    <!-- html2pdf.js for PDF Export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="daily-activity.js"></script>
+    <script src="daily-activity-new.js"></script>
 </body>
 
 </html>
