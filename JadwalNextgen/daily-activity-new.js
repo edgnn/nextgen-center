@@ -838,19 +838,21 @@ async function downloadExcel() {
             totalOvertimeHours += (row.jamLembur || 0);
         });
 
-        // Values on same rows as labels but in different cells
-        worksheet.getCell(`D${hariKerjaRow}`).value = workDays;
-        worksheet.getCell(`D${hariKerjaRow}`).font = fontTimesNewRoman;
-        worksheet.getCell(`D${hariKerjaRow}`).alignment = { horizontal: 'center' };
+        // Values on row below labels
+        const valuesRow = hariKerjaRow + 1;
+        worksheet.addRow([]);
+        worksheet.getCell(`B${valuesRow}`).value = workDays;
+        worksheet.getCell(`B${valuesRow}`).font = fontTimesNewRoman;
+        worksheet.getCell(`B${valuesRow}`).alignment = { horizontal: 'center' };
         
-        worksheet.getCell(`E${hariKerjaRow}`).value = totalOvertimeHours;
-        worksheet.getCell(`E${hariKerjaRow}`).font = fontTimesNewRoman;
-        worksheet.getCell(`E${hariKerjaRow}`).alignment = { horizontal: 'center' };
+        worksheet.getCell(`C${valuesRow}`).value = totalOvertimeHours;
+        worksheet.getCell(`C${valuesRow}`).font = fontTimesNewRoman;
+        worksheet.getCell(`C${valuesRow}`).alignment = { horizontal: 'center' };
 
         // ===============================
         // SIGNATURE SECTION
         // ===============================
-        const sigRow1 = hariKerjaRow + 3;
+        const sigRow1 = valuesRow + 3;
         for (let i = 0; i < 10; i++) worksheet.addRow([]);
 
         // Dibuat Oleh
