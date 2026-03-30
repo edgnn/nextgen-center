@@ -885,12 +885,10 @@ async function downloadExcel() {
         worksheet.getCell(`D${sigLabelRow}`).font = fontTimesNewRoman;
         worksheet.getCell(`D${sigLabelRow}`).alignment = { horizontal: 'center' };
 
-        // Manager info
-        worksheet.getCell(`D${sigLabelRow + 1}`).value = companyInfo.manager.name;
+        // Manager NIK
+        worksheet.getCell(`D${sigLabelRow + 1}`).value = `NIK: ${companyInfo.manager.nik}`;
         worksheet.getCell(`D${sigLabelRow + 1}`).font = fontTimesNewRoman;
-
-        worksheet.getCell(`D${sigLabelRow + 2}`).value = `NIK: ${companyInfo.manager.nik}`;
-        worksheet.getCell(`D${sigLabelRow + 2}`).font = fontTimesNewRoman;
+        worksheet.getCell(`D${sigLabelRow + 1}`).alignment = { horizontal: 'center' };
 
         // Employee NIK
         worksheet.getCell(`B${sigLabelRow + 1}`).value = `NIK: ${currentEmployee.nik}`;
