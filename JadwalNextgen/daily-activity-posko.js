@@ -14,7 +14,7 @@ const employees = [
     { id: 6, name: "Muhammad Yarham", nik: "213500", category: "SHIFTING" },
     { id: 7, name: "Fachri Ilmawandi", nik: "213494", category: "SHIFTING" },
     { id: 8, name: "Andry Wahyudi", nik: "213497", category: "SHIFTING" },
-    { id: 9, name: "Youngky Ramadhan", nik: "107522", category: "SHIFTING" },
+    { id: 9, name: "Youngky Ramadhan", nik: "226840", category: "SHIFTING" },
     { id: 10, name: "Ali Ridho Salatin", nik: "213496", category: "SHIFTING" },
     { id: 11, name: "Edi Gunawan", nik: "213502", category: "SHIFTING" },
     { id: 12, name: "Milan Trista", nik: "213512", category: "SHIFTING" },

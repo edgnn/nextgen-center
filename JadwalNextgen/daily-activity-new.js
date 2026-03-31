@@ -7,7 +7,7 @@
 // DATA - EMPLOYEES (with NIK)
 // ============================================
 const employees = [
-    { id: 1, name: "Youngky Ramadhan", nik: "107522", category: "SHIFTING" },
+    { id: 1, name: "Youngky Ramadhan", nik: "226840", category: "SHIFTING" },
     { id: 2, name: "Ali Ridho Salatin", nik: "213496", category: "SHIFTING" },
     { id: 3, name: "Fachri Ilmawandi", nik: "213494", category: "SHIFTING" },
     { id: 4, name: "Andry Wahyudi", nik: "213497", category: "SHIFTING" },
