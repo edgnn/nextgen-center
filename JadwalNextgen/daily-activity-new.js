@@ -141,13 +141,13 @@ const shiftConfig = {
         absensi: { masuk: "08.00", keluar: "20.00" },
         lembur: { masuk: "08.00", keluar: "20.00" },
         keterangan: "LEMBUR HARI BESAR NASIONAL",
-        jamLembur: 11
+        jamLembur: 12
     },
     "A2": {
         absensi: { masuk: "20.00", keluar: "08.00" },
         lembur: { masuk: "20.00", keluar: "08.00" },
         keterangan: "LEMBUR HARI BESAR NASIONAL",
-        jamLembur: 11
+        jamLembur: 12
     }
 };
 
@@ -680,78 +680,83 @@ async function downloadExcel() {
         worksheet.getCell('G11').font = fontTimesNewRoman;
 
         // ===============================
-        // TABLE HEADER (Rows 12-13)
+        // SPACER ROW (Row 12) - empty row for cleaner print layout
         // ===============================
-        // Row 12
         worksheet.addRow([]);
-        worksheet.getCell('A12').value = 'TGL';
-        worksheet.getCell('A12').font = fontTimesNewRoman;
-        worksheet.getCell('A12').alignment = { horizontal: 'center', vertical: 'center', wrapText: true };
-        worksheet.getCell('A12').border = thinBorder;
 
-        worksheet.getCell('B12').value = 'HARI';
-        worksheet.getCell('B12').font = fontTimesNewRoman;
-        worksheet.getCell('B12').alignment = { horizontal: 'center', vertical: 'center', wrapText: true };
-        worksheet.getCell('B12').border = thinBorder;
-
-        // Merge ABSENSI C12:D12
-        worksheet.mergeCells('C12:D12');
-        worksheet.getCell('C12').value = 'ABSENSI';
-        worksheet.getCell('C12').font = fontTimesNewRoman;
-        worksheet.getCell('C12').alignment = { horizontal: 'center' };
-        worksheet.getCell('C12').border = thinBorder;
-        worksheet.getCell('D12').border = thinBorder;
-
-        // Merge LEMBUR E12:F12
-        worksheet.mergeCells('E12:F12');
-        worksheet.getCell('E12').value = 'LEMBUR';
-        worksheet.getCell('E12').font = fontTimesNewRoman;
-        worksheet.getCell('E12').alignment = { horizontal: 'center' };
-        worksheet.getCell('E12').border = thinBorder;
-        worksheet.getCell('F12').border = thinBorder;
-
-        worksheet.getCell('G12').value = 'KETERANGAN';
-        worksheet.getCell('G12').font = fontTimesNewRoman;
-        worksheet.getCell('G12').alignment = { horizontal: 'center', vertical: 'center' };
-        worksheet.getCell('G12').border = thinBorder;
-
-        worksheet.getCell('H12').value = 'STATUS (JUMLAH JAM LEMBUR)';
-        worksheet.getCell('H12').font = fontTimesNewRoman;
-        worksheet.getCell('H12').alignment = { horizontal: 'center', vertical: 'center' };
-        worksheet.getCell('H12').border = thinBorder;
-
-        // Merge verticals for row 12-13
-        worksheet.mergeCells('A12:A13');
-        worksheet.mergeCells('B12:B13');
-        worksheet.mergeCells('G12:G13');
-        worksheet.mergeCells('H12:H13');
-
-        // Row 13 - sub-headers
+        // ===============================
+        // TABLE HEADER (Rows 13-14)
+        // ===============================
+        // Row 13
         worksheet.addRow([]);
-        worksheet.getCell('C13').value = 'MASUK';
+        worksheet.getCell('A13').value = 'TGL';
+        worksheet.getCell('A13').font = fontTimesNewRoman;
+        worksheet.getCell('A13').alignment = { horizontal: 'center', vertical: 'center', wrapText: true };
+        worksheet.getCell('A13').border = thinBorder;
+
+        worksheet.getCell('B13').value = 'HARI';
+        worksheet.getCell('B13').font = fontTimesNewRoman;
+        worksheet.getCell('B13').alignment = { horizontal: 'center', vertical: 'center', wrapText: true };
+        worksheet.getCell('B13').border = thinBorder;
+
+        // Merge ABSENSI C13:D13
+        worksheet.mergeCells('C13:D13');
+        worksheet.getCell('C13').value = 'ABSENSI';
         worksheet.getCell('C13').font = fontTimesNewRoman;
         worksheet.getCell('C13').alignment = { horizontal: 'center' };
         worksheet.getCell('C13').border = thinBorder;
-
-        worksheet.getCell('D13').value = 'KELUAR';
-        worksheet.getCell('D13').font = fontTimesNewRoman;
-        worksheet.getCell('D13').alignment = { horizontal: 'center' };
         worksheet.getCell('D13').border = thinBorder;
 
-        worksheet.getCell('E13').value = 'MASUK';
+        // Merge LEMBUR E13:F13
+        worksheet.mergeCells('E13:F13');
+        worksheet.getCell('E13').value = 'LEMBUR';
         worksheet.getCell('E13').font = fontTimesNewRoman;
         worksheet.getCell('E13').alignment = { horizontal: 'center' };
         worksheet.getCell('E13').border = thinBorder;
-
-        worksheet.getCell('F13').value = 'KELUAR';
-        worksheet.getCell('F13').font = fontTimesNewRoman;
-        worksheet.getCell('F13').alignment = { horizontal: 'center' };
         worksheet.getCell('F13').border = thinBorder;
 
+        worksheet.getCell('G13').value = 'KETERANGAN';
+        worksheet.getCell('G13').font = fontTimesNewRoman;
+        worksheet.getCell('G13').alignment = { horizontal: 'center', vertical: 'center' };
+        worksheet.getCell('G13').border = thinBorder;
+
+        worksheet.getCell('H13').value = 'STATUS (JUMLAH JAM LEMBUR)';
+        worksheet.getCell('H13').font = fontTimesNewRoman;
+        worksheet.getCell('H13').alignment = { horizontal: 'center', vertical: 'center' };
+        worksheet.getCell('H13').border = thinBorder;
+
+        // Merge verticals for row 13-14
+        worksheet.mergeCells('A13:A14');
+        worksheet.mergeCells('B13:B14');
+        worksheet.mergeCells('G13:G14');
+        worksheet.mergeCells('H13:H14');
+
+        // Row 14 - sub-headers
+        worksheet.addRow([]);
+        worksheet.getCell('C14').value = 'MASUK';
+        worksheet.getCell('C14').font = fontTimesNewRoman;
+        worksheet.getCell('C14').alignment = { horizontal: 'center' };
+        worksheet.getCell('C14').border = thinBorder;
+
+        worksheet.getCell('D14').value = 'KELUAR';
+        worksheet.getCell('D14').font = fontTimesNewRoman;
+        worksheet.getCell('D14').alignment = { horizontal: 'center' };
+        worksheet.getCell('D14').border = thinBorder;
+
+        worksheet.getCell('E14').value = 'MASUK';
+        worksheet.getCell('E14').font = fontTimesNewRoman;
+        worksheet.getCell('E14').alignment = { horizontal: 'center' };
+        worksheet.getCell('E14').border = thinBorder;
+
+        worksheet.getCell('F14').value = 'KELUAR';
+        worksheet.getCell('F14').font = fontTimesNewRoman;
+        worksheet.getCell('F14').alignment = { horizontal: 'center' };
+        worksheet.getCell('F14').border = thinBorder;
+
         // ===============================
-        // DATA ROWS (Row 14 onwards = row 14 for day 1)
+        // DATA ROWS (Row 15 onwards = row 15 for day 1)
         // ===============================
-        const dataStartRow = 14;
+        const dataStartRow = 15;
 
         activityData.forEach((row, index) => {
             const excelRow = worksheet.addRow([
