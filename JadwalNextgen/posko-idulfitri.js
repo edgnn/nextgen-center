@@ -27,8 +27,8 @@ const poskoEmployees = [
 // DATA - SHIFT DESCRIPTIONS
 // ============================================
 const shiftDescriptions = {
-    "A1": "08.00 - 20.00 (Shift 1)",
-    "A2": "20.00 - 08.00 (Shift 2)",
+    "A1P": "08.00 - 20.00 (Shift 1 POSKO)",
+    "A2P": "20.00 - 08.00 (Shift 2 POSKO)",
     "LIBUR": "LIBUR"
 };
 
@@ -52,33 +52,33 @@ const nationalHolidays = {
 // ============================================
 const poskoScheduleData = {
     // Mochamad Razky Adiantoro
-    1: { 13: "LIBUR", 14: "LIBUR", 15: "LIBUR", 16: "A1", 17: "LIBUR", 18: "LIBUR", 19: "LIBUR", 20: "A1", 21: "LIBUR", 22: "LIBUR", 23: "LIBUR", 24: "LIBUR", 25: "LIBUR", 26: "A1", 27: "LIBUR", 28: "LIBUR", 29: "LIBUR" },
+    1: { 13: "LIBUR", 14: "LIBUR", 15: "LIBUR", 16: "A1P", 17: "LIBUR", 18: "LIBUR", 19: "LIBUR", 20: "A1P", 21: "LIBUR", 22: "LIBUR", 23: "LIBUR", 24: "LIBUR", 25: "LIBUR", 26: "A1P", 27: "LIBUR", 28: "LIBUR", 29: "LIBUR" },
     // Julius Ruben AP Sibarani
-    2: { 13: "LIBUR", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "LIBUR", 19: "LIBUR", 20: "A1", 21: "A1", 22: "LIBUR", 23: "LIBUR", 24: "LIBUR", 25: "A1", 26: "LIBUR", 27: "LIBUR", 28: "LIBUR", 29: "LIBUR" },
+    2: { 13: "LIBUR", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "LIBUR", 19: "LIBUR", 20: "A1P", 21: "A1P", 22: "LIBUR", 23: "LIBUR", 24: "LIBUR", 25: "A1P", 26: "LIBUR", 27: "LIBUR", 28: "LIBUR", 29: "LIBUR" },
     // Fitra Malik
-    3: { 13: "LIBUR", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "LIBUR", 19: "LIBUR", 20: "LIBUR", 21: "LIBUR", 22: "LIBUR", 23: "A1", 24: "LIBUR", 25: "LIBUR", 26: "A1", 27: "A1", 28: "LIBUR", 29: "LIBUR" },
+    3: { 13: "LIBUR", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "LIBUR", 19: "LIBUR", 20: "LIBUR", 21: "LIBUR", 22: "LIBUR", 23: "A1P", 24: "LIBUR", 25: "LIBUR", 26: "A1P", 27: "A1P", 28: "LIBUR", 29: "LIBUR" },
     // Muhammad Fikri
-    4: { 13: "LIBUR", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "A1", 18: "LIBUR", 19: "LIBUR", 20: "LIBUR", 21: "LIBUR", 22: "A1", 23: "LIBUR", 24: "LIBUR", 25: "LIBUR", 26: "LIBUR", 27: "A1", 28: "LIBUR", 29: "LIBUR" },
+    4: { 13: "LIBUR", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "A1P", 18: "LIBUR", 19: "LIBUR", 20: "LIBUR", 21: "LIBUR", 22: "A1P", 23: "LIBUR", 24: "LIBUR", 25: "LIBUR", 26: "LIBUR", 27: "A1P", 28: "LIBUR", 29: "LIBUR" },
     // Muhammad Taufik
-    5: { 13: "LIBUR", 14: "A1", 15: "A1", 16: "A2", 17: "A2", 18: "LIBUR", 19: "LIBUR", 20: "LIBUR", 21: "LIBUR", 22: "A2", 23: "LIBUR", 24: "A1", 25: "LIBUR", 26: "LIBUR", 27: "LIBUR", 28: "A2", 29: "A2" },
+    5: { 13: "LIBUR", 14: "A1P", 15: "A1P", 16: "A2P", 17: "A2P", 18: "LIBUR", 19: "LIBUR", 20: "LIBUR", 21: "LIBUR", 22: "A2P", 23: "LIBUR", 24: "A1P", 25: "LIBUR", 26: "LIBUR", 27: "LIBUR", 28: "A2P", 29: "A2P" },
     // Muhammad Yarham
-    6: { 13: "LIBUR", 14: "A1", 15: "A1", 16: "A2", 17: "A2", 18: "LIBUR", 19: "A1", 20: "A2", 21: "LIBUR", 22: "LIBUR", 23: "LIBUR", 24: "A2", 25: "LIBUR", 26: "LIBUR", 27: "LIBUR", 28: "A2", 29: "A2" },
+    6: { 13: "LIBUR", 14: "A1P", 15: "A1P", 16: "A2P", 17: "A2P", 18: "LIBUR", 19: "A1P", 20: "A2P", 21: "LIBUR", 22: "LIBUR", 23: "LIBUR", 24: "A2P", 25: "LIBUR", 26: "LIBUR", 27: "LIBUR", 28: "A2P", 29: "A2P" },
     // Fachri Ilmawandi
-    7: { 13: "LIBUR", 14: "A2", 15: "A2", 16: "LIBUR", 17: "LIBUR", 18: "A2", 19: "LIBUR", 20: "LIBUR", 21: "A2", 22: "LIBUR", 23: "A2", 24: "LIBUR", 25: "LIBUR", 26: "A2", 27: "A2", 28: "LIBUR", 29: "LIBUR" },
+    7: { 13: "LIBUR", 14: "A2P", 15: "A2P", 16: "LIBUR", 17: "LIBUR", 18: "A2P", 19: "LIBUR", 20: "LIBUR", 21: "A2P", 22: "LIBUR", 23: "A2P", 24: "LIBUR", 25: "LIBUR", 26: "A2P", 27: "A2P", 28: "LIBUR", 29: "LIBUR" },
     // Andry Wahyudi
-    8: { 13: "LIBUR", 14: "A2", 15: "A2", 16: "LIBUR", 17: "LIBUR", 18: "A1", 19: "LIBUR", 20: "LIBUR", 21: "LIBUR", 22: "LIBUR", 23: "LIBUR", 24: "A1", 25: "LIBUR", 26: "A2", 27: "A2", 28: "LIBUR", 29: "LIBUR" },
+    8: { 13: "LIBUR", 14: "A2P", 15: "A2P", 16: "LIBUR", 17: "LIBUR", 18: "A1P", 19: "LIBUR", 20: "LIBUR", 21: "LIBUR", 22: "LIBUR", 23: "LIBUR", 24: "A1P", 25: "LIBUR", 26: "A2P", 27: "A2P", 28: "LIBUR", 29: "LIBUR" },
     // Youngky Ramadhan
-    9: { 13: "A2", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "A2", 19: "LIBUR", 20: "LIBUR", 21: "A1", 22: "LIBUR", 23: "A1", 24: "LIBUR", 25: "A2", 26: "LIBUR", 27: "LIBUR", 28: "A1", 29: "A1" },
+    9: { 13: "A2P", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "A2P", 19: "LIBUR", 20: "LIBUR", 21: "A1P", 22: "LIBUR", 23: "A1P", 24: "LIBUR", 25: "A2P", 26: "LIBUR", 27: "LIBUR", 28: "A1P", 29: "A1P" },
     // Ali Ridho Salatin
-    10: { 13: "A2", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "LIBUR", 19: "LIBUR", 20: "LIBUR", 21: "LIBUR", 22: "A1", 23: "LIBUR", 24: "A2", 25: "A2", 26: "LIBUR", 27: "LIBUR", 28: "A1", 29: "A1" },
+    10: { 13: "A2P", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "LIBUR", 19: "LIBUR", 20: "LIBUR", 21: "LIBUR", 22: "A1P", 23: "LIBUR", 24: "A2P", 25: "A2P", 26: "LIBUR", 27: "LIBUR", 28: "A1P", 29: "A1P" },
     // Edi Gunawan
-    11: { 13: "A1", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "LIBUR", 19: "A2", 20: "LIBUR", 21: "A2", 22: "LIBUR", 23: "A2", 24: "LIBUR", 25: "LIBUR", 26: "LIBUR", 27: "LIBUR", 28: "LIBUR", 29: "LIBUR" },
+    11: { 13: "A1P", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "LIBUR", 19: "A2P", 20: "LIBUR", 21: "A2P", 22: "LIBUR", 23: "A2P", 24: "LIBUR", 25: "LIBUR", 26: "LIBUR", 27: "LIBUR", 28: "LIBUR", 29: "LIBUR" },
     // Milan Trista
-    12: { 13: "A1", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "A1", 19: "A1", 20: "LIBUR", 21: "LIBUR", 22: "LIBUR", 23: "LIBUR", 24: "LIBUR", 25: "LIBUR", 26: "LIBUR", 27: "LIBUR", 28: "LIBUR", 29: "LIBUR" },
+    12: { 13: "A1P", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "A1P", 19: "A1P", 20: "LIBUR", 21: "LIBUR", 22: "LIBUR", 23: "LIBUR", 24: "LIBUR", 25: "LIBUR", 26: "LIBUR", 27: "LIBUR", 28: "LIBUR", 29: "LIBUR" },
     // Jajang Haris Hidayat
-    13: { 13: "LIBUR", 14: "LIBUR", 15: "LIBUR", 16: "A1", 17: "A1", 18: "LIBUR", 19: "A2", 20: "A2", 21: "LIBUR", 22: "A2", 23: "LIBUR", 24: "LIBUR", 25: "A1", 26: "LIBUR", 27: "LIBUR", 28: "LIBUR", 29: "LIBUR" },
+    13: { 13: "LIBUR", 14: "LIBUR", 15: "LIBUR", 16: "A1P", 17: "A1P", 18: "LIBUR", 19: "A2P", 20: "A2P", 21: "LIBUR", 22: "A2P", 23: "LIBUR", 24: "LIBUR", 25: "A1P", 26: "LIBUR", 27: "LIBUR", 28: "LIBUR", 29: "LIBUR" },
     // Muhammad Ali Wardhana
-    14: { 13: "LIBUR", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "LIBUR", 19: "LIBUR", 20: "A1", 21: "LIBUR", 22: "A1", 23: "LIBUR", 24: "LIBUR", 25: "A1", 26: "LIBUR", 27: "LIBUR", 28: "LIBUR", 29: "LIBUR" }
+    14: { 13: "LIBUR", 14: "LIBUR", 15: "LIBUR", 16: "LIBUR", 17: "LIBUR", 18: "LIBUR", 19: "LIBUR", 20: "A1P", 21: "LIBUR", 22: "A1P", 23: "LIBUR", 24: "LIBUR", 25: "A1P", 26: "LIBUR", 27: "LIBUR", 28: "LIBUR", 29: "LIBUR" }
 };
 
 // ============================================
@@ -156,20 +156,20 @@ function updateDashboard() {
         return;
     }
 
-    // Determine current shift: A1 = 08:00-20:00, A2 = 20:00-08:00
+    // Determine current shift: A1P = 08:00-20:00, A2P = 20:00-08:00
     let currentShift = null;
     let nextShiftCode = null;
     let nextShiftTime = '';
     let nextShiftLabel = '';
 
     if (hours >= 8 && hours < 20) {
-        currentShift = "A1";
-        nextShiftCode = "A2";
+        currentShift = "A1P";
+        nextShiftCode = "A2P";
         nextShiftTime = "20:00";
         nextShiftLabel = "malam ini";
     } else {
-        currentShift = "A2";
-        nextShiftCode = "A1";
+        currentShift = "A2P";
+        nextShiftCode = "A1P";
         nextShiftTime = "08:00";
         nextShiftLabel = hours < 8 ? "pagi ini" : "besok";
     }
