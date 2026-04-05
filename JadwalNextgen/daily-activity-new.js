@@ -16,7 +16,16 @@ const employees = [
     { id: 7, name: "Edi Gunawan", nik: "213502", category: "OFFICE HOUR" },
     { id: 8, name: "Milan Trista", nik: "213512", category: "OFFICE HOUR" },
     { id: 9, name: "Jajang Haris Hidayat", nik: "213503", category: "OFFICE HOUR" },
-    { id: 10, name: "Juwarti", nik: "213513", category: "OFFICE HOUR" }
+    { id: 10, name: "Juwarti", nik: "213513", category: "OFFICE HOUR" },
+    { id: 11, name: "Wulan Purnamawati", nik: "213509", category: "CALENDAR" }
+];
+
+// Rotating keterangan for CALENDAR employees (cycles through these 4)
+const calendarKeterangan = [
+    "Monitoring order SDWAN & Pekerjaan neuCentrIX",
+    "Reporting PI & Monitoring Order SDWAN",
+    "Review Operasional NeuCentrIX",
+    "Penyelesaian Report Performance"
 ];
 
 // ============================================
@@ -313,21 +322,18 @@ function buildActivityData() {
     const monthData = scheduleData[monthKey] || {};
     const empSchedule = monthData[currentEmployee.id] || {};
     const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+    const isCalendarEmployee = currentEmployee.category === "CALENDAR";
 
     activityData = [];
+    let calendarKetIndex = 0; // Counter for rotating keterangan for CALENDAR employees
 
     for (let day = 1; day <= daysInMonth; day++) {
         const date = new Date(currentYear, currentMonth - 1, day);
         const dayOfWeek = date.getDay();
         const dateKey = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-        const shift = empSchedule[day] || "";
         const isHoliday = !!nationalHolidays[dateKey];
         const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-        const isLibur = shift === "LIBUR" || !shift;
-
-        // Get shift config
-        const config = shiftConfig[shift] || null;
 
         // ABSENSI times
         let absensiMasuk = "";
@@ -339,23 +345,52 @@ function buildActivityData() {
         let keterangan = "";
         // Status (jam lembur)
         let jamLembur = 0;
+        let shift = "";
+        let isLibur = false;
 
-        if (!isLibur && config) {
-            absensiMasuk = config.absensi.masuk;
-            absensiKeluar = config.absensi.keluar;
-            lemburMasuk = config.lembur.masuk;
-            lemburKeluar = config.lembur.keluar;
-            keterangan = config.keterangan;
-            jamLembur = config.jamLembur;
-
-            // If holiday name exists and shift is A1/A2, add holiday name
-            if (isHoliday && (shift === "A1" || shift === "A2")) {
-                keterangan = `LEMBUR HARI BESAR NASIONAL - ${nationalHolidays[dateKey]}`;
+        if (isCalendarEmployee) {
+            // CALENDAR employee: works weekdays, off on weekends & holidays
+            if (isWeekend || isHoliday) {
+                isLibur = true;
+                shift = "LIBUR";
+                keterangan = "LIBUR";
+                if (isHoliday) {
+                    keterangan = `LIBUR - ${nationalHolidays[dateKey]}`;
+                }
+            } else {
+                // Workday - O1 shift (08:00 - 17:00)
+                shift = "O1";
+                isLibur = false;
+                absensiMasuk = "08.00";
+                absensiKeluar = "17.00";
+                keterangan = calendarKeterangan[calendarKetIndex % calendarKeterangan.length];
+                calendarKetIndex++;
             }
-        } else if (isLibur) {
-            keterangan = "LIBUR";
-            if (isHoliday) {
-                keterangan = `LIBUR - ${nationalHolidays[dateKey]}`;
+        } else {
+            // SHIFTING / OFFICE HOUR employees - use schedule data
+            shift = empSchedule[day] || "";
+            isLibur = shift === "LIBUR" || !shift;
+
+            // Get shift config
+            const config = shiftConfig[shift] || null;
+
+            if (!isLibur && config) {
+                absensiMasuk = config.absensi.masuk;
+                absensiKeluar = config.absensi.keluar;
+                lemburMasuk = config.lembur.masuk;
+                lemburKeluar = config.lembur.keluar;
+                keterangan = config.keterangan;
+                jamLembur = config.jamLembur;
+
+                // If holiday name exists and shift is A1/A2, add holiday name
+                if (isHoliday && (shift === "A1" || shift === "A2")) {
+                    keterangan = `LEMBUR HARI BESAR NASIONAL - ${nationalHolidays[dateKey]}`;
+                }
+            } else if (isLibur) {
+                keterangan = "LIBUR";
+                if (isHoliday) {
+                    keterangan = `LIBUR - ${nationalHolidays[dateKey]}`;
+                }
             }
         }
 
