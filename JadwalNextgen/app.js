@@ -6,7 +6,7 @@
 // DATA - EMPLOYEES (with NIK)
 // ============================================
 const employees = [
-    { id: 1, name: "Youngky Ramadhan", nik: "226840", category: "SHIFTING" },
+    { id: 1, name: "Youngky Ramadhan", nik: "107522", category: "SHIFTING" },
     { id: 2, name: "Ali Ridho Salatin", nik: "213496", category: "SHIFTING" },
     { id: 3, name: "Fachri Ilmawandi", nik: "213494", category: "SHIFTING" },
     { id: 4, name: "Andry Wahyudi", nik: "213497", category: "SHIFTING" },
@@ -374,9 +374,49 @@ function initEmployeeFilter() {
 }
 
 // ============================================
+// DYNAMIC BUTTONS (based on selected month/year)
+// ============================================
+function updateDynamicButtons() {
+    const container = document.getElementById('dynamicButtons');
+    if (!container) return;
+
+    let html = '';
+
+    // Determine if selected month is March 2026 or later
+    const isMarch2026OrLater = (currentYear > 2026) || (currentYear === 2026 && currentMonth >= 3);
+    const isMarch2026 = (currentYear === 2026 && currentMonth === 3);
+
+    // Daily Activity (old format) - only show before March 2026
+    if (!isMarch2026OrLater) {
+        html += `<a href="daily-activity.html" class="download-report-btn">
+            📋 Daily Activity
+        </a>`;
+    }
+
+    // Daily Activity (Format Baru) - only show from March 2026 onward
+    if (isMarch2026OrLater) {
+        html += `<a href="daily-activity-new.html" class="download-report-btn"
+            style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+            📄 Daily Activity (Format Baru)
+        </a>`;
+    }
+
+    // Posko Idul Fitri - only show in March 2026
+    if (isMarch2026) {
+        html += `<a href="posko-idulfitri.html" class="download-report-btn"
+            style="background: linear-gradient(135deg, #059669, #10b981);">
+            🕌 Posko Idul Fitri
+        </a>`;
+    }
+
+    container.innerHTML = html;
+}
+
+// ============================================
 // CALENDAR RENDERING
 // ============================================
 function renderCalendar() {
+    updateDynamicButtons();
     const container = document.getElementById('calendarContainer');
     const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
     const monthKey = `${currentYear}-${String(currentMonth).padStart(2, '0')}`;
