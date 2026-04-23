@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial Konfigurasi FortiClient VPN 7.2.14</title>
+    <meta name="description" content="Panduan lengkap konfigurasi FortiClient VPN 7.2.14 menggunakan IPsec VPN dengan Pre-Shared Key">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ========== THEME VARIABLES ========== */
+        :root[data-theme="dark"] {
+            --bg-primary: #0a0e1a;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.06);
+            --bg-header: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(22, 163, 74, 0.06));
+            --bg-info: rgba(59, 130, 246, 0.08);
+            --bg-highlight: rgba(250, 204, 21, 0.08);
+            --bg-table-header: rgba(34, 197, 94, 0.12);
+            --bg-table-even: rgba(255, 255, 255, 0.02);
+            --bg-img: rgba(0, 0, 0, 0.3);
+            --bg-gradient-1: rgba(34, 197, 94, 0.08);
+            --bg-gradient-2: rgba(59, 130, 246, 0.06);
+            --border-primary: rgba(255, 255, 255, 0.08);
+            --border-header: rgba(34, 197, 94, 0.2);
+            --border-info: rgba(59, 130, 246, 0.2);
+            --border-img: rgba(255, 255, 255, 0.1);
+            --border-table: rgba(255, 255, 255, 0.08);
+            --border-table-row: rgba(255, 255, 255, 0.05);
+            --border-footer: rgba(255, 255, 255, 0.06);
+            --text-primary: #e0e6ed;
+            --text-heading: #f1f5f9;
+            --text-muted: #94a3b8;
+            --text-footer: #475569;
+            --text-caption: #64748b;
+            --text-info: #93c5fd;
+            --text-label: #94a3b8;
+            --text-value: #e2e8f0;
+            --text-badge: #4ade80;
+            --text-badge-bg: rgba(34, 197, 94, 0.15);
+            --text-badge-border: rgba(34, 197, 94, 0.3);
+            --text-table-header: #4ade80;
+            --text-highlight: #fde68a;
+            --text-highlight-strong: #facc15;
+            --text-user-fill: #facc15;
+            --text-save: #4ade80;
+            --change-from-bg: rgba(239, 68, 68, 0.15);
+            --change-from-color: #f87171;
+            --change-to-bg: rgba(34, 197, 94, 0.15);
+            --change-to-color: #4ade80;
+            --hover-border: rgba(34, 197, 94, 0.3);
+            --toggle-bg: rgba(255, 255, 255, 0.08);
+            --toggle-hover: rgba(255, 255, 255, 0.15);
+            --toggle-icon: #f1f5f9;
+        }
+
+        :root[data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.8);
+            --bg-card-hover: rgba(255, 255, 255, 1);
+            --bg-header: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(22, 163, 74, 0.04));
+            --bg-info: rgba(59, 130, 246, 0.06);
+            --bg-highlight: rgba(250, 204, 21, 0.08);
+            --bg-table-header: rgba(34, 197, 94, 0.08);
+            --bg-table-even: rgba(0, 0, 0, 0.02);
+            --bg-img: rgba(0, 0, 0, 0.04);
+            --bg-gradient-1: rgba(34, 197, 94, 0.05);
+            --bg-gradient-2: rgba(59, 130, 246, 0.04);
+            --border-primary: rgba(0, 0, 0, 0.1);
+            --border-header: rgba(34, 197, 94, 0.25);
+            --border-info: rgba(59, 130, 246, 0.2);
+            --border-img: rgba(0, 0, 0, 0.1);
+            --border-table: rgba(0, 0, 0, 0.1);
+            --border-table-row: rgba(0, 0, 0, 0.06);
+            --border-footer: rgba(0, 0, 0, 0.08);
+            --text-primary: #334155;
+            --text-heading: #1e293b;
+            --text-muted: #64748b;
+            --text-footer: #94a3b8;
+            --text-caption: #64748b;
+            --text-info: #1e40af;
+            --text-label: #475569;
+            --text-value: #1e293b;
+            --text-badge: #16a34a;
+            --text-badge-bg: rgba(34, 197, 94, 0.1);
+            --text-badge-border: rgba(34, 197, 94, 0.3);
+            --text-table-header: #16a34a;
+            --text-highlight: #854d0e;
+            --text-highlight-strong: #a16207;
+            --text-user-fill: #b45309;
+            --text-save: #16a34a;
+            --change-from-bg: rgba(239, 68, 68, 0.1);
+            --change-from-color: #dc2626;
+            --change-to-bg: rgba(34, 197, 94, 0.1);
+            --change-to-color: #16a34a;
+            --hover-border: rgba(34, 197, 94, 0.4);
+            --toggle-bg: rgba(0, 0, 0, 0.06);
+            --toggle-hover: rgba(0, 0, 0, 0.1);
+            --toggle-icon: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.65;
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, var(--bg-gradient-1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, var(--bg-gradient-2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ========== THEME TOGGLE ========== */
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            border: 1px solid var(--border-primary);
+            background: var(--toggle-bg);
+            backdrop-filter: blur(12px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            transition: all 0.3s;
+            color: var(--toggle-icon);
+        }
+
+        .theme-toggle:hover {
+            background: var(--toggle-hover);
+            transform: scale(1.08);
+        }
+
+        .theme-toggle .icon-sun,
+        .theme-toggle .icon-moon { display: none; }
+
+        [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+        [data-theme="light"] .theme-toggle .icon-moon { display: block; }
+
+        /* ========== LAYOUT ========== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 24px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header — compact */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 24px 24px 20px;
+            background: var(--bg-header);
+            border: 1px solid var(--border-header);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            transition: all 0.3s;
+        }
+
+        .header-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            background: var(--text-badge-bg);
+            border: 1px solid var(--text-badge-border);
+            border-radius: 100px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-badge);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4ade80, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Info box — compact */
+        .info-box {
+            background: var(--bg-info);
+            border: 1px solid var(--border-info);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .info-box .icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .info-box p { color: var(--text-info); font-size: 0.82rem; transition: color 0.3s; }
+
+        /* ========== 2-COLUMN GRID ========== */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Step Card — compact */
+        .step-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: 14px;
+            padding: 20px 18px;
+            transition: all 0.3s;
+        }
+
+        .step-card:hover {
+            border-color: var(--hover-border);
+            background: var(--bg-card-hover);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-radius: 8px;
+        }
+
+        h2 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            transition: color 0.3s;
+        }
+
+        .step-card > p {
+            font-size: 0.82rem;
+            margin-bottom: 10px;
+            color: var(--text-muted);
+        }
+
+        /* Config table — compact */
+        .config-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 10px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-table);
+            transition: border-color 0.3s;
+        }
+
+        .config-table th {
+            background: var(--bg-table-header);
+            color: var(--text-table-header);
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 8px 12px;
+            text-align: left;
+            transition: all 0.3s;
+        }
+
+        .config-table td {
+            padding: 7px 12px;
+            border-top: 1px solid var(--border-table-row);
+            font-size: 0.82rem;
+            transition: all 0.3s;
+        }
+
+        .config-table tr:nth-child(even) td {
+            background: var(--bg-table-even);
+        }
+
+        .config-table .label {
+            color: var(--text-label);
+            font-weight: 500;
+            width: 42%;
+        }
+
+        .config-table .value {
+            color: var(--text-value);
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+
+        .config-table .value.user-fill {
+            color: var(--text-user-fill);
+            font-family: 'Inter', sans-serif;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        /* Image container — compact */
+        .img-container {
+            margin: 12px 0 4px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-img);
+            background: var(--bg-img);
+            transition: all 0.3s;
+        }
+
+        .img-container img {
+            width: 100%;
+            display: block;
+        }
+
+        .img-caption {
+            text-align: center;
+            padding: 6px;
+            font-size: 0.72rem;
+            color: var(--text-caption);
+            font-style: italic;
+            transition: color 0.3s;
+        }
+
+        /* Highlight box — compact */
+        .highlight {
+            background: var(--bg-highlight);
+            border-left: 3px solid var(--text-highlight-strong);
+            border-radius: 0 8px 8px 0;
+            padding: 8px 14px;
+            margin: 8px 0;
+            font-size: 0.82rem;
+            color: var(--text-highlight);
+            transition: all 0.3s;
+        }
+
+        .highlight strong { color: var(--text-highlight-strong); }
+
+        /* Change indicator */
+        .change-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 5px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            margin-left: 6px;
+        }
+
+        .change-from {
+            background: var(--change-from-bg);
+            color: var(--change-from-color);
+            text-decoration: line-through;
+        }
+
+        .change-to {
+            background: var(--change-to-bg);
+            color: var(--change-to-color);
+        }
+
+        .arrow { color: var(--text-caption); margin: 0 4px; }
+
+        .save-note {
+            margin-top: 8px;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+
+        .save-note strong {
+            color: var(--text-save);
+        }
+
+        /* Footer — compact */
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-footer);
+            color: var(--text-footer);
+            font-size: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 900px) {
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 16px 16px 32px;
+            }
+
+            h1 {
+                font-size: 1.35rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 18px 14px 16px;
+            }
+
+            .step-card {
+                padding: 14px 12px;
+            }
+
+            .config-table td,
+            .config-table th {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+            }
+
+            h1 {
+                font-size: 1.15rem;
+            }
+
+            h2 {
+                font-size: 0.9rem;
+            }
+
+            .theme-toggle {
+                width: 36px;
+                height: 36px;
+                top: 12px;
+                right: 12px;
+                font-size: 1rem;
+            }
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header { animation: fadeUp 0.4s ease both; }
+        .info-box { animation: fadeUp 0.4s ease 0.05s both; }
+        .step-card:nth-child(1) { animation: fadeUp 0.4s ease 0.1s both; }
+        .step-card:nth-child(2) { animation: fadeUp 0.4s ease 0.15s both; }
+        .step-card:nth-child(3) { animation: fadeUp 0.4s ease 0.2s both; }
+        .step-card:nth-child(4) { animation: fadeUp 0.4s ease 0.25s both; }
+        .step-card:nth-child(5) { animation: fadeUp 0.4s ease 0.3s both; }
+
+        /* Success card variant for step 5 */
+        .step-card.success-card {
+            border-color: var(--change-to-bg);
+            background: var(--change-to-bg);
+        }
+
+        .step-card.success-card:hover {
+            border-color: var(--change-to-color);
+        }
+
+        .success-text {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--change-to-color);
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <div class="container">
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-badge">📘 Panduan Resmi</div>
+            <h1>Tutorial Konfigurasi FortiClient VPN 7.2.14</h1>
+            <p>Panduan konfigurasi koneksi IPsec VPN menggunakan FortiClient VPN versi 7.2.14</p>
+        </header>
+
+        <!-- Info -->
+        <div class="info-box">
+            <span class="icon">ℹ️</span>
+            <p>Pastikan Anda sudah menginstall <strong>FortiClient VPN 7.2.14</strong> sebelum memulai konfigurasi. Siapkan juga username dan Pre-Shared Key yang telah diberikan.</p>
+        </div>
+
+        <!-- Steps Grid -->
+        <div class="steps-grid">
+
+            <!-- STEP 1 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h2>Buat Koneksi VPN & Konfigurasi Authentication</h2>
+                </div>
+                <p>Buka FortiClient VPN, klik <strong>"New VPN Connection"</strong>, pilih tipe <strong>IPsec VPN</strong>, lalu isi seluruh konfigurasi berikut:</p>
+
+                <table class="config-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Nilai</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="label">VPN Type</td>
+                            <td class="value">IPsec VPN</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Connection Name</td>
+                            <td class="value user-fill">Isi sendiri (nama koneksi)</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Description</td>
+                            <td class="value user-fill">Isi sendiri (deskripsi koneksi)</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Remote Gateway</td>
+                            <td class="value">36.92.34.189</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Auth Method</td>
+                            <td class="value">Pre-Shared Key</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Pre-Shared Key</td>
+                            <td class="value">T3lK0M26#$</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Auth (XAuth)</td>
+                            <td class="value">Save Login</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Username</td>
+                            <td class="value user-fill">Isi sesuai user yang didapat</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="highlight">
+                    <strong>⚠️ Penting:</strong> Pastikan Pre-Shared Key diisi dengan tepat. Kesalahan satu karakter akan menyebabkan koneksi gagal.
+                </div>
+
+                <div class="img-container">
+                    <img src="images/Image forticlient/gambar 1.png" alt="Step 1 - IPsec VPN, Authentication Method dan XAuth">
+                    <div class="img-caption">Gambar 1 — IPsec VPN, Authentication Method dan XAuth</div>
+                </div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <h2>Advanced Settings — Phase 1 (DH Group)</h2>
+                </div>
+                <p>Buka <strong>Advanced Settings</strong>, pada bagian <strong>Phase 1</strong>, ubah pengaturan DH Group:</p>
+
+                <div class="highlight">
+                    <strong>DH Group:</strong>
+                    <span class="change-badge change-from">20</span>
+                    <span class="arrow">→</span>
+                    <span class="change-badge change-to">5</span>
+                </div>
+
+                <div class="img-container">
+                    <img src="images/Image forticlient/gambar 2.png" alt="Step 2 - Phase 1 DH Group">
+                    <div class="img-caption">Gambar 2 — Mengubah DH Group Phase 1</div>
+                </div>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <h2>Advanced Settings — Phase 2 (DH Group)</h2>
+                </div>
+                <p>Masih di Advanced Settings, scroll ke bagian <strong>Phase 2</strong> dan ubah DH Group dengan cara yang sama:</p>
+
+                <div class="highlight">
+                    <strong>DH Group:</strong>
+                    <span class="change-badge change-from">20</span>
+                    <span class="arrow">→</span>
+                    <span class="change-badge change-to">5</span>
+                </div>
+
+                <p class="save-note">Setelah selesai, klik <strong>Save</strong> untuk menyimpan konfigurasi VPN.</p>
+
+                <div class="img-container">
+                    <img src="images/Image forticlient/gambar 3.png" alt="Step 3 - Phase 2 DH Group">
+                    <div class="img-caption">Gambar 3 — Mengubah DH Group Phase 2</div>
+                </div>
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="step-card success-card">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <h2>VPN Sudah Bisa Digunakan</h2>
+                </div>
+                <p class="success-text">✅ Konfigurasi selesai! VPN sudah siap digunakan. Klik Connect untuk memulai koneksi.</p>
+
+                <div class="img-container">
+                    <img src="images/Image forticlient/gambar 4.png" alt="Step 4 - Connect to VPN">
+                </div>
+            </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Tutorial FortiClient VPN 7.2.14 — Dokumen ini dibuat untuk keperluan internal.</p>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('forticlient-theme', next);
+        }
+
+        // Load saved theme
+        (function() {
+            const saved = localStorage.getItem('forticlient-theme');
+            if (saved) {
+                document.documentElement.setAttribute('data-theme', saved);
+            }
+        })();
+    </script>
+</body>
+</html>
